@@ -76,6 +76,9 @@ composants React.
 ## Déploiement
 
 Push sur `main` (ou la branche de développement configurée) → GitHub Actions
-(`.github/workflows/deploy.yml`) : tests → build → déploiement GitHub Pages.
+(`.github/workflows/deploy.yml`) : tests → build → publication du dossier
+`dist/` sur la branche `gh-pages`, servie par GitHub Pages.
 Le chemin de base (`/Nouvelle-app-1-/`) est fixé dans `vite.config.ts` et doit
 correspondre exactement au nom du dépôt (sensible à la casse).
+Si Pages était désactivé : Settings → Pages → « Deploy from a branch » →
+`gh-pages` / root (une seule fois).
