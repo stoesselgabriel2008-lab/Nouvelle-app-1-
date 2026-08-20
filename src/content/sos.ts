@@ -1,0 +1,170 @@
+import type { SosProtocol } from './types';
+
+/**
+ * Protocoles SOS — Source V2, §8 (p. 34-35).
+ * Très courts, « Fais ça maintenant » en premier, lisibles en état de saturation.
+ */
+export const SOS_PROTOCOLS: SosProtocol[] = [
+  {
+    id: 'ca-rentre-pas',
+    title: 'Ça ne rentre pas',
+    tagline: 'Réduis, vérifie, puis choisis la bonne porte.',
+    doNow: [
+      'Réduis l’unité : une seule définition, un seul mécanisme, un seul schéma.',
+      'Vérifie le prérequis qui bloque.',
+      'Si tu comprends : ferme le support et rappelle.',
+      'Si c’est arbitraire : structure d’abord, puis association courte.',
+      'Si tu mélanges : tableau A/B.',
+      'Si c’est un calcul : exemple guidé, puis exercice.',
+    ],
+    methods: ['rappel-actif', 'imagerie-interactive', 'tableau-contraste', 'exemple-resolu', 'chunking'],
+    aliases: ['ça rentre pas', 'ca rentre pas', 'ça ne rentre pas', 'rien ne rentre', 'j’y arrive pas à retenir'],
+    source: 'Source V2 — §8 SOS, p. 34',
+  },
+  {
+    id: 'commencer',
+    title: 'Je n’arrive pas à commencer',
+    tagline: 'Le contrat ne porte que sur 10 minutes.',
+    doNow: [
+      'Téléphone hors de la pièce.',
+      'Un seul support ouvert.',
+      'Écris une sortie observable : « restituer 3 mécanismes », « résoudre 1 à 4 ».',
+      'Lance 10 minutes, sans négocier la suite.',
+      'À 10 minutes : continue si engagé, sinon réduis encore l’unité.',
+    ],
+    methods: ['demarrage-10-minutes', 'friction-numerique', 'pomodoro'],
+    aliases: ['commencer', 'procrastination', 'je procrastine', 'j’arrive pas à m’y mettre', 'me lancer'],
+    source: 'Source V2 — §8 SOS, p. 34',
+  },
+  {
+    id: 'fatigue',
+    title: 'Je suis très fatigué',
+    tagline: 'Mode minimum : éviter le zéro, pas compenser.',
+    doNow: [
+      'Protège la nuit qui vient — pas de nuit blanche.',
+      'Une seule priorité critique aujourd’hui.',
+      'Fais l’entretien mémoire réellement dû (cartes essentielles).',
+      'Une petite application ou un QCM corrigé si possible.',
+      'Prépare la première action de demain.',
+    ],
+    methods: ['journee-minimale', 'revision-rapide'],
+    aliases: ['fatigué', 'fatigue', 'épuisé', 'crevé', 'plus d’énergie', 'à bout'],
+    source: 'Source V2 — §8 SOS, p. 34',
+  },
+  {
+    id: 'retard',
+    title: 'Je suis en retard',
+    tagline: 'Le retard doit redevenir une liste fermable.',
+    doNow: [
+      'Liste les objets exacts (chapitres, séries, decks).',
+      'Classe : bloque la suite / fortement évalué / entretien / supprimable.',
+      'Suspends les nouvelles cartes non essentielles.',
+      'Deux priorités rouges maximum par jour.',
+      'Planifie 3 jours, pas plus.',
+      'Termine par un retest diagnostic court.',
+    ],
+    methods: ['triage-retard', 'journee-minimale', 'audit-deck'],
+    aliases: ['retard', 'débordé', 'deborde', 'submergé', 'trop de cours', 'rattraper'],
+    source: 'Source V2 — §8 SOS, p. 34',
+  },
+  {
+    id: 'qcm-rates',
+    title: 'Je viens de rater une série de QCM',
+    tagline: 'Ne « travaille pas plus » au hasard : code, corrige, reteste.',
+    doNow: [
+      'Pour chaque erreur, choisis le code : K (connaissance), C (confusion), T (transfert), L (lecture), F (formule), Tps (temps), G (chance).',
+      'Applique la correction correspondant au code — pas une relecture générale.',
+      'Programme le retest différé.',
+    ],
+    then: [
+      'K → réapprendre + carte ciblée · C → tableau A/B · L → règle de lecture des négations/absolus · F → carte calcul + exercice · Tps → simulation chronométrée.',
+    ],
+    methods: ['correction-par-cause', 'qcm-actif', 'tableau-contraste', 'rappel-differe'],
+    aliases: ['qcm raté', 'qcm rate', 'raté mes qcm', 'mauvaise série', 'mauvais score', 'échec qcm'],
+    source: 'Source V2 — §8 SOS, p. 34',
+  },
+  {
+    id: 'anki-deborde',
+    title: 'Anki déborde',
+    tagline: 'Les dues avant les nouvelles — toujours.',
+    doNow: [
+      'Fais les cartes dues avant toute nouvelle.',
+      'Zéro nouvelle carte tant que l’arriéré augmente.',
+      'Suspends ou réécris les cartes ambiguës.',
+      'Réduis le flux de création.',
+    ],
+    methods: ['repetition-espacee', 'audit-deck', 'triage-retard'],
+    aliases: ['anki déborde', 'anki deborde', 'trop de cartes', 'cartes en retard', 'arriéré anki', 'reviews en retard'],
+    source: 'Source V2 — §8 SOS, p. 34-35',
+  },
+  {
+    id: 'panique',
+    title: 'Je panique pendant une question',
+    tagline: 'N-R-A-R : quatre gestes, dans l’ordre.',
+    doNow: [
+      'Nomme : « le stress monte ; ce n’est pas une preuve que je ne sais rien ».',
+      'Respire lentement 1 à 2 minutes, sans forcer.',
+      'Ancre-toi : pieds au sol, mâchoire et épaules relâchées, regarde les informations disponibles.',
+      'Reprends la prochaine action simple — ou passe à une question accessible, puis reviens.',
+    ],
+    methods: ['nrar-stress', 'simulation-examen'],
+    aliases: ['panique', 'je panique', 'stress', 'crise', 'je bloque', 'blackout examen'],
+    source: 'Source V2 — §8 SOS, p. 35',
+  },
+  {
+    id: 'vingt-minutes',
+    title: 'Je n’ai que 20-30 minutes',
+    tagline: 'Un circuit court, à fort rendement.',
+    doNow: [
+      'Rappel actif sur la portion visée.',
+      'Reprends tes erreurs antérieures.',
+      'Revois distinctions et confusions (discriminants rois).',
+      'Chiffres, conditions, exceptions.',
+      'Quelques QCM ciblés.',
+      'Pas de nouvelle fiche longue.',
+    ],
+    methods: ['revision-rapide', 'rappel-actif', 'blurting'],
+    aliases: ['20 minutes', '30 minutes', 'peu de temps', 'pause courte', 'entre deux cours', 'temps court'],
+    source: 'Source V2 — §8 SOS, p. 35',
+  },
+  {
+    id: 'comprends-plus-rien',
+    title: 'Je ne comprends plus rien',
+    tagline: 'Descends d’un niveau, repars du minimal suffisant.',
+    doNow: [
+      'Identifie le niveau qui casse : vocabulaire ? prérequis ? causalité ? spatial ? chronologie ? surcharge ?',
+      'Repars du niveau minimal suffisant — pas du début du chapitre.',
+      'Répare seulement le prérequis qui bloque.',
+      'Reprends l’unité en cours, en plus petit.',
+    ],
+    methods: ['feynman', 'auto-explication', 'chunking', 'chaine-causale'],
+    aliases: ['je comprends plus rien', 'je ne comprends plus rien', 'perdu', 'largué', 'rien compris', 'incompréhensible'],
+    source: 'Source V2 — §8 SOS, p. 35',
+  },
+  {
+    id: 'detresse',
+    title: 'Je tourne en boucle / détresse persistante',
+    tagline: 'Là, la bonne action n’est pas une méthode de travail.',
+    doNow: [
+      'Arrête l’optimisation scolaire pour aujourd’hui.',
+      'Si le fonctionnement, le sommeil ou la sécurité se dégradent : cherche un soutien humain — proche, médecin, service de santé universitaire.',
+      'Tu peux revenir aux méthodes quand la base est de nouveau stable.',
+    ],
+    methods: ['journee-minimale'],
+    aliases: [
+      'détresse',
+      'detresse',
+      'je tourne en boucle',
+      'je n’arrive plus à travailler',
+      'craquer',
+      'plus envie',
+      'au bout du rouleau',
+    ],
+    careNotice: true,
+    source: 'Source V2 — §8 SOS, p. 35',
+  },
+];
+
+export const SOS_BY_ID: ReadonlyMap<string, SosProtocol> = new Map(
+  SOS_PROTOCOLS.map((s) => [s.id, s]),
+);

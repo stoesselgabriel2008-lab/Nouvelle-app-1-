@@ -1,0 +1,164 @@
+/* ============================================================
+   PASS Methods OS — design tokens
+   Inspiré des Human Interface Guidelines actuelles :
+   - typographie système Apple ;
+   - couche navigation en « verre » (blur + saturation), contenu
+     sur surfaces stables et lisibles ;
+   - light / dark / system ;
+   - safe areas iPhone (viewport-fit=cover).
+   ============================================================ */
+
+:root {
+  /* Typographie — stack système Apple adaptée au web. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --fs-large-title: 2.125rem;   /* 34 */
+  --fs-title1: 1.75rem;         /* 28 */
+  --fs-title2: 1.375rem;        /* 22 */
+  --fs-title3: 1.25rem;         /* 20 */
+  --fs-headline: 1.0625rem;     /* 17 semibold */
+  --fs-body: 1.0625rem;         /* 17 */
+  --fs-callout: 1rem;           /* 16 */
+  --fs-subhead: 0.9375rem;      /* 15 */
+  --fs-footnote: 0.8125rem;     /* 13 */
+  --fs-caption: 0.75rem;        /* 12 */
+
+  --lh-tight: 1.22;
+  --lh-body: 1.47;
+
+  /* Espacement (base 4). */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+
+  /* Rayons. */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-pill: 999px;
+
+  /* Safe areas. */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* Dimensions de navigation. */
+  --tabbar-h: 64px;
+  --content-max: 700px;
+
+  /* Palette — light (défaut). */
+  --bg: #f2f2f7;
+  --bg-elevated: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9e9ee;
+  --bg-inset: #e4e4ea;
+  --label: #0b0b0f;
+  --label-2: rgba(60, 60, 67, 0.72);
+  --label-3: rgba(60, 60, 67, 0.5);
+  --label-4: rgba(60, 60, 67, 0.26);
+  --separator: rgba(60, 60, 67, 0.16);
+  --separator-strong: rgba(60, 60, 67, 0.29);
+
+  --tint: #0a63e8;
+  --tint-strong: #0752c4;
+  --on-tint: #ffffff;
+  --tint-soft: rgba(10, 99, 232, 0.1);
+  --red: #e03131;
+  --red-soft: rgba(224, 49, 49, 0.09);
+  --on-red: #ffffff;
+  --green: #1f9d55;
+
+  /* Verre — réservé à la couche navigation (tab bar, barres, recherche). */
+  --glass-bg: rgba(248, 248, 252, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow:
+    0 12px 32px rgba(20, 24, 40, 0.14),
+    0 2px 8px rgba(20, 24, 40, 0.08);
+  --glass-blur: saturate(180%) blur(22px);
+
+  --card-shadow: 0 1px 2px rgba(16, 20, 34, 0.05);
+  --focus-ring: 0 0 0 3px rgba(10, 99, 232, 0.35);
+
+  color-scheme: light;
+}
+
+/* Dark — préférence système (sans choix explicite). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #000000;
+    --bg-elevated: #1c1c1e;
+    --bg-secondary: #1c1c1e;
+    --bg-tertiary: #2c2c2e;
+    --bg-inset: #131315;
+    --label: #f5f5f7;
+    --label-2: rgba(235, 235, 245, 0.66);
+    --label-3: rgba(235, 235, 245, 0.44);
+    --label-4: rgba(235, 235, 245, 0.22);
+    --separator: rgba(84, 84, 88, 0.5);
+    --separator-strong: rgba(84, 84, 88, 0.72);
+
+    --tint: #4c94ff;
+    --tint-strong: #79afff;
+    --on-tint: #04101f;
+    --tint-soft: rgba(76, 148, 255, 0.16);
+    --red: #ff5f57;
+    --red-soft: rgba(255, 95, 87, 0.14);
+    --on-red: #200404;
+    --green: #43c478;
+
+    --glass-bg: rgba(22, 22, 26, 0.74);
+    --glass-border: rgba(255, 255, 255, 0.09);
+    --glass-shadow:
+      0 12px 36px rgba(0, 0, 0, 0.55),
+      0 2px 8px rgba(0, 0, 0, 0.4);
+
+    --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --focus-ring: 0 0 0 3px rgba(76, 148, 255, 0.45);
+
+    color-scheme: dark;
+  }
+}
+
+/* Dark — choix explicite (le réglage gagne dans les deux sens). */
+:root[data-theme='dark'] {
+  --bg: #000000;
+  --bg-elevated: #1c1c1e;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e;
+  --bg-inset: #131315;
+  --label: #f5f5f7;
+  --label-2: rgba(235, 235, 245, 0.66);
+  --label-3: rgba(235, 235, 245, 0.44);
+  --label-4: rgba(235, 235, 245, 0.22);
+  --separator: rgba(84, 84, 88, 0.5);
+  --separator-strong: rgba(84, 84, 88, 0.72);
+
+  --tint: #4c94ff;
+  --tint-strong: #79afff;
+  --on-tint: #04101f;
+  --tint-soft: rgba(76, 148, 255, 0.16);
+  --red: #ff5f57;
+  --red-soft: rgba(255, 95, 87, 0.14);
+  --on-red: #200404;
+  --green: #43c478;
+
+  --glass-bg: rgba(22, 22, 26, 0.74);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --focus-ring: 0 0 0 3px rgba(76, 148, 255, 0.45);
+
+  color-scheme: dark;
+}

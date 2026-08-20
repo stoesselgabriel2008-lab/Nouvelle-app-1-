@@ -1,0 +1,161 @@
+/* ============================================================
+   Base : reset léger, typographie, règles anti-troncature.
+   Règle produit non négociable (Source V2, §10) :
+   aucun titre ni texte méthodologique n'est tronqué. Pas de
+   line-clamp, pas d'ellipsis sur les contenus, pas de hauteur
+   fixe qui coupe : les cartes grandissent avec le contenu.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--label);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+/* Le texte revient toujours à la ligne, jamais d'ellipsis silencieux. */
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+dt,
+dd,
+button,
+a,
+span {
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: var(--lh-tight);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--tint);
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+}
+
+svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: var(--tint-soft);
+}
+
+/* Respect de prefers-reduced-motion : aucune animation imposée. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Typo utilitaires. */
+.large-title {
+  font-size: var(--fs-large-title);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.title2 {
+  font-size: var(--fs-title2);
+  font-weight: 700;
+  letter-spacing: -0.014em;
+}
+
+.title3 {
+  font-size: var(--fs-title3);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.headline {
+  font-size: var(--fs-headline);
+  font-weight: 600;
+}
+
+.subhead {
+  font-size: var(--fs-subhead);
+}
+
+.footnote {
+  font-size: var(--fs-footnote);
+}
+
+.caption {
+  font-size: var(--fs-caption);
+}
+
+.muted {
+  color: var(--label-2);
+}
+
+.muted-3 {
+  color: var(--label-3);
+}

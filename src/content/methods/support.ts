@@ -1,0 +1,103 @@
+import type { Method } from '../types';
+
+/** Rapport au support : notes, relecture. Source V2, §6. */
+export const supportMethods: Method[] = [
+  {
+    id: 'prise-de-notes',
+    title: 'Prise de notes ciblée',
+    subtitle: 'Cours · Support',
+    summary:
+      'Le poly reste la source : ne note que le complément oral, la précision de périmètre, l’exemple ou le lien absent du poly. Ne le réécris pas au propre.',
+    categories: ['structurer', 'comprendre'],
+    subjects: [],
+    infoTypes: ['texte'],
+    problems: ['concentration', 'comprends-pas'],
+    aliases: [
+      'prise de notes',
+      'notes',
+      'annoter',
+      'notes cours',
+      'fiche',
+      'faire des fiches',
+      'recopier le cours',
+    ],
+    keywords: ['complément', 'périmètre', 'abréviations', 'poly'],
+    tags: ['support'],
+    whenToUse: [
+      'Pour les compléments oraux, précisions de périmètre, exemples ou liens absents du poly.',
+    ],
+    avoid: [
+      'Ne réécris pas le poly au propre et ne fabrique pas une fiche esthétique qui ne change pas la restitution.',
+    ],
+    quickSteps: [
+      'Garde le poly comme source.',
+      'Note seulement le complément ou la précision.',
+      'Utilise des abréviations stables.',
+      'Réserve un espace aux questions.',
+      'Ne recopie pas au propre sans bénéfice mesurable.',
+    ],
+    procedure: [
+      { text: 'Garder le poly comme source.' },
+      { text: 'Noter seulement le complément ou la précision.' },
+      { text: 'Utiliser des abréviations stables.' },
+      { text: 'Réserver un espace aux questions.', detail: 'Les questions notées deviennent ta liste de questions (voir la fiche dédiée).' },
+      { text: 'Ne pas recopier au propre sans bénéfice mesurable.' },
+    ],
+    mastery: [
+      'Les notes ajoutent une information utile au lieu de dupliquer le support.',
+    ],
+    related: ['liste-questions', 'relecture-surlignage', 'chunking'],
+    source: 'Source V2 — §6 Bibliothèque, p. 27-28',
+  },
+  {
+    id: 'relecture-surlignage',
+    title: 'Relecture / surlignage : usage limité',
+    subtitle: 'Orientation · À ne pas confondre',
+    summary:
+      'Relire sert à repérer, retrouver, orienter ou corriger un trou identifié — jamais à prouver la maîtrise. La sensation de familiarité n’est pas de la mémoire.',
+    categories: ['comprendre'],
+    subjects: [],
+    infoTypes: ['texte'],
+    problems: ['oublie', 'reconnais-seulement'],
+    aliases: [
+      'relire',
+      'relecture',
+      'surligner',
+      'surlignage',
+      'highlighter',
+      'stabilo',
+      'ça semble familier',
+      'je relis tout le temps',
+    ],
+    keywords: ['familiarité', 'orientation', 'illusion de maîtrise', 'passif'],
+    tags: ['usage limité'],
+    whenToUse: [
+      'Pour repérer le plan, retrouver un passage, orienter l’attention ou corriger un trou identifié.',
+    ],
+    avoid: [
+      'Ne l’utilise pas comme preuve de maîtrise ni comme méthode principale de consolidation.',
+    ],
+    quickSteps: [
+      'Lis avec une question précise.',
+      'Surligne seulement les discriminants, si utile.',
+      'Ferme le support.',
+      'Produis.',
+      'Rouvre uniquement pour corriger.',
+    ],
+    procedure: [
+      { text: 'Lire avec une question précise.' },
+      { text: 'Surligner seulement les discriminants si utile.' },
+      { text: 'Fermer le support.' },
+      { text: 'Produire.', detail: 'La relecture n’est finie que lorsqu’elle a déclenché une production.' },
+      { text: 'Rouvrir uniquement pour corriger.' },
+    ],
+    mastery: [
+      'La relecture conduit à une production, pas à une familiarité confortable.',
+    ],
+    limits: [
+      '« Relire jusqu’à connaître » : la familiarité peut masquer un rappel libre faible.',
+    ],
+    related: ['rappel-actif', 'pretest', 'feuille-blanche'],
+    source: 'Source V2 — §6 Bibliothèque, p. 28',
+  },
+];
