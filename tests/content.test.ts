@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { METHODS, METHODS_BY_ID } from '../src/content/methods/index';
 import { SUBJECTS } from '../src/content/subjects';
-import { SOS_PROTOCOLS } from '../src/content/sos';
+import { SOS_PROTOCOLS, SOS_BY_ID } from '../src/content/sos';
 import { PERSONAL_RULES, PROFILE_SIGNALS } from '../src/content/profile';
 import { ALGORITHM_STEPS, INFO_TYPE_MATRIX, MYTHS, RESEARCH_SOURCES } from '../src/content/reference';
 import { SHORTCUTS } from '../src/content/shortcuts';
+import { APP_VERSION, CHANGELOG } from '../src/lib/version';
+import { TIMER_CONFIGS } from '../src/ui/FocusTimer';
 
 /**
  * Garantie de couverture : rien de la Source V2 ne doit disparaître
@@ -119,6 +121,76 @@ describe('bibliothèque des méthodes', () => {
     for (const m of METHODS) {
       for (const r of m.related) {
         expect(METHODS_BY_ID.has(r), `${m.id} → ${r}`).toBe(true);
+      }
+    }
+  });
+
+  it('chaque fiche a un exemple PASS concret', () => {
+    for (const m of METHODS) {
+      expect(m.example !== undefined && m.example.length > 30, `${m.id} sans exemple`).toBe(
+        true,
+      );
+    }
+  });
+
+  it('les liens « Ensuite » résolvent et ne bouclent pas sur eux-mêmes', () => {
+    let count = 0;
+    for (const m of METHODS) {
+      if (m.next === undefined) continue;
+      count++;
+      expect(METHODS_BY_ID.has(m.next.id), `${m.id} → next ${m.next.id}`).toBe(true);
+      expect(m.next.id, `${m.id} pointe sur lui-même`).not.toBe(m.id);
+      expect(m.next.label.length, `${m.id} next sans label`).toBeGreaterThan(5);
+    }
+    expect(count).toBeGreaterThanOrEqual(25);
+  });
+
+  it('« Pourquoi ça marche » est présent sur les méthodes à preuve forte', () => {
+    const expected = [
+      'rappel-actif',
+      'feuille-blanche',
+      'rappel-differe',
+      'repetition-espacee',
+      'pretest',
+      'auto-explication',
+      'exemple-resolu',
+      'interleaving',
+      'feynman',
+      'imagerie-interactive',
+      'tableau-contraste',
+      'calibration-confiance',
+      'qcm-actif',
+      'variation',
+    ];
+    for (const id of expected) {
+      const m = METHODS_BY_ID.get(id);
+      expect(
+        m?.whyItWorks !== undefined && m.whyItWorks.length > 40,
+        `${id} sans « pourquoi ça marche »`,
+      ).toBe(true);
+    }
+  });
+});
+
+describe('nouveautés, version et minuteurs', () => {
+  it('le journal des nouveautés commence par la version courante', () => {
+    expect(CHANGELOG.length).toBeGreaterThanOrEqual(2);
+    expect(CHANGELOG[0]?.version).toBe(APP_VERSION);
+    for (const e of CHANGELOG) {
+      expect(e.items.length, e.version).toBeGreaterThan(0);
+      for (const item of e.items) expect(item.length, e.version).toBeGreaterThan(15);
+    }
+  });
+
+  it('chaque minuteur est rattaché à une fiche ou un protocole existant', () => {
+    for (const [id, cfg] of Object.entries(TIMER_CONFIGS)) {
+      expect(
+        METHODS_BY_ID.has(id) || SOS_BY_ID.has(id),
+        `minuteur orphelin : ${id}`,
+      ).toBe(true);
+      expect(cfg.presets.length, id).toBeGreaterThan(0);
+      for (const p of cfg.presets) {
+        expect(p.minutes, `${id}/${p.label}`).toBeGreaterThan(0);
       }
     }
   });

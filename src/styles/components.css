@@ -885,6 +885,417 @@ li + li > .row::before {
   margin: var(--sp-4) 0;
 }
 
+/* ----------------------------------------------- Entrée de page (douce) */
+
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    animation: page-in 0.22s ease both;
+  }
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Retour au toucher : léger, instantané, jamais gênant. */
+.row:active,
+.option-btn:active,
+.sos-btn:active,
+.chip:active,
+.hero-card:active,
+.tophit:active,
+.check-step:active {
+  transform: scale(0.988);
+}
+
+.row,
+.option-btn,
+.sos-btn,
+.chip,
+.hero-card,
+.tophit,
+.check-step {
+  transition: transform 0.08s ease, background-color 0.15s ease;
+}
+
+/* ----------------------------------------------- Carte d'entrée (Pour moi) */
+
+.hero-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  text-align: left;
+  margin: var(--sp-2) 0 var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--r-xl);
+  background: var(--tint);
+  color: var(--on-tint);
+  box-shadow: 0 8px 24px rgba(10, 99, 232, 0.28);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .hero-card {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+}
+
+:root[data-theme='dark'] .hero-card {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.hero-card h2 {
+  font-size: var(--fs-title3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.hero-card p {
+  margin-top: 3px;
+  font-size: var(--fs-subhead);
+  opacity: 0.85;
+}
+
+.hero-card svg {
+  margin-left: auto;
+  opacity: 0.9;
+}
+
+/* ----------------------------------------------- Panneau « Quoi de neuf » */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(8, 10, 16, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+@media (min-width: 740px) {
+  .sheet-backdrop {
+    align-items: center;
+    padding: var(--sp-6);
+  }
+}
+
+.sheet {
+  background: var(--bg-elevated);
+  width: 100%;
+  max-width: 560px;
+  max-height: min(78dvh, 640px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding-bottom: max(var(--sp-4), var(--safe-bottom));
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.28);
+}
+
+@media (min-width: 740px) {
+  .sheet {
+    border-radius: var(--r-xl);
+    padding-bottom: var(--sp-4);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet {
+    animation: sheet-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  }
+
+  @keyframes sheet-in {
+    from {
+      transform: translateY(24px);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+}
+
+.sheet-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-4) var(--sp-2) var(--sp-5);
+}
+
+.sheet-body {
+  overflow-y: auto;
+  padding: var(--sp-2) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.sheet-foot {
+  padding: var(--sp-3) var(--sp-5) 0;
+}
+
+/* ----------------------------------------------- Pastille hors ligne */
+
+.offline-pill {
+  position: fixed;
+  top: max(var(--sp-2), var(--safe-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 0.5px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--r-pill);
+  padding: 6px 14px;
+  font-size: var(--fs-footnote);
+  font-weight: 600;
+  color: var(--label-2);
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------- Étapes cochables */
+
+.steps--check {
+  gap: var(--sp-2);
+}
+
+.steps--check > li {
+  padding-left: 0;
+  counter-increment: none;
+}
+
+.steps--check > li::before {
+  content: none;
+}
+
+.check-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--sp-2);
+  margin: calc(-1 * var(--sp-2)) 0;
+  border-radius: var(--r-sm);
+}
+
+.check-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-subhead);
+  font-weight: 700;
+  background: var(--tint);
+  color: var(--on-tint);
+  transition: background-color 0.15s ease;
+}
+
+.is-done .check-dot {
+  background: var(--green);
+  color: #fff;
+}
+
+.check-text {
+  padding-top: 2px;
+  transition: opacity 0.15s ease;
+}
+
+.is-done .check-text {
+  opacity: 0.55;
+}
+
+.check-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.check-reset {
+  min-height: 32px;
+  font-size: var(--fs-footnote);
+}
+
+/* ----------------------------------------------- Minuteur */
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.timer-display {
+  text-align: center;
+  font-size: clamp(2.6rem, 12vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.timer-bar {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+}
+
+.timer-bar span {
+  display: block;
+  height: 100%;
+  background: var(--tint);
+  border-radius: 3px;
+  transition: width 0.25s linear;
+}
+
+.timer-actions {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.timer-actions .btn {
+  flex: 1;
+}
+
+.timer-actions .btn--quiet {
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------- Pseudo-champ de recherche */
+
+.search-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: 12px var(--sp-4);
+  margin-top: var(--sp-3);
+  border-radius: var(--r-pill);
+  background: var(--bg-elevated);
+  box-shadow: var(--card-shadow);
+  color: var(--label-3);
+  font-size: var(--fs-body);
+  text-align: left;
+}
+
+/* ----------------------------------------------- Meilleur résultat */
+
+.tophit {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--card-shadow);
+  border: 1.5px solid var(--tint);
+  color: var(--label);
+}
+
+.tophit .tophit-kind {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tint);
+}
+
+.tophit h2 {
+  font-size: var(--fs-headline);
+  font-weight: 650;
+  margin-top: 2px;
+}
+
+.tophit p {
+  margin-top: 4px;
+  font-size: var(--fs-subhead);
+  color: var(--label-2);
+}
+
+/* ----------------------------------------------- Fiche : pourquoi / ensuite */
+
+.why-card {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  background: var(--bg-elevated);
+  box-shadow: var(--card-shadow);
+  border-left: 3px solid var(--tint);
+}
+
+.next-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--tint-soft);
+  color: var(--label);
+}
+
+.next-card .next-kicker {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tint);
+}
+
+.next-card h2 {
+  font-size: var(--fs-headline);
+  font-weight: 650;
+  margin-top: 2px;
+}
+
+.next-card p {
+  margin-top: 2px;
+  font-size: var(--fs-subhead);
+  color: var(--label-2);
+}
+
+.next-card svg {
+  margin-left: auto;
+  color: var(--tint);
+}
+
+/* ----------------------------------------------- Récap diagnostic */
+
+.answers-recap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin: calc(-1 * var(--sp-2)) 0 var(--sp-2);
+}
+
+.answers-recap .tag {
+  background: var(--bg-elevated);
+  box-shadow: var(--card-shadow);
+  color: var(--label-2);
+  padding: 5px 12px;
+}
+
 .grid-2 {
   display: grid;
   gap: var(--sp-3);

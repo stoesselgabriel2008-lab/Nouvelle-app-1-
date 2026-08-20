@@ -65,7 +65,7 @@ test.describe('mode hors ligne', () => {
     // Recherche.
     await page.goto('#/recherche');
     await page.getByRole('searchbox').fill('feuille blanche');
-    await expect(page.locator('.list .row').first()).toContainText('Feuille blanche');
+    await expect(page.locator('.tophit')).toContainText('Feuille blanche');
 
     // Favoris (stockage local, hors ligne).
     await page.goto('#/methode/blurting');

@@ -153,6 +153,30 @@ export function nextQuestion(a: DiagAnswers): DiagQuestion | null {
   return null;
 }
 
+const ALL_QUESTIONS: DiagQuestion[] = [
+  Q_ITEM_TYPE,
+  Q_NATURE,
+  Q_PROBLEM,
+  Q_SUBJECT,
+  Q_ORDRE,
+  Q_POSITION,
+  Q_ARBITRAIRE,
+  Q_DEJA_PRODUIT,
+];
+
+/** Libellés lisibles des réponses données — pour le récapitulatif du résultat. */
+export function answerLabels(a: DiagAnswers): string[] {
+  const record = a as Record<string, string | undefined>;
+  const labels: string[] = [];
+  for (const q of ALL_QUESTIONS) {
+    const value = record[q.id];
+    if (value === undefined) continue;
+    const option = q.options.find((o) => o.value === value);
+    if (option !== undefined) labels.push(option.label);
+  }
+  return labels;
+}
+
 function effectiveType(a: DiagAnswers): DiagItemType {
   if (a.itemType !== 'inconnu' && a.itemType !== undefined) return a.itemType;
   switch (a.nature) {

@@ -54,6 +54,9 @@ export const appliquerMethods: Method[] = [
     limits: [
       'Bénéfice surtout chez les novices : quand l’expertise augmente, l’aide doit se retirer (fading, exercice à froid).',
     ],
+    whyItWorks:
+      'Chez le débutant, étudier une solution expliquée charge moins la mémoire de travail que chercher à l’aveugle — c’est l’effet worked-example, qui s’inverse quand l’expertise monte : d’où le retrait progressif de l’aide.',
+    next: { id: 'fading', label: 'Passe aux exemples à trous : l’aide doit commencer à se retirer.' },
     related: ['fading', 'auto-explication', 'exercice-a-froid', 'carte-calcul'],
     source: 'Source V2 — §6 Bibliothèque, p. 20-21',
   },
@@ -93,6 +96,9 @@ export const appliquerMethods: Method[] = [
     mastery: [
       'Tu reconstruis progressivement toute la procédure.',
     ],
+    example:
+      'Série de biophysique : premier exemple complet, deuxième sans l’étape « choix de la loi », troisième sans la mise en équation, quatrième entièrement seul.',
+    next: { id: 'exercice-a-froid', label: 'Dernier palier : plus aucune aide visible.' },
     related: ['exemple-resolu', 'exercice-a-froid', 'variation'],
     source: 'Source V2 — §6 Bibliothèque, p. 21',
   },
@@ -144,6 +150,9 @@ export const appliquerMethods: Method[] = [
     mastery: [
       'Tu choisis et appliques la méthode sans indice du chapitre.',
     ],
+    example:
+      'Un exercice de chimie jamais vu, formulaire fermé : données, inconnue, choix du modèle justifié, unités posées, prédiction du sens, résolution, contrôle dimensionnel.',
+    next: { id: 'variation', label: 'Change une donnée ou la formulation, et vérifie que la stratégie tient.' },
     related: ['fading', 'variation', 'interleaving', 'correction-par-cause'],
     source: 'Source V2 — §6 Bibliothèque, p. 21-22',
   },
@@ -183,6 +192,11 @@ export const appliquerMethods: Method[] = [
     mastery: [
       'Tu réussis malgré une formulation ou des données nouvelles.',
     ],
+    whyItWorks:
+      'Réussir sous variation prouve que tu as appris la stratégie, pas mémorisé la correction — c’est la différence entre refaire et savoir faire.',
+    example:
+      'Le même problème d’osmolarité, mais on te donne la concentration et on demande le volume : le principe est identique, la mémoire de la correction ne suffit plus.',
+    next: { id: 'interleaving', label: 'Mélange maintenant les familles : le choix fait partie de la maîtrise.' },
     related: ['exercice-a-froid', 'perturbations', 'interleaving', 'rappel-differe'],
     source: 'Source V2 — §6 Bibliothèque, p. 22',
   },
@@ -236,6 +250,11 @@ export const appliquerMethods: Method[] = [
     limits: [
       'Mélanger immédiatement n’est pas toujours mieux : l’entrelacement est utile après une acquisition initiale suffisante.',
     ],
+    whyItWorks:
+      'Mélanger les familles force à choisir la méthode à chaque item — la compétence que les séries homogènes ne travaillent jamais (Rohrer & Taylor, 2007).',
+    example:
+      'Dix exercices tirés de trois chapitres de physique, dans le désordre et sans titre de chapitre : avant chaque résolution, écris quelle famille c’est et pourquoi.',
+    next: { id: 'simulation-examen', label: 'Puis teste en conditions réelles : temps, grille, mélange complet.' },
     related: ['tableau-contraste', 'exercice-a-froid', 'variation', 'simulation-examen'],
     source: 'Source V2 — §6 Bibliothèque, p. 22-23',
     forMe: true,

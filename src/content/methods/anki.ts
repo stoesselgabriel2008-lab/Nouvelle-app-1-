@@ -63,6 +63,8 @@ export const ankiMethods: Method[] = [
     limits: [
       'Plus de cartes ≠ plus de mémoire : les nouvelles cartes créent une dette future ; qualité et soutenabilité priment.',
     ],
+    whyItWorks:
+      'Espacer les rappels au moment où tu es sur le point d’oublier maximise l’effet de chaque révision — c’est la pratique distribuée, l’une des deux techniques les mieux établies (Dunlosky et al., 2013), et FSRS calcule ce moment pour toi.',
     related: ['carte-qr', 'cloze-cible', 'carte-calcul', 'carte-contraste', 'image-occlusion', 'audit-deck'],
     source: 'Source V2 — §6 Bibliothèque, p. 25',
   },
@@ -102,6 +104,9 @@ export const ankiMethods: Method[] = [
     mastery: [
       'Une seule décision mentale nette est testée.',
     ],
+    example:
+      'Recto : « Localisation de la synthèse des protéines membranaires ? » Verso : « Réticulum endoplasmique granuleux » — une décision, une réponse, l’explication en extra.',
+    next: { id: 'repetition-espacee', label: 'Laisse FSRS planifier — et réponds honnêtement.' },
     related: ['repetition-espacee', 'cloze-cible', 'carte-contraste'],
     source: 'Source V2 — §6 Bibliothèque, p. 25',
   },
@@ -141,6 +146,9 @@ export const ankiMethods: Method[] = [
     mastery: [
       'Le trou teste la connaissance, pas la forme de la phrase.',
     ],
+    example:
+      '« Le surfactant est sécrété par les pneumocytes de type {{c1::II}} » — le contexte aide, le trou porte le discriminant, la réponse est unique.',
+    next: { id: 'repetition-espacee', label: 'Une carte n’existe que planifiée.' },
     related: ['carte-qr', 'repetition-espacee'],
     source: 'Source V2 — §6 Bibliothèque, p. 26',
   },
@@ -178,6 +186,9 @@ export const ankiMethods: Method[] = [
     mastery: [
       'Tu sais calculer ET reconnaître quand ce mini-format est pertinent.',
     ],
+    example:
+      'Recto : « 0,9 g de NaCl dans 100 mL — concentration massique, avec l’unité ? » Verso : « 9 g/L », plus le contrôle attendu. L’application courte devient un réflexe.',
+    next: { id: 'exercice-a-froid', label: 'Les cartes automatisent ; les problèmes entiers restent des problèmes.' },
     related: ['exemple-resolu', 'exercice-a-froid', 'repetition-espacee'],
     source: 'Source V2 — §6 Bibliothèque, p. 26',
   },
@@ -225,6 +236,9 @@ export const ankiMethods: Method[] = [
     mastery: [
       'Le critère décisif revient plus vite que la confusion.',
     ],
+    example:
+      'Recto : « Qu’est-ce qui distingue à coup sûr ces deux transporteurs ? » Verso : le discriminant roi + une ligne de justification — pas deux cartes factuelles séparées.',
+    next: { id: 'interleaving', label: 'Alterne des questions A/B pour stabiliser la discrimination.' },
     related: ['tableau-contraste', 'carte-qr', 'repetition-espacee', 'interleaving'],
     source: 'Source V2 — §6 Bibliothèque, p. 26-27',
     forMe: true,
@@ -273,6 +287,9 @@ export const ankiMethods: Method[] = [
     mastery: [
       'Le deck fait gagner du temps sans ajouter d’erreurs ni de dette inutile.',
     ],
+    example:
+      'Deck de prépa reçu en début de semestre : demi-heure d’audit — suppression du hors-poly de TA fac, réécriture des cartes ambiguës, suspension des pavés, ajout de tes seules lacunes.',
+    next: { id: 'repetition-espacee', label: 'Un deck audité se travaille ensuite comme le tien.' },
     related: ['repetition-espacee', 'carte-qr', 'triage-retard'],
     source: 'Source V2 — §6 Bibliothèque, p. 27',
   },

@@ -51,6 +51,9 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Tu peux reconstruire la hiérarchie avant les items isolés.',
     ],
+    whyItWorks:
+      'La mémoire de travail sature vite face à une liste plate ; regroupée en 3 à 7 blocs porteurs de sens, la même information devient tenable — et la structure sert ensuite d’index de rappel.',
+    next: { id: 'feuille-blanche', label: 'Teste la hiérarchie sans support : branches d’abord, détails ensuite.' },
     related: ['mind-map', 'feuille-blanche', 'carte-conceptuelle', 'acronyme'],
     source: 'Source V2 — §6 Bibliothèque, p. 12-13',
     forMe: true,
@@ -99,6 +102,9 @@ export const structurerMethods: Method[] = [
     limits: [
       'Utile pour la vue d’ensemble et les relations ; mauvaise si décorative et copiée.',
     ],
+    example:
+      'Fin d’un chapitre d’immunologie : support fermé, concept central au milieu, 5 branches maximum, uniquement les mots qui discriminent — puis comparaison au poly.',
+    next: { id: 'liste-questions', label: 'Fais travailler ta carte : elle doit répondre à de vraies questions.' },
     related: ['chunking', 'carte-conceptuelle', 'feuille-blanche'],
     source: 'Source V2 — §6 Bibliothèque, p. 13',
   },
@@ -138,6 +144,9 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Chaque flèche peut être lue comme une phrase scientifique correcte.',
     ],
+    example:
+      '« Hormone → stimule → glande cible », « rétrocontrôle → inhibe → sécrétion » : chaque flèche du chapitre d’endocrinologie devient une phrase vérifiable.',
+    next: { id: 'feuille-blanche', label: 'Reconstruis le réseau à froid, verbes compris.' },
     related: ['mind-map', 'chaine-causale', 'double-representation'],
     source: 'Source V2 — §6 Bibliothèque, p. 13-14',
   },
@@ -200,6 +209,9 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Tu peux expliquer chaque transition et prédire un blocage.',
     ],
+    whyItWorks:
+      'Une voie apprise comme une suite de mots se récite ; une voie apprise comme une chaîne de causes se reconstruit — et résiste aux questions qui changent le point d’entrée.',
+    next: { id: 'perturbations', label: 'Bloque un maillon et prédis : le test qui prouve que ce n’est pas une poésie.' },
     related: ['perturbations', 'tableau-contraste', 'feynman', 'reconstruction-schema', 'carte-contraste'],
     source: 'Source V2 — §6 Bibliothèque, p. 14',
     forMe: true,
@@ -251,6 +263,9 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Tu peux prédire sans réciter toute la chaîne.',
     ],
+    whyItWorks:
+      'Prédire la conséquence d’un blocage oblige à utiliser la causalité, pas l’ordre appris — c’est exactement la forme des questions de transfert en QCM.',
+    next: { id: 'rappel-differe', label: 'Refais deux perturbations dans quelques jours, sans relire la voie.' },
     related: ['chaine-causale', 'auto-explication', 'variation', 'qcm-actif'],
     source: 'Source V2 — §6 Bibliothèque, p. 14-15',
   },
@@ -315,6 +330,9 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Tu peux justifier rapidement pourquoi un item est A et pas B.',
     ],
+    whyItWorks:
+      'L’interférence naît de l’apprentissage séparé de notions semblables ; la comparaison directe fait ressortir ce qui les distingue, et le « discriminant roi » devient ton réflexe de vérification en QCM.',
+    next: { id: 'carte-contraste', label: 'Fixe le discriminant roi dans une carte piège / contraste.' },
     related: ['carte-contraste', 'interleaving', 'chaine-causale', 'qcm-actif'],
     source: 'Source V2 — §6 Bibliothèque, p. 15',
     forMe: true,
@@ -366,6 +384,7 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Tu peux reconstruire l’ordre et expliquer les transformations.',
     ],
+    next: { id: 'rappel-differe', label: 'Reteste l’ordre à distance : c’est lui qui glisse en différé.' },
     related: ['histoire-chainage', 'reconstruction-schema', 'rappel-differe', 'chaine-causale'],
     source: 'Source V2 — §6 Bibliothèque, p. 15-16',
   },
@@ -405,6 +424,9 @@ export const structurerMethods: Method[] = [
     mastery: [
       'Chaque représentation peut reconstruire l’autre.',
     ],
+    example:
+      'Potentiel d’action : la phrase (« dépolarisation puis repolarisation par… ») ET la courbe tracée à main levée. Cache la courbe, redonne la phrase — et inversement.',
+    next: { id: 'rappel-differe', label: 'Masque un format et régénère l’autre, quelques jours plus tard.' },
     related: ['reconstruction-schema', 'carte-conceptuelle', 'chaine-causale'],
     source: 'Source V2 — §6 Bibliothèque, p. 19',
   },

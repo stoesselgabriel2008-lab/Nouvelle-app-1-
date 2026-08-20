@@ -62,6 +62,9 @@ export const mnemotechniquesMethods: Method[] = [
     limits: [
       'Une mnémotechnique est un crochet pour l’arbitraire, pas une façon de remplacer une relation compréhensible.',
     ],
+    whyItWorks:
+      'Quand rien ne relie logiquement deux éléments, une interaction imagée fabrique l’indice de récupération qui manque — d’où sa force sur l’arbitraire, et son inutilité sur le compréhensible.',
+    next: { id: 'rappel-differe', label: 'Vérifie que l’image redonne la cible exacte, à distance.' },
     related: ['association-phonetique', 'histoire-chainage', 'palais-mental', 'carte-qr'],
     source: 'Source V2 — §6 Bibliothèque, p. 16-17',
     forMe: true,
@@ -116,6 +119,9 @@ export const mnemotechniquesMethods: Method[] = [
     limits: [
       'Toute information ne mérite pas une mnémotechnique : si la relation est compréhensible, comprendre coûte souvent moins cher.',
     ],
+    example:
+      'Un nom d’enzyme qui sonne comme un mot familier : construis une mini-scène où ce mot exécute la fonction de l’enzyme — puis récite le nom scientifique exact, pas le surnom.',
+    next: { id: 'rappel-differe', label: 'Reteste le terme exact sans l’indice écrit.' },
     related: ['imagerie-interactive', 'carte-qr', 'rappel-differe'],
     source: 'Source V2 — §6 Bibliothèque, p. 17',
   },
@@ -155,6 +161,9 @@ export const mnemotechniquesMethods: Method[] = [
     mastery: [
       'L’acronyme rappelle toute la liste sans omission ni permutation importante.',
     ],
+    example:
+      'Huit os du carpe à donner dans l’ordre : une phrase dont chaque initiale rappelle un os — puis récitation complète et comptage (huit, pas sept).',
+    next: { id: 'rappel-differe', label: 'Reteste l’exhaustivité à distance : l’omission est silencieuse.' },
     related: ['histoire-chainage', 'chunking', 'palais-mental'],
     source: 'Source V2 — §6 Bibliothèque, p. 17-18',
   },
@@ -194,6 +203,9 @@ export const mnemotechniquesMethods: Method[] = [
     mastery: [
       'L’histoire restitue l’ordre sans ajouter d’éléments faux.',
     ],
+    example:
+      'Une suite de stades à garder dans l’ordre : chaque stade devient une image, chaque image déclenche la suivante — histoire courte, étrange, et récitée sans support.',
+    next: { id: 'rappel-differe', label: 'Récite la suite complète dans quelques jours.' },
     related: ['imagerie-interactive', 'acronyme', 'frise-chronologique', 'palais-mental'],
     source: 'Source V2 — §6 Bibliothèque, p. 18',
   },
@@ -246,6 +258,9 @@ export const mnemotechniquesMethods: Method[] = [
     limits: [
       'Ne remplace jamais la compréhension d’un mécanisme : c’est un rangement pour l’arbitraire.',
     ],
+    example:
+      'Ton trajet vers la fac, dix repères fixes : un par élément d’une liste longue à forte valeur (classification exigée par le poly, par exemple) — puis parcours mental complet.',
+    next: { id: 'rappel-differe', label: 'Refais le parcours mental à distance, dans les deux sens.' },
     related: ['imagerie-interactive', 'histoire-chainage', 'acronyme'],
     source: 'Source V2 — §6 Bibliothèque, p. 18-19',
   },

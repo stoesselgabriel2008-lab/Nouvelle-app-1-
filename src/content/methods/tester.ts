@@ -54,6 +54,9 @@ export const testerMethods: Method[] = [
     limits: [
       'Un QCM correct peut tester la reconnaissance seulement : ajoute parfois un rappel sans propositions.',
     ],
+    whyItWorks:
+      'Chaque proposition est une décision vrai/faux à part entière : c’est elle qu’il faut corriger — le score global cache autant qu’il montre.',
+    next: { id: 'correction-par-cause', label: 'Code chaque erreur : la correction dépend de la cause.' },
     related: ['correction-par-cause', 'calibration-confiance', 'simulation-examen', 'rappel-actif'],
     source: 'Source V2 — §6 Bibliothèque, p. 23',
   },
@@ -116,6 +119,11 @@ export const testerMethods: Method[] = [
     limits: [
       'Toute erreur ne mérite pas une flashcard : certaines exigent explication, exercice, règle de lecture ou gestion du temps.',
     ],
+    whyItWorks:
+      '« Travailler plus » ne corrige rien si la cause reste inconnue : une confusion se répare par un contraste, une erreur de lecture par une règle de lecture — jamais par une relecture générale.',
+    example:
+      'Item raté : tu avais lu « toujours » sans le voir. Code L (lecture), règle : souligner chaque absolu avant de répondre. Retest sur 10 items la semaine suivante.',
+    next: { id: 'rappel-differe', label: 'Reteste la famille d’erreurs à distance — c’est le vrai critère.' },
     related: ['qcm-actif', 'calibration-confiance', 'tableau-contraste', 'rappel-differe'],
     source: 'Source V2 — §6 Bibliothèque, p. 23',
   },
@@ -166,6 +174,11 @@ export const testerMethods: Method[] = [
     mastery: [
       'Ta confiance devient mieux calibrée à ta performance réelle.',
     ],
+    whyItWorks:
+      'On révise mal ce qu’on croit déjà savoir : comparer confiance et exactitude remet le tri à l’endroit — les erreurs sûres d’elles-mêmes d’abord.',
+    example:
+      'Sur 20 items, note F/M/F… puis compare : deux erreurs en confiance forte valent plus de travail que cinq hésitations justes.',
+    next: { id: 'correction-par-cause', label: 'Traite en priorité les erreurs à forte confiance.' },
     related: ['qcm-actif', 'correction-par-cause', 'rappel-differe'],
     source: 'Source V2 — §6 Bibliothèque, p. 24',
   },
@@ -216,6 +229,8 @@ export const testerMethods: Method[] = [
     mastery: [
       'Tu consolides les points fragiles plutôt que de relire tout le programme.',
     ],
+    example:
+      '25 minutes avant un ED : blurting du chapitre, reprise de tes trois dernières erreurs, relecture des discriminants rois, cinq QCM ciblés. Rien de nouveau, rien de long.',
     related: ['rappel-actif', 'blurting', 'correction-par-cause', 'tableau-contraste'],
     source: 'Source V2 — §6 Bibliothèque, p. 31-32',
   },
@@ -265,6 +280,9 @@ export const testerMethods: Method[] = [
     mastery: [
       'La performance tient sous contraintes proches de l’épreuve.',
     ],
+    example:
+      'Un sujet d’annale complet, chronométré, grille papier, sans pause et sans correction avant la fin — puis analyse : score, temps par matière, confiance, codes d’erreur.',
+    next: { id: 'correction-par-cause', label: 'Chaque famille d’erreurs repart dans le circuit de correction.' },
     related: ['qcm-actif', 'correction-par-cause', 'interleaving', 'nrar-stress'],
     source: 'Source V2 — §6 Bibliothèque, p. 32',
   },

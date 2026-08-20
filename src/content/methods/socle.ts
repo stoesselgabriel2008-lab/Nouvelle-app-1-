@@ -63,6 +63,9 @@ export const socleMethods: Method[] = [
       'Un QCM correct peut ne tester que la reconnaissance : ajoute régulièrement un rappel sans propositions.',
       'La familiarité de relecture peut masquer un rappel libre faible.',
     ],
+    whyItWorks:
+      'Récupérer une information en mémoire la renforce davantage que la relire : c’est l’effet test, un des résultats les plus solides de la recherche sur l’apprentissage (Karpicke & Roediger, 2008).',
+    next: { id: 'rappel-differe', label: 'Valide à distance ce que tu as produit aujourd’hui.' },
     related: ['feuille-blanche', 'blurting', 'rappel-differe', 'repetition-espacee', 'qcm-actif'],
     source: 'Source V2 — §6 Bibliothèque, p. 8-9',
     forMe: true,
@@ -123,6 +126,9 @@ export const socleMethods: Method[] = [
     mastery: [
       'La restitution est structurée et les omissions importantes disparaissent au retest.',
     ],
+    whyItWorks:
+      'Le rappel libre force ta mémoire à reconstruire sans aucun indice — exactement ce que la reconnaissance en QCM ne teste jamais.',
+    next: { id: 'rappel-differe', label: 'La même restitution, dans deux ou trois jours, sans prévenir.' },
     related: ['rappel-actif', 'blurting', 'reconstruction-schema', 'mind-map', 'rappel-differe'],
     source: 'Source V2 — §6 Bibliothèque, p. 9-10',
     forMe: true,
@@ -168,6 +174,9 @@ export const socleMethods: Method[] = [
     mastery: [
       'Tu récupères rapidement l’essentiel sans transformer l’exercice en copie décorative.',
     ],
+    example:
+      'Fin de journée, 5 minutes : tout ce qui te revient du chapitre du matin sur les jonctions cellulaires, en vrac, sans mise en page — puis comparaison et surlignage des trous.',
+    next: { id: 'feuille-blanche', label: 'La version structurée, quand tu veux tester l’architecture complète.' },
     related: ['feuille-blanche', 'rappel-actif', 'revision-rapide'],
     source: 'Source V2 — §6 Bibliothèque, p. 10',
   },
@@ -210,6 +219,10 @@ export const socleMethods: Method[] = [
     mastery: [
       'La notion revient après délai et sous une forme différente.',
     ],
+    whyItWorks:
+      'Ce qui est récupéré après un délai se consolide bien mieux : la difficulté du rappel espacé est précisément ce qui renforce la trace (pratique distribuée, Dunlosky et al., 2013).',
+    example:
+      'Tu as su réciter les dérivés des feuillets embryonnaires ce matin. Le vrai test : les redonner jeudi, à partir de la question inverse (« d’où vient ce tissu ? »).',
     related: ['rappel-actif', 'repetition-espacee', 'variation', 'calibration-confiance'],
     source: 'Source V2 — §6 Bibliothèque, p. 24',
     forMe: true,

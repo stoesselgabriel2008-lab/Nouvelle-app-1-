@@ -115,9 +115,18 @@ chaque terme du PDF est porté par les champs `aliases`/`keywords` de la fiche
 la plus pertinente (+ les lignes « Recherche : … » de chaque fiche du PDF).
 Les requêtes du prompt maître (§24) sont verrouillées par `tests/search.test.ts`.
 
-## Choix éditorial documenté
+## Choix éditoriaux documentés
 
 - L'onglet iPhone de la Bibliothèque est libellé **« Méthodes »** dans la tab bar :
   « Bibliothèque » ne tient pas en entier sur un iPhone de 320 px sans troncature,
   interdite par le §10. La page garde son titre « Bibliothèque » et la sidebar
   iPad affiche le libellé complet.
+- Depuis la v1.1, chaque fiche porte trois couches de présentation
+  supplémentaires, dérivées du corpus sans le modifier : un **exemple PASS**
+  concret (illustration d'usage), **« Pourquoi ça marche »** (une phrase adossée
+  aux repères de recherche du §12, uniquement sur les méthodes qui en ont une
+  solide) et **« Ensuite »** (la suite logique entre fiches, reprise des
+  chaînes du §4 et du §7 : exemple résolu → complétion → exercice à froid →
+  variation → entrelacement, chaîne causale → perturbations, etc.).
+  Les protocoles chronométrés (démarrage 10 min, Pomodoro, 20-30 min)
+  embarquent un minuteur réel.

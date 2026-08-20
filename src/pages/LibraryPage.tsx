@@ -8,6 +8,7 @@ import {
 } from '../content/taxonomy';
 import type { CategoryId } from '../content/types';
 import { MethodLinkList, Row, SectionLabel } from '../ui/bits';
+import { SearchPill } from '../ui/SearchPill';
 
 type Tab = 'methodes' | 'matieres' | 'reperes';
 
@@ -54,7 +55,9 @@ export function LibraryPage() {
         faire maintenant.
       </p>
 
-      <div className="seg" role="tablist" aria-label="Sections de la bibliothèque">
+      <SearchPill />
+
+      <div className="seg" role="tablist" aria-label="Sections de la bibliothèque" style={{ marginTop: 'var(--sp-4)' }}>
         <button
           type="button"
           aria-pressed={tab === 'methodes'}

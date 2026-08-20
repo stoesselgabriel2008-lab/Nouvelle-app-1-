@@ -66,6 +66,15 @@ npm run icons      # régénère les icônes PWA depuis le vectoriel (sharp)
 Recherche, bibliothèque, diagnostic et liens se mettent à jour sans toucher aux
 composants React.
 
+## Publier une évolution (panneau « Quoi de neuf »)
+
+1. Incrémenter `APP_VERSION` dans `src/lib/version.ts`.
+2. Ajouter une entrée en tête de `CHANGELOG` (phrases courtes, orientées
+   utilisateur).
+3. Pousser : au prochain lancement après mise à jour, l'app affiche le panneau
+   Nouveautés ; le bandeau « Recharger » gère l'installation de la nouvelle
+   version sans toucher aux données locales.
+
 ## Installer sur iPhone (sans App Store)
 
 1. Ouvrir **https://stoesselgabriel2008-lab.github.io/Nouvelle-app-1-/** dans Safari.

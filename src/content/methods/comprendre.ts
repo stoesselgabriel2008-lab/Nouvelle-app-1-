@@ -56,6 +56,9 @@ export const comprendreMethods: Method[] = [
     limits: [
       'Expliquer aide, mais une explication fluide peut être fausse : Feynman ne prouve pas la maîtrise, il la prépare.',
     ],
+    whyItWorks:
+      'Reformuler simplement expose les mots que tu utilises sans les comprendre ; la vérification au poly transforme ensuite l’explication en vrai contrôle.',
+    next: { id: 'qcm-actif', label: 'Vérifie par une question de transfert : c’est elle qui conclut un Feynman.' },
     related: ['auto-explication', 'rappel-actif', 'perturbations', 'qcm-actif'],
     source: 'Source V2 — §6 Bibliothèque, p. 10-11',
   },
@@ -105,6 +108,11 @@ export const comprendreMethods: Method[] = [
     mastery: [
       'Tu peux justifier la transition sans regarder la correction.',
     ],
+    whyItWorks:
+      'Expliquer pourquoi chaque étape est valide relie l’exemple aux principes du cours — c’est ce qui distingue comprendre de suivre (Chi et al., 1989).',
+    example:
+      'Correction d’un exercice d’enzymologie : à chaque ligne, finis la phrase « on fait ça parce que… ». Si elle ne se finit pas, le trou est là.',
+    next: { id: 'exercice-a-froid', label: 'Reprends un problème proche sans le modèle sous les yeux.' },
     related: ['feynman', 'exemple-resolu', 'chaine-causale', 'perturbations'],
     source: 'Source V2 — §6 Bibliothèque, p. 11',
   },
@@ -144,6 +152,11 @@ export const comprendreMethods: Method[] = [
     mastery: [
       'Le prétest t’aide à repérer et corriger les écarts, pas seulement à compter des erreurs.',
     ],
+    whyItWorks:
+      'Tenter une réponse avant d’étudier oriente l’attention et améliore la rétention — même quand la tentative est fausse (Richland, Kornell & Kao, 2009).',
+    example:
+      'Avant le cours sur le cycle cellulaire : « Qu’est-ce qui déclenche la mitose ? Qu’est-ce qui l’arrête ? » Deux réponses tentées en 1 minute, puis tu écoutes avec ces questions en tête.',
+    next: { id: 'liste-questions', label: 'Transforme tout le chapitre en questions auxquelles répondre à froid.' },
     related: ['liste-questions', 'rappel-actif', 'relecture-surlignage'],
     source: 'Source V2 — §6 Bibliothèque, p. 11-12',
   },
@@ -185,6 +198,9 @@ export const comprendreMethods: Method[] = [
     mastery: [
       'La liste déclenche des productions, pas une nouvelle lecture.',
     ],
+    example:
+      'Chapitre « indicateurs de santé » : une question de définition (incidence ?), une de causalité (pourquoi rapporter à une population ?), un contraste (incidence vs prévalence ?), une limite (quand l’indicateur trompe-t-il ?).',
+    next: { id: 'rappel-actif', label: 'Réponds à ta liste sans support — c’est là que tout se joue.' },
     related: ['pretest', 'rappel-actif', 'perturbations', 'tableau-contraste'],
     source: 'Source V2 — §6 Bibliothèque, p. 12',
   },

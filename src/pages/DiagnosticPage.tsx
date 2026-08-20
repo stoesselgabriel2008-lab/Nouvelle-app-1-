@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { diagnose, nextQuestion } from '../diagnostic/engine';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { answerLabels, diagnose, nextQuestion } from '../diagnostic/engine';
 import type { DiagAnswers, DiagQuestionId } from '../diagnostic/model';
 import { getMethod } from '../content/methods/index';
 import { SUBJECTS_BY_ID } from '../content/subjects';
@@ -17,9 +17,21 @@ function initialAnswers(params: URLSearchParams): DiagAnswers {
 }
 
 export function DiagnosticPage() {
-  const [params] = useSearchParams();
-  const [answers, setAnswers] = useState<DiagAnswers>(() => initialAnswers(params));
+  const location = useLocation();
+  const [answers, setAnswers] = useState<DiagAnswers>(() =>
+    initialAnswers(new URLSearchParams(location.search)),
+  );
   const [trail, setTrail] = useState<DiagQuestionId[]>([]);
+
+  // Un raccourci (« Formule / exercice ») peut arriver alors que la page est
+  // déjà montée : chaque navigation avec paramètres réamorce le questionnaire.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('type') !== null || params.get('problem') !== null) {
+      setAnswers(initialAnswers(params));
+      setTrail([]);
+    }
+  }, [location.key, location.search]);
 
   const question = useMemo(() => nextQuestion(answers), [answers]);
   const answeredCount = trail.length;
@@ -59,6 +71,15 @@ export function DiagnosticPage() {
             <span key={i} className={i < answeredCount ? 'on' : ''} />
           ))}
         </div>
+        {answeredCount > 0 || answerLabels(answers).length > 0 ? (
+          <div className="answers-recap" aria-label="Réponses déjà données">
+            {answerLabels(answers).map((l) => (
+              <span key={l} className="tag">
+                {l}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <h2 className="title3" style={{ marginBottom: 'var(--sp-3)' }}>
           {question.title}
         </h2>
@@ -97,7 +118,16 @@ export function DiagnosticPage() {
   return (
     <main className="content">
       <h1 className="page-title large-title">Voilà quoi faire maintenant</h1>
-      <p className="page-sub subhead">{reco.reason}</p>
+      <div className="answers-recap" aria-label="Tes réponses">
+        {answerLabels(answers).map((l) => (
+          <span key={l} className="tag">
+            {l}
+          </span>
+        ))}
+      </div>
+      <p className="page-sub subhead" role="status">
+        {reco.reason}
+      </p>
 
       <section className="section" style={{ marginTop: 'var(--sp-4)' }}>
         <ul className="option-list" style={{ gap: 'var(--sp-3)' }}>
@@ -163,7 +193,12 @@ export function DiagnosticPage() {
         </section>
       ) : null}
 
-      <section className="section">
+      <section className="section" style={{ display: 'flex', gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
+        {trail.length > 0 ? (
+          <button type="button" className="btn btn--quiet" onClick={undo}>
+            ← Modifier la dernière réponse
+          </button>
+        ) : null}
         <button type="button" className="btn btn--quiet" onClick={restart}>
           Recommencer le diagnostic
         </button>

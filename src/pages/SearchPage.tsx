@@ -68,6 +68,13 @@ export function SearchPage() {
             aria-label="Rechercher une méthode"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && trimmed.length >= 2) {
+                pushRecentSearch(trimmed);
+                setRecent(getRecentSearches());
+                if (results[0] !== undefined) navigate(results[0].route);
+              }
+            }}
           />
           {query.length > 0 ? (
             <button
@@ -126,34 +133,60 @@ export function SearchPage() {
       ) : results.length === 0 ? (
         <div className="empty">
           <p className="headline">Rien trouvé pour « {query} »</p>
-          <p className="subhead" style={{ marginTop: 'var(--sp-2)' }}>
-            Essaie un mot du problème (« je confonds », « formule ») ou passe par le
-            Diagnostic.
+          <p className="subhead" style={{ margin: 'var(--sp-2) 0 var(--sp-4)' }}>
+            Essaie un mot du problème (« je confonds », « formule ») — ou laisse le
+            diagnostic trouver pour toi.
           </p>
+          <div style={{ display: 'grid', gap: 'var(--sp-2)', maxWidth: 340, margin: '0 auto' }}>
+            <button type="button" className="btn" onClick={() => navigate('/diagnostic')}>
+              Lancer le diagnostic
+            </button>
+            <button type="button" className="btn btn--secondary" onClick={() => navigate('/sos')}>
+              Ouvrir les protocoles SOS
+            </button>
+          </div>
         </div>
       ) : (
         <section className="section" style={{ marginTop: 'var(--sp-2)' }}>
-          <ul className="list">
-            {results.map((r) => (
-              <li key={`${r.kind}:${r.refId}`}>
-                <Row
-                  icon={
-                    r.kind === 'sos'
-                      ? 'sos'
-                      : r.kind === 'subject'
-                        ? 'book'
-                        : r.kind === 'reference'
-                          ? 'info'
-                          : 'grid'
-                  }
-                  iconRed={r.kind === 'sos'}
-                  title={r.title}
-                  sub={`${KIND_LABEL[r.kind]} · ${r.subtitle}`}
-                  onClick={() => openResult(r.route)}
-                />
-              </li>
-            ))}
-          </ul>
+          {results[0] !== undefined ? (
+            <button
+              type="button"
+              className="tophit"
+              onClick={() => openResult(results[0]!.route)}
+            >
+              <span style={{ minWidth: 0, flex: 1 }}>
+                <span className="tophit-kind">
+                  Meilleur résultat · {KIND_LABEL[results[0].kind]}
+                </span>
+                <h2>{results[0].title}</h2>
+                <p>{results[0].summary}</p>
+              </span>
+              <Icon name="chevronRight" size={17} strokeWidth={2.2} />
+            </button>
+          ) : null}
+          {results.length > 1 ? (
+            <ul className="list" style={{ marginTop: 'var(--sp-3)' }}>
+              {results.slice(1).map((r) => (
+                <li key={`${r.kind}:${r.refId}`}>
+                  <Row
+                    icon={
+                      r.kind === 'sos'
+                        ? 'sos'
+                        : r.kind === 'subject'
+                          ? 'book'
+                          : r.kind === 'reference'
+                            ? 'info'
+                            : 'grid'
+                    }
+                    iconRed={r.kind === 'sos'}
+                    title={r.title}
+                    sub={`${KIND_LABEL[r.kind]} · ${r.subtitle}`}
+                    onClick={() => openResult(r.route)}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </section>
       )}
     </main>

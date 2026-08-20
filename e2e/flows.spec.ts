@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test';
 test('recherche : « je melange » mène au tableau de contraste', async ({ page }) => {
   await page.goto('#/recherche');
   await page.getByRole('searchbox').fill('je melange');
-  const first = page.locator('.list .row').first();
+  const first = page.locator('.tophit');
   await expect(first).toContainText('Tableau de contraste A/B');
   await first.click();
   await expect(page).toHaveURL(/methode\/tableau-contraste/);
@@ -17,7 +17,7 @@ test('recherche : « je melange » mène au tableau de contraste', async ({ page
 test('recherche : fautes et accents tolérés (« mecanisme biocel »)', async ({ page }) => {
   await page.goto('#/recherche');
   await page.getByRole('searchbox').fill('mecanisme biocel');
-  await expect(page.locator('.list .row').first()).toBeVisible();
+  await expect(page.locator('.tophit')).toBeVisible();
 });
 
 test('diagnostic : mécanisme + confusion + biocell → plan anti-confusion ordonné', async ({

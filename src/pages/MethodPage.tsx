@@ -5,6 +5,8 @@ import { SUBJECTS_BY_ID } from '../content/subjects';
 import { CATEGORY_LABELS, INFO_TYPE_LABELS, PROBLEM_LABELS, SUBJECT_LABELS } from '../content/taxonomy';
 import { pushRecent } from '../lib/storage';
 import { BackButton, Disclose, FavoriteButton, MethodLinkList, SectionLabel, TagRow } from '../ui/bits';
+import { StepChecklist } from '../ui/StepChecklist';
+import { FocusTimer, TIMER_CONFIGS } from '../ui/FocusTimer';
 import { Icon } from '../ui/Icon';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -35,6 +37,13 @@ export function MethodPage() {
           <p>{method.summary}</p>
         </div>
 
+        {method.whyItWorks !== undefined ? (
+          <div className="why-card">
+            <p className="section-mini">Pourquoi ça marche</p>
+            <p className="subhead">{method.whyItWorks}</p>
+          </div>
+        ) : null}
+
         <section className="section">
           <SectionLabel>Quand l’utiliser</SectionLabel>
           <div className="card">
@@ -60,13 +69,21 @@ export function MethodPage() {
         <section className="section">
           <SectionLabel>Fais ça maintenant</SectionLabel>
           <div className="card">
-            <ol className="steps">
-              {method.quickSteps.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ol>
+            <StepChecklist id={method.id} steps={method.quickSteps} />
           </div>
         </section>
+
+        {TIMER_CONFIGS[method.id] !== undefined ? (
+          <section className="section">
+            <SectionLabel>Minuteur</SectionLabel>
+            <div className="card">
+              <FocusTimer
+                presets={TIMER_CONFIGS[method.id]!.presets}
+                note={TIMER_CONFIGS[method.id]!.note}
+              />
+            </div>
+          </section>
+        ) : null}
 
         <section className="section">
           <Disclose
@@ -175,6 +192,19 @@ export function MethodPage() {
                 );
               })}
             </div>
+          </section>
+        ) : null}
+
+        {method.next !== undefined && getMethod(method.next.id) !== undefined ? (
+          <section className="section">
+            <Link to={`/methode/${method.next.id}`} className="next-card">
+              <span style={{ minWidth: 0 }}>
+                <span className="next-kicker">Ensuite</span>
+                <h2>{getMethod(method.next.id)!.title}</h2>
+                <p>{method.next.label}</p>
+              </span>
+              <Icon name="arrow" size={20} />
+            </Link>
           </section>
         ) : null}
 

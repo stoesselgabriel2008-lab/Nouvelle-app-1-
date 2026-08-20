@@ -7,6 +7,8 @@ import {
   useNavigationType,
 } from 'react-router-dom';
 import { Sidebar, TabBar } from './ui/nav';
+import { WhatsNewGate } from './ui/WhatsNew';
+import { OfflineBadge } from './ui/OfflineBadge';
 import { applyUpdate, hasUpdate, subscribeUpdate } from './lib/sw';
 import { ForMePage } from './pages/ForMePage';
 import { LibraryPage } from './pages/LibraryPage';
@@ -59,6 +61,18 @@ export default function App() {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         navigate('/recherche');
+        return;
+      }
+      // « / » ouvre la recherche (hors champs de saisie), comme partout ailleurs.
+      const target = e.target as HTMLElement | null;
+      const typing =
+        target !== null &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable);
+      if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        navigate('/recherche');
       }
     };
     window.addEventListener('keydown', handler);
@@ -85,6 +99,8 @@ export default function App() {
       </div>
       <TabBar />
       <UpdateToast />
+      <OfflineBadge />
+      <WhatsNewGate />
     </div>
   );
 }

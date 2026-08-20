@@ -52,6 +52,8 @@ export const focusMethods: Method[] = [
     limits: [
       '« Pomodoro 25/5 obligatoire » est un mythe : la durée dépend de la tâche et de la fatigue.',
     ],
+    example:
+      'Sortie observable : « restituer les 3 voies du chapitre ». Bloc de 45 minutes, téléphone hors de la pièce, pause de 10 — et on juge le bloc à ce qui a été produit, pas au temps passé.',
     related: ['demarrage-10-minutes', 'friction-numerique', 'journee-minimale'],
     source: 'Source V2 — §6 Bibliothèque, p. 28-29',
   },
@@ -100,6 +102,9 @@ export const focusMethods: Method[] = [
     mastery: [
       'Tu passes de l’évitement à une production observable.',
     ],
+    example:
+      'Dimanche 14 h, aucune envie : téléphone dans l’entrée, poly de biocell seul sur le bureau, sortie écrite « restituer 3 mécanismes », minuteur 10 minutes. À 14 h 10, tu décides — en général, tu continues.',
+    next: { id: 'pomodoro', label: 'Lancé·e ? Enchaîne sur un vrai bloc de travail.' },
     related: ['pomodoro', 'friction-numerique', 'journee-minimale'],
     source: 'Source V2 — §6 Bibliothèque, p. 29',
   },
@@ -150,6 +155,8 @@ export const focusMethods: Method[] = [
     mastery: [
       'Les ouvertures automatiques diminuent et les blocs se terminent davantage.',
     ],
+    example:
+      'Notifications coupées sauf appels, téléphone dans une autre pièce, fenêtre de consultation à 13 h et 19 h, le poly de demain déjà ouvert sur le bureau la veille.',
     related: ['pomodoro', 'demarrage-10-minutes'],
     source: 'Source V2 — §6 Bibliothèque, p. 29-30',
   },
@@ -199,6 +206,8 @@ export const focusMethods: Method[] = [
     mastery: [
       'Tu évites le zéro et préserves la reprise sans aggraver la fatigue.',
     ],
+    example:
+      'Journée à plat : nuit protégée, cartes dues essentielles uniquement, un seul objet critique (le mécanisme qui bloque la suite), dix QCM corrigés, et le poly de demain préparé sur le bureau.',
     related: ['triage-retard', 'demarrage-10-minutes', 'revision-rapide'],
     source: 'Source V2 — §6 Bibliothèque, p. 30',
   },
@@ -254,6 +263,8 @@ export const focusMethods: Method[] = [
     mastery: [
       'Le retard devient une liste fermable et la charge redevient soutenable.',
     ],
+    example:
+      '« Je suis noyé·e » devient : biochimie ch. 4 (bloque la suite), annales de biostats (fortement évalué), cartes dues (entretien), fiche de SHS recopiée (supprimable). Deux rouges par jour, plan sur 3 jours.',
     related: ['journee-minimale', 'revision-rapide', 'audit-deck', 'demarrage-10-minutes'],
     source: 'Source V2 — §6 Bibliothèque, p. 30-31',
   },
@@ -304,6 +315,8 @@ export const focusMethods: Method[] = [
     limits: [
       'Si le fonctionnement, le sommeil ou la sécurité se dégradent durablement, la bonne action est un soutien humain ou professionnel — pas une app.',
     ],
+    example:
+      'Question 17, trou noir complet : « le stress monte ; ça ne prouve pas que je ne sais rien » — deux minutes de respiration lente, pieds au sol, question 18 accessible, puis retour à la 17.',
     related: ['simulation-examen', 'demarrage-10-minutes', 'journee-minimale'],
     source: 'Source V2 — §6 Bibliothèque, p. 31',
   },

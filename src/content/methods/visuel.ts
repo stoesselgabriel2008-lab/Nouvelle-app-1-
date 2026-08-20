@@ -56,6 +56,9 @@ export const visuelMethods: Method[] = [
     mastery: [
       'Tu peux reconstruire les relations, pas seulement reconnaître l’image.',
     ],
+    whyItWorks:
+      'Reconnaître une planche déjà vue ne prouve rien : c’est la reconstruction des repères et des rapports qui montre que la structure est à toi — et elle survit au changement de vue.',
+    next: { id: 'image-occlusion', label: 'Fixe en occlusion les légendes qui ont résisté au redessin.' },
     related: ['image-occlusion', 'feuille-blanche', 'double-representation', 'frise-chronologique'],
     source: 'Source V2 — §6 Bibliothèque, p. 19-20',
   },
@@ -104,6 +107,9 @@ export const visuelMethods: Method[] = [
     mastery: [
       'Tu identifies la cible sur une vue ou un contexte qui n’est pas strictement identique.',
     ],
+    example:
+      'Planche d’histologie du poly : masque une seule structure par carte, réponds avant de révéler, et ajoute dans l’extra le critère qui permet de la reconnaître sur une autre lame.',
+    next: { id: 'rappel-differe', label: 'Valide sur une vue différente, pas sur la même image.' },
     related: ['reconstruction-schema', 'repetition-espacee', 'carte-qr'],
     source: 'Source V2 — §6 Bibliothèque, p. 20',
   },

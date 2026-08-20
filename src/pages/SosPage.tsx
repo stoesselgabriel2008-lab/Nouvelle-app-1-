@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { SOS_BY_ID } from '../content/sos';
 import { pushRecent } from '../lib/storage';
 import { BackButton, MethodLinkList, SectionLabel } from '../ui/bits';
+import { FocusTimer, TIMER_CONFIGS } from '../ui/FocusTimer';
 import { Icon } from '../ui/Icon';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -38,6 +39,18 @@ export function SosPage() {
             </ol>
           </div>
         </section>
+
+        {TIMER_CONFIGS[sos.id] !== undefined ? (
+          <section className="section">
+            <SectionLabel>Minuteur</SectionLabel>
+            <div className="card">
+              <FocusTimer
+                presets={TIMER_CONFIGS[sos.id]!.presets}
+                note={TIMER_CONFIGS[sos.id]!.note}
+              />
+            </div>
+          </section>
+        ) : null}
 
         {sos.then !== undefined && sos.then.length > 0 ? (
           <section className="section">

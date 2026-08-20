@@ -42,6 +42,7 @@ export interface SearchHit {
   refId: string;
   title: string;
   subtitle: string;
+  summary: string;
   route: string;
   score: number;
 }
@@ -243,7 +244,7 @@ function ensureIndex(): MiniSearch<SearchDoc> {
   docsById = new Map(docs.map((d) => [d.id, d]));
   mini = new MiniSearch<SearchDoc>({
     fields: [...SEARCH_FIELDS],
-    storeFields: ['kind', 'refId', 'title', 'subtitle', 'route'],
+    storeFields: ['kind', 'refId', 'title', 'subtitle', 'summary', 'route'],
     processTerm: (term) => {
       const t = normalizeTerm(term);
       return t.length > 0 ? t : null;
@@ -287,6 +288,7 @@ export function searchAll(query: string, limit = 20): SearchHit[] {
       refId: r['refId'] as string,
       title: r['title'] as string,
       subtitle: r['subtitle'] as string,
+      summary: r['summary'] as string,
       route: r['route'] as string,
       score: r.score + bonus,
     };

@@ -118,6 +118,14 @@ export interface Method {
   mastery: string[];
   /** Limites et nuances scientifiques (section 11 de la Source V2). */
   limits?: string[];
+  /**
+   * « Pourquoi ça marche » : une phrase sérieuse et claire, adossée aux
+   * repères de recherche de la Source V2 (§12). Réservée aux méthodes où la
+   * justification éclaire vraiment l'usage.
+   */
+  whyItWorks?: string;
+  /** Suite logique : la méthode qui vient naturellement après celle-ci. */
+  next?: { id: string; label: string };
   /** IDs des méthodes proches. */
   related: string[];
   /** Référence discrète vers la Source V2 (section, pages). */

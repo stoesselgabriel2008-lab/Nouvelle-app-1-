@@ -46,6 +46,9 @@ export const supportMethods: Method[] = [
     mastery: [
       'Les notes ajoutent une information utile au lieu de dupliquer le support.',
     ],
+    example:
+      'En amphi : le poly est projeté, tu ne recopies rien — tu notes la précision de périmètre (« pas exigible »), l’exemple donné à l’oral, et ta question en marge.',
+    next: { id: 'liste-questions', label: 'Tes questions notées deviennent ta banque de questions.' },
     related: ['liste-questions', 'relecture-surlignage', 'chunking'],
     source: 'Source V2 — §6 Bibliothèque, p. 27-28',
   },
@@ -97,6 +100,11 @@ export const supportMethods: Method[] = [
     limits: [
       '« Relire jusqu’à connaître » : la familiarité peut masquer un rappel libre faible.',
     ],
+    whyItWorks:
+      'Relire crée de la familiarité, pas du rappel : le texte « te parle », donc tu crois le savoir — l’illusion de maîtrise la mieux documentée.',
+    example:
+      'Tu relis le chapitre et tout te semble connu. Ferme-le et récite les critères diagnostiques : ce qui ne sort pas n’était que familier.',
+    next: { id: 'rappel-actif', label: 'Ferme le support et produis — la relecture n’était que l’entrée.' },
     related: ['rappel-actif', 'pretest', 'feuille-blanche'],
     source: 'Source V2 — §6 Bibliothèque, p. 28',
   },
