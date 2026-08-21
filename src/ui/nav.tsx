@@ -31,13 +31,13 @@ export function TabBar() {
     <nav className="tabbar-wrap" aria-label="Navigation principale">
       <div className="tabbar">
         {ENTRIES.map((e) => (
-          <NavLink key={e.to} to={e.to} end={e.end} className="tab-item">
+          <NavLink key={e.to} to={e.to} end={e.end} className="tab-item" viewTransition>
             <Icon name={e.icon} size={23} />
             <span>{e.tabLabel ?? e.label}</span>
           </NavLink>
         ))}
       </div>
-      <NavLink to="/recherche" className="tab-search" aria-label="Recherche">
+      <NavLink to="/recherche" className="tab-search" aria-label="Recherche" viewTransition>
         <Icon name="search" size={24} strokeWidth={1.9} />
       </NavLink>
     </nav>
@@ -63,12 +63,12 @@ export function Sidebar() {
         <span>Methods OS</span>
       </div>
       {ENTRIES.map((e) => (
-        <NavLink key={e.to} to={e.to} end={e.end} className="side-item">
+        <NavLink key={e.to} to={e.to} end={e.end} className="side-item" viewTransition>
           <Icon name={e.icon} size={21} />
           <span>{e.label}</span>
         </NavLink>
       ))}
-      <NavLink to="/recherche" className="side-item">
+      <NavLink to="/recherche" className="side-item" viewTransition>
         <Icon name="search" size={21} />
         <span>Recherche</span>
       </NavLink>

@@ -47,7 +47,7 @@ export function SearchPage() {
       pushRecentSearch(trimmed);
       setRecent(getRecentSearches());
     }
-    navigate(route);
+    void navigate(route, { viewTransition: true });
   };
 
   return (
@@ -76,7 +76,9 @@ export function SearchPage() {
               if (e.key === 'Enter' && trimmed.length >= 2) {
                 pushRecentSearch(trimmed);
                 setRecent(getRecentSearches());
-                if (results[0] !== undefined) navigate(results[0].route);
+                if (results[0] !== undefined) {
+                  void navigate(results[0].route, { viewTransition: true });
+                }
               }
             }}
           />
@@ -142,10 +144,18 @@ export function SearchPage() {
             diagnostic trouver pour toi.
           </p>
           <div style={{ display: 'grid', gap: 'var(--sp-2)', maxWidth: 340, margin: '0 auto' }}>
-            <button type="button" className="btn" onClick={() => navigate('/diagnostic')}>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => void navigate('/diagnostic', { viewTransition: true })}
+            >
               Lancer le diagnostic
             </button>
-            <button type="button" className="btn btn--secondary" onClick={() => navigate('/sos')}>
+            <button
+              type="button"
+              className="btn btn--secondary"
+              onClick={() => void navigate('/sos', { viewTransition: true })}
+            >
               Ouvrir les protocoles SOS
             </button>
           </div>

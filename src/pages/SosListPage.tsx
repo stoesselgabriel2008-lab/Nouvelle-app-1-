@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { SOS_PROTOCOLS } from '../content/sos';
+import { LargeTitleHeader } from '../ui/LargeTitleHeader';
 import { Icon } from '../ui/Icon';
 
 /**
@@ -9,13 +10,13 @@ import { Icon } from '../ui/Icon';
 export function SosListPage() {
   return (
     <main className="content">
-      <h1 className="page-title large-title">SOS</h1>
-      <p className="page-sub subhead">
-        Choisis ce qui t’arrive. Chaque protocole commence par « Fais ça maintenant ».
-      </p>
+      <LargeTitleHeader
+        title="SOS"
+        sub="Choisis ce qui t’arrive. Chaque protocole commence par « Fais ça maintenant »."
+      />
       <div className="sos-grid">
         {SOS_PROTOCOLS.map((p) => (
-          <Link key={p.id} to={`/sos/${p.id}`} className="sos-btn">
+          <Link key={p.id} to={`/sos/${p.id}`} className="sos-btn" viewTransition>
             <span className={`row-icon${p.careNotice === true ? ' row-icon--red' : ''}`}>
               <Icon name={p.careNotice === true ? 'heart' : 'sos'} size={19} />
             </span>

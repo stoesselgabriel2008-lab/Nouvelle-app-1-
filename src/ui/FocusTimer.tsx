@@ -69,11 +69,12 @@ export function FocusTimer({ presets, note }: { presets: TimerPreset[]; note?: s
   return (
     <div className="timer" role="timer" aria-label={`Minuteur ${preset.label}`}>
       {presets.length > 1 && !running ? (
-        <div className="seg" role="group" aria-label="Durée">
+        <div className="chip-row" role="group" aria-label="Durée" style={{ justifyContent: 'center' }}>
           {presets.map((p, i) => (
             <button
               key={p.label}
               type="button"
+              className={`chip${i === presetIdx ? ' chip--on' : ''}`}
               aria-pressed={i === presetIdx}
               onClick={() => selectPreset(i)}
             >
@@ -82,11 +83,21 @@ export function FocusTimer({ presets, note }: { presets: TimerPreset[]; note?: s
           ))}
         </div>
       ) : null}
-      <p className="timer-display" aria-live={finished ? 'polite' : 'off'}>
-        {finished ? 'Temps écoulé' : fmt(remaining)}
-      </p>
-      <div className="timer-bar" aria-hidden="true">
-        <span style={{ width: `${Math.round(progress * 100)}%` }} />
+      <div className="timer-ring" aria-hidden={false}>
+        <svg viewBox="0 0 160 160" aria-hidden="true">
+          <circle className="ring-track" cx="80" cy="80" r="70" />
+          <circle
+            className="ring-progress"
+            cx="80"
+            cy="80"
+            r="70"
+            strokeDasharray={2 * Math.PI * 70}
+            strokeDashoffset={(1 - progress) * 2 * Math.PI * 70}
+          />
+        </svg>
+        <p className="timer-display" aria-live={finished ? 'polite' : 'off'}>
+          {finished ? 'Temps écoulé' : fmt(remaining)}
+        </p>
       </div>
       {finished ? (
         <p className="subhead muted" style={{ textAlign: 'center' }}>

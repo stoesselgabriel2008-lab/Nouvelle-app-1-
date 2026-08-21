@@ -8,6 +8,7 @@ import {
 } from '../content/taxonomy';
 import type { CategoryId } from '../content/types';
 import { MethodLinkList, Row, SectionLabel } from '../ui/bits';
+import { LargeTitleHeader } from '../ui/LargeTitleHeader';
 import { SearchPill } from '../ui/SearchPill';
 
 type Tab = 'methodes' | 'matieres' | 'reperes';
@@ -49,11 +50,10 @@ export function LibraryPage() {
 
   return (
     <main className="content">
-      <h1 className="page-title large-title">Bibliothèque</h1>
-      <p className="page-sub subhead">
-        {METHODS.length} méthodes — chacune dit quand l’utiliser, quand l’éviter, et quoi
-        faire maintenant.
-      </p>
+      <LargeTitleHeader
+        title="Bibliothèque"
+        sub={`${METHODS.length} méthodes — chacune dit quand l’utiliser, quand l’éviter, et quoi faire maintenant.`}
+      />
 
       <SearchPill />
 

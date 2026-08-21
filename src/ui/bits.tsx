@@ -52,7 +52,7 @@ export function Row({
   );
   if (to !== undefined) {
     return (
-      <Link className="row" to={to}>
+      <Link className="row" to={to} viewTransition>
         {body}
       </Link>
     );
@@ -65,7 +65,7 @@ export function Row({
 }
 
 /** Liste de méthodes par IDs — titres complets, jamais tronqués. */
-export function MethodLinkList({ ids, icon }: { ids: string[]; icon?: IconName }) {
+export function MethodLinkList({ ids, icon = 'grid' }: { ids: string[]; icon?: IconName }) {
   return (
     <ul className="list">
       {ids.map((id) => {

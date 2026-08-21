@@ -179,6 +179,27 @@ test('reprendre : l’accueil propose la méthode en cours', async ({ page }) =>
   await expect(section).toContainText('1/5');
 });
 
+test('grand titre : la barre compacte apparaît au défilement (iPhone)', async ({ page }) => {
+  const width = page.viewportSize()?.width ?? 1280;
+  test.skip(width >= 740, 'barre compacte réservée aux écrans iPhone');
+  await page.goto('#/bibliotheque');
+  const bar = page.locator('.compact-bar');
+  await expect(bar).not.toHaveClass(/on/);
+  await page.evaluate(() => window.scrollTo(0, 600));
+  await expect(bar).toHaveClass(/on/);
+  await expect(bar).toContainText('Bibliothèque');
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(bar).not.toHaveClass(/on/);
+});
+
+test('minuteur : anneau de progression présent et fonctionnel', async ({ page }) => {
+  await page.goto('#/methode/pomodoro');
+  await expect(page.locator('.timer-ring svg')).toBeVisible();
+  await expect(page.locator('.timer-display')).toHaveText('25:00');
+  await page.getByRole('button', { name: '45 min' }).click();
+  await expect(page.locator('.timer-display')).toHaveText('45:00');
+});
+
 test('vérification manuelle des mises à jour : un retour clair', async ({ page }) => {
   await page.goto('#/');
   await page.getByText('Vérifier les mises à jour').click();

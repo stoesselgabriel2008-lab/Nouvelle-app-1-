@@ -1,7 +1,6 @@
-import { useEffect, useLayoutEffect, useSyncExternalStore } from 'react';
+import { useEffect, useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 import {
-  Route,
-  Routes,
+  Outlet,
   useLocation,
   useNavigate,
   useNavigationType,
@@ -10,16 +9,6 @@ import { Sidebar, TabBar } from './ui/nav';
 import { WhatsNewGate } from './ui/WhatsNew';
 import { OfflineBadge } from './ui/OfflineBadge';
 import { applyUpdate, hasUpdate, subscribeUpdate } from './lib/sw';
-import { ForMePage } from './pages/ForMePage';
-import { LibraryPage } from './pages/LibraryPage';
-import { MethodPage } from './pages/MethodPage';
-import { SubjectPage } from './pages/SubjectPage';
-import { DiagnosticPage } from './pages/DiagnosticPage';
-import { SosListPage } from './pages/SosListPage';
-import { SosPage } from './pages/SosPage';
-import { SearchPage } from './pages/SearchPage';
-import { ReferencePage } from './pages/ReferencePage';
-import { NotFoundPage } from './pages/NotFoundPage';
 
 const scrollPositions = new Map<string, number>();
 
@@ -40,6 +29,39 @@ function ScrollManager() {
   return null;
 }
 
+/**
+ * Filet de sécurité View Transitions : si une navigation par hashchange
+ * (retour très rapide, URL saisie) arrive pendant une transition active,
+ * la route peut diverger du hash. On vérifie après coup et on resynchronise.
+ */
+function HashSyncGuard() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const locRef = useRef(location);
+  locRef.current = location;
+
+  useEffect(() => {
+    let timer: number | undefined;
+    const check = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const raw = window.location.hash.slice(1) || '/';
+        const current =
+          locRef.current.pathname + locRef.current.search + locRef.current.hash;
+        if (raw !== current) {
+          void navigate(raw, { replace: true });
+        }
+      }, 300);
+    };
+    window.addEventListener('hashchange', check);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('hashchange', check);
+    };
+  }, [navigate]);
+  return null;
+}
+
 function UpdateToast() {
   const ready = useSyncExternalStore(subscribeUpdate, hasUpdate, () => false);
   if (!ready) return null;
@@ -53,14 +75,14 @@ function UpdateToast() {
   );
 }
 
-export default function App() {
+export function Layout() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        navigate('/recherche');
+        void navigate('/recherche', { viewTransition: true });
         return;
       }
       // « / » ouvre la recherche (hors champs de saisie), comme partout ailleurs.
@@ -72,7 +94,7 @@ export default function App() {
           target.isContentEditable);
       if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
-        navigate('/recherche');
+        void navigate('/recherche', { viewTransition: true });
       }
     };
     window.addEventListener('keydown', handler);
@@ -84,18 +106,8 @@ export default function App() {
       <Sidebar />
       <div className="app-main">
         <ScrollManager />
-        <Routes>
-          <Route path="/" element={<ForMePage />} />
-          <Route path="/bibliotheque" element={<LibraryPage />} />
-          <Route path="/methode/:id" element={<MethodPage />} />
-          <Route path="/matiere/:id" element={<SubjectPage />} />
-          <Route path="/diagnostic" element={<DiagnosticPage />} />
-          <Route path="/sos" element={<SosListPage />} />
-          <Route path="/sos/:id" element={<SosPage />} />
-          <Route path="/recherche" element={<SearchPage />} />
-          <Route path="/reperes/:id" element={<ReferencePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <HashSyncGuard />
+        <Outlet />
       </div>
       <TabBar />
       <UpdateToast />

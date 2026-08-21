@@ -80,23 +80,25 @@ export function DiagnosticPage() {
             ))}
           </div>
         ) : null}
-        <h2 className="title3" style={{ marginBottom: 'var(--sp-3)' }}>
-          {question.title}
-        </h2>
-        <ul className="option-list">
-          {question.options.map((o) => (
-            <li key={o.value}>
-              <button
-                type="button"
-                className="option-btn"
-                onClick={() => answer(question.id, o.value)}
-              >
-                <span>{o.label}</span>
-                <Icon name="chevronRight" size={16} strokeWidth={2.2} />
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div key={question.id} className="diag-anim">
+          <h2 className="title3" style={{ marginBottom: 'var(--sp-3)' }}>
+            {question.title}
+          </h2>
+          <ul className="option-list">
+            {question.options.map((o) => (
+              <li key={o.value}>
+                <button
+                  type="button"
+                  className="option-btn"
+                  onClick={() => answer(question.id, o.value)}
+                >
+                  <span>{o.label}</span>
+                  <Icon name="chevronRight" size={16} strokeWidth={2.2} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         {answeredCount > 0 ? (
           <button
             type="button"
@@ -147,6 +149,7 @@ export function DiagnosticPage() {
                       to={`/methode/${m.id}`}
                       className="btn btn--secondary"
                       style={{ marginTop: 'var(--sp-3)' }}
+                      viewTransition
                     >
                       Ouvrir la méthode
                       <Icon name="chevronRight" size={15} strokeWidth={2.2} />
@@ -170,7 +173,7 @@ export function DiagnosticPage() {
       {subject !== undefined ? (
         <section className="section">
           <SectionLabel>Protocole matière</SectionLabel>
-          <Link to={`/matiere/${subject.id}`} className="btn btn--secondary">
+          <Link to={`/matiere/${subject.id}`} className="btn btn--secondary" viewTransition>
             Voir le protocole {subject.name}
           </Link>
         </section>
@@ -184,7 +187,7 @@ export function DiagnosticPage() {
               const m = getMethod(id);
               if (!m) return null;
               return (
-                <Link key={id} to={`/methode/${id}`} className="chip">
+                <Link key={id} to={`/methode/${id}`} className="chip" viewTransition>
                   {m.title}
                 </Link>
               );

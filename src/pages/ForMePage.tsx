@@ -17,6 +17,7 @@ import {
 import { APP_VERSION } from '../lib/version';
 import { checkForUpdates, type UpdateCheckResult } from '../lib/sw';
 import { Disclose, MethodLinkList, Row, SectionLabel } from '../ui/bits';
+import { LargeTitleHeader } from '../ui/LargeTitleHeader';
 import { openWhatsNew } from '../ui/WhatsNew';
 import { getLastWorked } from '../ui/StepChecklist';
 import { Icon } from '../ui/Icon';
@@ -75,10 +76,9 @@ export function ForMePage() {
 
   return (
     <main className="content">
-      <h1 className="page-title large-title">Pour moi</h1>
-      <p className="page-sub subhead">Un problème, une méthode, tout de suite.</p>
+      <LargeTitleHeader title="Pour moi" sub="Un problème, une méthode, tout de suite." />
 
-      <Link to="/diagnostic" className="hero-card">
+      <Link to="/diagnostic" className="hero-card" viewTransition>
         <span style={{ minWidth: 0 }}>
           <h2>Un blocage, là, maintenant ?</h2>
           <p>3 à 5 questions et tu sais exactement quoi faire.</p>
@@ -88,7 +88,7 @@ export function ForMePage() {
 
       <div className="chip-row">
         {SHORTCUTS.map((s) => (
-          <Link key={s.id} to={s.to} className="chip chip--tint">
+          <Link key={s.id} to={s.to} className="chip chip--tint" viewTransition>
             <Icon name="bolt" size={15} strokeWidth={2} />
             {s.label}
           </Link>
@@ -183,7 +183,9 @@ export function ForMePage() {
                       return (
                         <span key={id}>
                           {j > 0 ? ' · ' : ''}
-                          <Link to={`/methode/${id}`}>{m.title}</Link>
+                          <Link to={`/methode/${id}`} viewTransition>
+                            {m.title}
+                          </Link>
                         </span>
                       );
                     })}

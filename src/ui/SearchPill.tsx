@@ -8,7 +8,7 @@ export function SearchPill({ label = 'Rechercher une méthode, un problème…' 
     <button
       type="button"
       className="search-pill"
-      onClick={() => navigate('/recherche')}
+      onClick={() => void navigate('/recherche', { viewTransition: true })}
     >
       <Icon name="search" size={18} strokeWidth={2} />
       <span>{label}</span>

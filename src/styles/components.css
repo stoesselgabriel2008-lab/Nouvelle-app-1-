@@ -298,6 +298,7 @@
 .card {
   background: var(--bg-elevated);
   border-radius: var(--r-lg);
+  border: 0.5px solid var(--card-border);
   box-shadow: var(--card-shadow);
   padding: var(--sp-4);
 }
@@ -305,6 +306,7 @@
 .list {
   background: var(--bg-elevated);
   border-radius: var(--r-lg);
+  border: 0.5px solid var(--card-border);
   box-shadow: var(--card-shadow);
   overflow: hidden;
   list-style: none;
@@ -959,6 +961,87 @@ body:has(.searchbar input:focus) .tabbar-wrap {
   }
 }
 
+/* View Transitions natives : le navigateur cross-fade les pages lui-même —
+   on retire alors l'animation locale pour ne pas doubler l'effet. */
+@supports (view-transition-name: root) {
+  .content {
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.18s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+}
+
+/* Le questionnaire et le pas-à-pas glissent d'une étape à l'autre. */
+@media (prefers-reduced-motion: no-preference) {
+  .diag-anim,
+  .guided-inner {
+    animation: step-in 0.22s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+
+  @keyframes step-in {
+    from {
+      opacity: 0;
+      transform: translateX(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ----------------------------------------------- Barre compacte (grand titre replié) */
+
+.compact-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 36;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: calc(44px + var(--safe-top));
+  padding: calc(var(--safe-top) + 6px) var(--sp-4) 8px;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 0.5px solid var(--separator);
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.compact-bar span {
+  font-size: var(--fs-headline);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.compact-bar.on {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 739px) {
+  .compact-bar {
+    display: flex;
+  }
+}
+
 /* Retour au toucher : léger, instantané, jamais gênant. */
 .row:active,
 .option-btn:active,
@@ -991,7 +1074,7 @@ body:has(.searchbar input:focus) .tabbar-wrap {
   margin: var(--sp-2) 0 var(--sp-4);
   padding: var(--sp-4) var(--sp-5);
   border-radius: var(--r-xl);
-  background: var(--tint);
+  background: linear-gradient(135deg, var(--tint) 0%, var(--tint-strong) 120%);
   color: var(--on-tint);
   box-shadow: 0 8px 24px rgba(10, 99, 232, 0.28);
 }
@@ -1166,6 +1249,21 @@ body:has(.searchbar input:focus) .tabbar-wrap {
   color: #fff;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .is-done .check-dot {
+    animation: check-pop 0.28s cubic-bezier(0.2, 0.8, 0.3, 1.4);
+  }
+
+  @keyframes check-pop {
+    0% {
+      transform: scale(0.7);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
 .check-text {
   padding-top: 2px;
   transition: opacity 0.15s ease;
@@ -1196,28 +1294,46 @@ body:has(.searchbar input:focus) .tabbar-wrap {
   gap: var(--sp-3);
 }
 
+.timer-ring {
+  position: relative;
+  width: min(240px, 64vw);
+  margin: 0 auto;
+}
+
+.timer-ring svg {
+  width: 100%;
+  height: auto;
+  transform: rotate(-90deg);
+}
+
+.timer-ring circle {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.ring-track {
+  stroke: var(--bg-tertiary);
+}
+
+.ring-progress {
+  stroke: var(--tint);
+  transition: stroke-dashoffset 0.3s linear;
+}
+
 .timer-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-size: clamp(2.6rem, 12vw, 3.4rem);
+  font-size: clamp(2rem, 9vw, 2.75rem);
   font-weight: 700;
   letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
-}
-
-.timer-bar {
-  height: 5px;
-  border-radius: 3px;
-  background: var(--bg-tertiary);
-  overflow: hidden;
-}
-
-.timer-bar span {
-  display: block;
-  height: 100%;
-  background: var(--tint);
-  border-radius: 3px;
-  transition: width 0.25s linear;
+  padding: 0 var(--sp-4);
 }
 
 .timer-actions {
@@ -1423,11 +1539,18 @@ body:has(.searchbar input:focus) .tabbar-wrap {
 .guided-body {
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   padding: var(--sp-4) max(var(--sp-5), var(--safe-left)) var(--sp-6)
     max(var(--sp-5), var(--safe-right));
   max-width: var(--content-max);
   width: 100%;
   margin: 0 auto;
+}
+
+/* Contenu court : centré verticalement ; contenu long : flux normal + scroll. */
+.guided-inner {
+  margin: auto 0;
 }
 
 .guided-num {

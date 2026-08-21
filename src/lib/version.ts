@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.2.0';
+export const APP_VERSION = '1.3.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,17 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.3.0',
+    date: '2026-08',
+    items: [
+      'Navigation en fondu natif : les pages s’enchaînent avec les transitions de vue du navigateur, comme dans une app iOS.',
+      'Grand titre à la iOS : en défilant, le titre de la page se replie dans une barre compacte en verre.',
+      'Minuteur redessiné : un anneau de progression autour du temps restant.',
+      'Le diagnostic et le pas-à-pas glissent d’une étape à l’autre ; les coches d’étapes ont un retour visuel.',
+      'Matière affinée : liséré fin sur les cartes, carte d’entrée en dégradé, icônes cohérentes dans toutes les listes.',
+    ],
+  },
   {
     version: '1.2.0',
     date: '2026-08',

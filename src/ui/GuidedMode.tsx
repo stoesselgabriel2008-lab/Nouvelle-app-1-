@@ -60,6 +60,7 @@ export function GuidedMode({ method, onClose }: { method: Method; onClose: () =>
       </div>
 
       <div className="guided-body" ref={bodyRef}>
+        <div className="guided-inner" key={index}>
         {!finished && step !== undefined ? (
           <>
             <p className="guided-num" aria-hidden="true">
@@ -102,6 +103,7 @@ export function GuidedMode({ method, onClose }: { method: Method; onClose: () =>
                 className="next-card"
                 style={{ marginTop: 'var(--sp-4)' }}
                 onClick={onClose}
+                viewTransition
               >
                 <span style={{ minWidth: 0 }}>
                   <span className="next-kicker">Ensuite</span>
@@ -113,6 +115,7 @@ export function GuidedMode({ method, onClose }: { method: Method; onClose: () =>
             ) : null}
           </>
         )}
+        </div>
       </div>
 
       <div className="guided-foot">

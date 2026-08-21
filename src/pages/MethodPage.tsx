@@ -205,7 +205,7 @@ export function MethodPage() {
                 const subject = SUBJECTS_BY_ID.get(s);
                 if (!subject) return null;
                 return (
-                  <Link key={s} to={`/matiere/${s}`} className="chip">
+                  <Link key={s} to={`/matiere/${s}`} className="chip" viewTransition>
                     {SUBJECT_LABELS[s]}
                   </Link>
                 );
@@ -216,7 +216,7 @@ export function MethodPage() {
 
         {method.next !== undefined && getMethod(method.next.id) !== undefined ? (
           <section className="section">
-            <Link to={`/methode/${method.next.id}`} className="next-card">
+            <Link to={`/methode/${method.next.id}`} className="next-card" viewTransition>
               <span style={{ minWidth: 0 }}>
                 <span className="next-kicker">Ensuite</span>
                 <h2>{getMethod(method.next.id)!.title}</h2>

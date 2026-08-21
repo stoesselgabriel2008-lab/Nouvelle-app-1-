@@ -1,0 +1,15 @@
+import { chromium, devices } from '@playwright/test';
+const BASE = 'http://127.0.0.1:4173/Nouvelle-app-1-/#';
+const OUT = '/tmp/claude-0/-home-user-Nouvelle-app-1-/2cdad411-0176-5a95-8bf4-8cfe69e9c7ad/scratchpad/shots-v13';
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM_PATH });
+const ctx = await browser.newContext({ ...devices['iPhone 14 Pro'], defaultBrowserType: undefined });
+const p = await ctx.newPage();
+await p.goto(BASE + '/bibliotheque');
+await p.evaluate(() => window.scrollTo(0, 700));
+await p.waitForTimeout(450);
+await p.screenshot({ path: `${OUT}/compact-bar.png` });
+await p.goto(BASE + '/methode/pomodoro');
+await p.locator('.timer-ring').scrollIntoViewIfNeeded();
+await p.waitForTimeout(250);
+await p.screenshot({ path: `${OUT}/timer-ring.png` });
+await ctx.close(); await browser.close(); console.log('done');

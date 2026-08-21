@@ -19,7 +19,7 @@ function MethodChips({ ids }: { ids: string[] }) {
         const m = getMethod(id);
         if (!m) return null;
         return (
-          <Link key={id} to={`/methode/${id}`} className="chip">
+          <Link key={id} to={`/methode/${id}`} className="chip" viewTransition>
             {m.title}
           </Link>
         );
