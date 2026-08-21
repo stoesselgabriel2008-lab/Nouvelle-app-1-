@@ -41,9 +41,20 @@ export const mnemotechniquesMethods: Method[] = [
       'Reteste plus tard.',
     ],
     procedure: [
-      { text: 'Transformer les deux éléments en images concrètes.' },
-      { text: 'Les faire interagir de façon exagérée.', detail: 'L’interaction (choc, fusion, action) accroche mieux que deux images posées côte à côte.' },
-      { text: 'Vérifier que l’image mène sans ambiguïté à la cible.', detail: 'Règle personnalisée : l’association n’est valable que si elle rappelle la cible sans hésitation possible.' },
+      {
+        text: 'Transformer les deux éléments en images concrètes.',
+        micro: ['Prends la première image concrète que chaque élément t’évoque — la première est en général la bonne.'],
+      },
+      {
+        text: 'Les faire interagir de façon exagérée.',
+        detail: 'L’interaction (choc, fusion, action) accroche mieux que deux images posées côte à côte.',
+        micro: ['Fais-les se percuter, se transformer, agir l’une sur l’autre — une action, pas une juxtaposition.'],
+      },
+      {
+        text: 'Vérifier que l’image mène sans ambiguïté à la cible.',
+        detail: 'Règle personnalisée : l’association n’est valable que si elle rappelle la cible sans hésitation possible.',
+        micro: ['Test immédiat : depuis l’image, redonnes-tu LE terme exact, sans hésiter entre deux candidats ?'],
+      },
       { text: 'Rappeler sans regarder.' },
       { text: 'Retester plus tard.' },
     ],
@@ -105,9 +116,16 @@ export const mnemotechniquesMethods: Method[] = [
       'Reteste sans l’indice écrit.',
     ],
     procedure: [
-      { text: 'Trouver une sonorité proche.' },
+      {
+        text: 'Trouver une sonorité proche.',
+        micro: ['Dis le nom à voix haute deux ou trois fois : quel mot familier entends-tu dedans ?'],
+      },
       { text: 'Créer une image / action courte qui relie cet indice à la fonction.' },
-      { text: 'Répéter la cible scientifique exacte.', detail: 'Le surnom n’est qu’un pont : c’est le terme exact qui sera exigé.' },
+      {
+        text: 'Répéter la cible scientifique exacte.',
+        detail: 'Le surnom n’est qu’un pont : c’est le terme exact qui sera exigé.',
+        micro: ['Redis trois fois le terme scientifique complet — orthographe comprise si elle est piégeuse.'],
+      },
       { text: 'Retester sans l’indice écrit.' },
     ],
     personal: [
@@ -153,10 +171,20 @@ export const mnemotechniquesMethods: Method[] = [
     ],
     procedure: [
       { text: 'Extraire les initiales.' },
-      { text: 'Former un mot ou une phrase courte.' },
+      {
+        text: 'Former un mot ou une phrase courte.',
+        micro: ['Si rien ne sort en deux minutes, abandonne l’acronyme : la liste brute coûtera moins cher.'],
+      },
       { text: 'Associer chaque lettre à un seul item.', detail: 'Une lettre qui peut rappeler deux items différents créera une confusion.' },
-      { text: 'Rappeler la liste sans support.' },
-      { text: 'Retester l’exhaustivité.', detail: 'Le risque des listes : l’omission silencieuse. Compte les items.' },
+      {
+        text: 'Rappeler la liste sans support.',
+        micro: ['Récite en développant chaque lettre en item complet — pas seulement l’acronyme.'],
+      },
+      {
+        text: 'Retester l’exhaustivité.',
+        detail: 'Le risque des listes : l’omission silencieuse. Compte les items.',
+        micro: ['Compte à chaque récitation : huit attendus, huit récités.'],
+      },
     ],
     mastery: [
       'L’acronyme rappelle toute la liste sans omission ni permutation importante.',
@@ -195,9 +223,12 @@ export const mnemotechniquesMethods: Method[] = [
     ],
     procedure: [
       { text: 'Transformer chaque item en image.' },
-      { text: 'Créer une interaction de l’un au suivant.' },
+      {
+        text: 'Créer une interaction de l’un au suivant.',
+        micro: ['Chaque image doit DÉCLENCHER la suivante par son action — sinon c’est une liste déguisée.'],
+      },
       { text: 'Garder l’histoire courte et étrange.', detail: 'L’étrangeté accroche ; la longueur coûte.' },
-      { text: 'Réciter la suite.' },
+      { text: 'Réciter la suite.', micro: ['Récite les items réels, pas les images : l’histoire est l’échafaudage, pas la réponse.'] },
       { text: 'Retester plus tard.' },
     ],
     mastery: [
@@ -244,9 +275,19 @@ export const mnemotechniquesMethods: Method[] = [
     ],
     procedure: [
       { text: 'Choisir un trajet très familier.', detail: 'Ta chambre, ton trajet vers la fac : des lieux que tu peux parcourir les yeux fermés.' },
-      { text: 'Définir des loci fixes dans l’ordre.' },
-      { text: 'Placer une image interactive par locus.', detail: 'Même règle que l’imagerie interactive : l’image doit mener sans ambiguïté à la cible.' },
-      { text: 'Parcourir mentalement le trajet pour rappeler.' },
+      {
+        text: 'Définir des loci fixes dans l’ordre.',
+        micro: ['Liste 8 à 12 points dans l’ordre de marche (porte, escalier, arrêt de bus…) — toujours les mêmes.'],
+      },
+      {
+        text: 'Placer une image interactive par locus.',
+        detail: 'Même règle que l’imagerie interactive : l’image doit mener sans ambiguïté à la cible.',
+        micro: ['L’élément AGIT sur le lieu (il bloque la porte, inonde l’escalier…) — pas posé dessus.'],
+      },
+      {
+        text: 'Parcourir mentalement le trajet pour rappeler.',
+        micro: ['Ferme les yeux, avance station par station, nomme l’item exact à chacune.'],
+      },
       { text: 'Retester dans le sens normal puis éventuellement inverse.' },
     ],
     personal: [

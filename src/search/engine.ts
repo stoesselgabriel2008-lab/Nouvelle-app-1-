@@ -69,7 +69,9 @@ function buildDocs(): SearchDoc[] {
         ...m.whenToUse,
         ...m.avoid,
         ...m.quickSteps,
-        ...m.procedure.map((s) => `${s.text} ${s.detail ?? ''}`),
+        ...m.procedure.map(
+          (s) => `${s.text} ${s.detail ?? ''} ${s.micro?.join(' ') ?? ''}`,
+        ),
         ...(m.personal ?? []),
         ...(m.anki ? [...m.anki.yes, ...m.anki.no, m.anki.note ?? ''] : []),
         ...m.mastery,

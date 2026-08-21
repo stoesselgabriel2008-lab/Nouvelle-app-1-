@@ -40,11 +40,18 @@ export const focusMethods: Method[] = [
       'Mesure la qualité, pas seulement le temps.',
     ],
     procedure: [
-      { text: 'Définir une sortie observable.', detail: '« Restituer 3 mécanismes », « résoudre les exercices 1 à 4 » — pas « travailler la biochimie ».' },
+      {
+        text: 'Définir une sortie observable.',
+        detail: '« Restituer 3 mécanismes », « résoudre les exercices 1 à 4 » — pas « travailler la biochimie ».',
+        micro: ['Écris-la sur un post-it visible : c’est sur elle que tu jugeras le bloc.'],
+      },
       { text: 'Choisir un bloc adapté : 25-5 pour démarrer / fatigue, 45-10 ou 50-10 en base, plus long si la tâche le permet.' },
       { text: 'Téléphone hors de portée.' },
       { text: 'Travailler jusqu’à la condition de fin ou la pause.' },
-      { text: 'Mesurer la qualité, pas seulement le temps.' },
+      {
+        text: 'Mesurer la qualité, pas seulement le temps.',
+        micro: ['À la pause : la sortie observable est-elle produite ? Sinon, réduis le bloc suivant.'],
+      },
     ],
     mastery: [
       'Le format aide à produire davantage sans fragmenter inutilement.',
@@ -93,10 +100,17 @@ export const focusMethods: Method[] = [
       'À 10 minutes : continue si engagé ; sinon réduis encore l’unité.',
     ],
     procedure: [
-      { text: 'Téléphone hors de la pièce.' },
-      { text: 'Ouvrir uniquement le support nécessaire.' },
-      { text: 'Écrire une sortie : « restituer 3 mécanismes » ou « résoudre 1 à 4 ».' },
-      { text: 'Lancer 10 minutes sans négocier la suite.', detail: 'Le contrat porte sur 10 minutes, pas sur la journée : c’est ce qui le rend signable.' },
+      { text: 'Téléphone hors de la pièce.', micro: ['Pas en poche, pas retourné sur la table : dans une autre pièce.'] },
+      { text: 'Ouvrir uniquement le support nécessaire.', micro: ['Un seul poly, une seule feuille — tout le reste fermé.'] },
+      {
+        text: 'Écrire une sortie : « restituer 3 mécanismes » ou « résoudre 1 à 4 ».',
+        micro: ['Formule-la comme un livrable, jamais comme « travailler la matière X ».'],
+      },
+      {
+        text: 'Lancer 10 minutes sans négocier la suite.',
+        detail: 'Le contrat porte sur 10 minutes, pas sur la journée : c’est ce qui le rend signable.',
+        micro: ['Utilise le minuteur de cette fiche et commence par l’action la plus petite possible.'],
+      },
       { text: 'À 10 minutes : continuer si engagé ; sinon réduire encore l’unité.' },
     ],
     mastery: [
@@ -146,10 +160,13 @@ export const focusMethods: Method[] = [
       'Utilise un seul minuteur.',
     ],
     procedure: [
-      { text: 'Retirer les signaux et notifications non essentiels.' },
+      {
+        text: 'Retirer les signaux et notifications non essentiels.',
+        micro: ['Coupe toutes les notifications sauf les appels ; sors les apps de la première page de l’écran.'],
+      },
       { text: 'Mettre le téléphone hors de la pièce.', detail: 'Hors de portée ne suffit pas toujours : hors de la pièce supprime le coût de résistance.' },
-      { text: 'Prévoir une fenêtre de consultation.' },
-      { text: 'Préparer la première tâche la veille.' },
+      { text: 'Prévoir une fenêtre de consultation.', micro: ['Deux rendez-vous fixes (midi et soir, par exemple) — pas de consultation entre les deux.'] },
+      { text: 'Préparer la première tâche la veille.', micro: ['Le poly de demain déjà ouvert à la bonne page sur le bureau.'] },
       { text: 'Utiliser un seul minuteur.' },
     ],
     mastery: [
@@ -197,10 +214,13 @@ export const focusMethods: Method[] = [
       'Prépare la première action du lendemain.',
     ],
     procedure: [
-      { text: 'Protéger sommeil, repas et récupération.' },
+      { text: 'Protéger sommeil, repas et récupération.', micro: ['Décide l’heure du coucher MAINTENANT, et ne la négocie plus.'] },
       { text: 'Faire les éléments de mémoire réellement dus / essentiels.', detail: 'Les cartes dues essentielles, pas les nouvelles.' },
-      { text: 'Traiter un seul objet critique.' },
-      { text: 'Faire une petite application / QCM corrigée si possible.' },
+      {
+        text: 'Traiter un seul objet critique.',
+        micro: ['Choisis l’objet qui bloque le plus la suite du programme — un seul, nommé.'],
+      },
+      { text: 'Faire une petite application / QCM corrigée si possible.', micro: ['Dix items corrigés suffisent : l’objectif est la continuité, pas le volume.'] },
       { text: 'Préparer la première action du lendemain.', detail: 'Une reprise préparée la veille coûte deux fois moins cher le matin.' },
     ],
     mastery: [
@@ -252,11 +272,22 @@ export const focusMethods: Method[] = [
       'Réévalue.',
     ],
     procedure: [
-      { text: 'Lister les objets exacts.', detail: 'Des objets nommés (« chapitre 4 de biochimie »), pas « tout mon retard ».' },
-      { text: 'Classer : bloque la suite / fortement évalué / entretien / supprimable.' },
+      {
+        text: 'Lister les objets exacts.',
+        detail: 'Des objets nommés (« chapitre 4 de biochimie »), pas « tout mon retard ».',
+        micro: ['Chaque ligne doit être finissable : « ch. 4 biochimie », pas « biochimie ».'],
+      },
+      {
+        text: 'Classer : bloque la suite / fortement évalué / entretien / supprimable.',
+        micro: ['Quatre étiquettes, une par ligne — sans état d’âme sur « supprimable ».'],
+      },
       { text: 'Suspendre les nouvelles cartes non essentielles.' },
       { text: 'Choisir au maximum deux priorités rouges par jour.' },
-      { text: 'Planifier seulement 3 jours.', detail: 'Au-delà de 72 h, le plan devient une fiction qui culpabilise.' },
+      {
+        text: 'Planifier seulement 3 jours.',
+        detail: 'Au-delà de 72 h, le plan devient une fiction qui culpabilise.',
+        micro: ['Trois lignes datées, deux rouges maximum par ligne — c’est tout le plan.'],
+      },
       { text: 'Faire un test diagnostique court.' },
       { text: 'Réévaluer.' },
     ],
@@ -304,10 +335,19 @@ export const focusMethods: Method[] = [
       'Reprends : exécute la prochaine action simple, ou passe à une question accessible puis reviens.',
     ],
     procedure: [
-      { text: 'Nommer : « le stress monte ; ce n’est pas une preuve que je ne sais rien ».' },
-      { text: 'Respirer lentement 1 à 2 minutes sans forcer.' },
+      {
+        text: 'Nommer : « le stress monte ; ce n’est pas une preuve que je ne sais rien ».',
+        micro: ['Dis-le vraiment, dans ta tête, mot pour mot : nommer l’état le sépare de toi.'],
+      },
+      {
+        text: 'Respirer lentement 1 à 2 minutes sans forcer.',
+        micro: ['Compte tes expirations lentes, sans forcer l’amplitude — le calme suit le rythme, pas l’effort.'],
+      },
       { text: 'Ancrer : pieds au sol, relâcher mâchoire / épaules, regarder les informations disponibles.' },
-      { text: 'Reprendre : exécuter la prochaine action simple ou passer à une question accessible puis revenir.' },
+      {
+        text: 'Reprendre : exécuter la prochaine action simple ou passer à une question accessible puis revenir.',
+        micro: ['Une seule action simple : relire l’énoncé, souligner les données, répondre à la question suivante.'],
+      },
     ],
     mastery: [
       'Le protocole permet de reprendre une action utile sans ajouter une nouvelle spirale.',

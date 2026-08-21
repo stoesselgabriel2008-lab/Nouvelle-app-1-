@@ -37,11 +37,26 @@ export const visuelMethods: Method[] = [
       'Refais sur une vue différente si disponible.',
     ],
     procedure: [
-      { text: 'Observer l’orientation et les gros repères.', detail: 'Plan de coupe, droite/gauche, supérieur/inférieur, antérieur/postérieur — avant tout détail.' },
+      {
+        text: 'Observer l’orientation et les gros repères.',
+        detail: 'Plan de coupe, droite/gauche, supérieur/inférieur, antérieur/postérieur — avant tout détail.',
+        micro: [
+          'Nomme à voix haute le plan de coupe et l’orientation avant de dessiner quoi que ce soit.',
+          'Choisis les 3 à 5 gros repères que tu poseras en premier.',
+        ],
+      },
       { text: 'Cacher le schéma.' },
-      { text: 'Redessiner les repères.', detail: 'Les gros repères d’abord, même grossièrement : la précision viendra après la structure.' },
-      { text: 'Ajouter les relations importantes.', detail: 'Rapports, trajets, contiguïtés : ce sont eux qui tombent en QCM.' },
-      { text: 'Comparer aux légendes.' },
+      {
+        text: 'Redessiner les repères.',
+        detail: 'Les gros repères d’abord, même grossièrement : la précision viendra après la structure.',
+        micro: ['Trace grossièrement : les positions relatives comptent, pas la beauté du trait.'],
+      },
+      {
+        text: 'Ajouter les relations importantes.',
+        detail: 'Rapports, trajets, contiguïtés : ce sont eux qui tombent en QCM.',
+        micro: ['Note rapports et trajets sous forme de flèches légendées : « passe devant », « traverse », « longe ».'],
+      },
+      { text: 'Comparer aux légendes.', micro: ['Chaque écart entre ton dessin et la planche = un point précis à retravailler.'] },
       { text: 'Refaire sur une vue différente si disponible.', detail: 'Ne jamais apprendre une seule planche : c’est la variation de vue qui prouve la maîtrise.' },
     ],
     example:
@@ -99,9 +114,15 @@ export const visuelMethods: Method[] = [
     ],
     procedure: [
       { text: 'Choisir une figure officielle.', detail: 'Celle du poly : c’est elle qui fait foi le jour de l’épreuve.' },
-      { text: 'Masquer une cible ou un petit groupe logique.' },
-      { text: 'Répondre avant de révéler.' },
-      { text: 'Ajouter fonction / rapport / piège dans l’extra, pas un paragraphe.' },
+      {
+        text: 'Masquer une cible ou un petit groupe logique.',
+        micro: ['Un masque = une structure (ou un petit groupe cohérent de 3-4 maximum).'],
+      },
+      { text: 'Répondre avant de révéler.', micro: ['Dis la réponse à voix haute AVANT de cliquer — sinon c’est de la reconnaissance.'] },
+      {
+        text: 'Ajouter fonction / rapport / piège dans l’extra, pas un paragraphe.',
+        micro: ['Dans l’extra : le critère qui permet de la reconnaître sur une AUTRE vue.'],
+      },
       { text: 'Varier les vues si possible.', detail: 'Une autre coupe, un autre grossissement : l’objectif est de reconnaître la structure, pas l’image.' },
     ],
     mastery: [

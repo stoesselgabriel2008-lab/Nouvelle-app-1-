@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getMethod } from '../content/methods/index';
 import { SUBJECTS_BY_ID } from '../content/subjects';
@@ -7,15 +7,18 @@ import { pushRecent } from '../lib/storage';
 import { BackButton, Disclose, FavoriteButton, MethodLinkList, SectionLabel, TagRow } from '../ui/bits';
 import { StepChecklist } from '../ui/StepChecklist';
 import { FocusTimer, TIMER_CONFIGS } from '../ui/FocusTimer';
+import { GuidedMode } from '../ui/GuidedMode';
 import { Icon } from '../ui/Icon';
 import { NotFoundPage } from './NotFoundPage';
 
 export function MethodPage() {
   const { id } = useParams();
   const method = id !== undefined ? getMethod(id) : undefined;
+  const [guided, setGuided] = useState(false);
 
   useEffect(() => {
     if (method) pushRecent('method', method.id);
+    setGuided(false);
   }, [method]);
 
   if (!method) return <NotFoundPage />;
@@ -71,6 +74,15 @@ export function MethodPage() {
           <div className="card">
             <StepChecklist id={method.id} steps={method.quickSteps} />
           </div>
+          <button
+            type="button"
+            className="btn btn--secondary"
+            style={{ marginTop: 'var(--sp-3)' }}
+            onClick={() => setGuided(true)}
+          >
+            <Icon name="arrow" size={16} strokeWidth={2.1} />
+            Suivre pas à pas
+          </button>
         </section>
 
         {TIMER_CONFIGS[method.id] !== undefined ? (
@@ -97,6 +109,13 @@ export function MethodPage() {
                     <div>{s.text}</div>
                     {s.detail !== undefined ? (
                       <div className="step-detail">{s.detail}</div>
+                    ) : null}
+                    {s.micro !== undefined && s.micro.length > 0 ? (
+                      <ul className="micro-steps">
+                        {s.micro.map((m) => (
+                          <li key={m}>{m}</li>
+                        ))}
+                      </ul>
                     ) : null}
                   </li>
                 ))}
@@ -234,6 +253,7 @@ export function MethodPage() {
           </p>
         </section>
       </main>
+      {guided ? <GuidedMode method={method} onClose={() => setGuided(false)} /> : null}
     </>
   );
 }

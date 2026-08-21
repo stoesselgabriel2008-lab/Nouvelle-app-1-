@@ -38,12 +38,30 @@ export const comprendreMethods: Method[] = [
       'Termine par une question ou un QCM de transfert.',
     ],
     procedure: [
-      { text: 'Choisir une notion précise.' },
-      { text: 'L’expliquer simplement sans support, comme à quelqu’un qui connaît les prérequis minimaux.' },
-      { text: 'Repérer les endroits où tu utilises un mot sans pouvoir l’expliquer.', detail: 'Ces mots-écrans sont exactement les trous de compréhension.' },
-      { text: 'Rouvrir le poly et corriger.' },
-      { text: 'Réexpliquer avec le vocabulaire exact.', detail: 'La version simple ne remplace pas la formulation du poly : elle y conduit.' },
-      { text: 'Faire une question / un QCM de transfert.', detail: 'C’est la vérification qui transforme une explication en maîtrise.' },
+      { text: 'Choisir une notion précise.', micro: ['Une notion, pas un chapitre : « l’osmose », pas « les échanges membranaires ».'] },
+      {
+        text: 'L’expliquer simplement sans support, comme à quelqu’un qui connaît les prérequis minimaux.',
+        micro: [
+          'Parle à voix haute, 2 à 3 minutes maximum, comme à un élève de terminale.',
+          'Poly fermé pendant toute l’explication — aucune vérification en cours de route.',
+        ],
+      },
+      {
+        text: 'Repérer les endroits où tu utilises un mot sans pouvoir l’expliquer.',
+        detail: 'Ces mots-écrans sont exactement les trous de compréhension.',
+        micro: ['Note chaque mot que tu prononces sans pouvoir le définir en une phrase.'],
+      },
+      { text: 'Rouvrir le poly et corriger.', micro: ['Va directement aux passages qui répondent à tes mots-écrans, pas au début du chapitre.'] },
+      {
+        text: 'Réexpliquer avec le vocabulaire exact.',
+        detail: 'La version simple ne remplace pas la formulation du poly : elle y conduit.',
+        micro: ['Reprends l’explication complète en réintégrant les termes exacts du poly.'],
+      },
+      {
+        text: 'Faire une question / un QCM de transfert.',
+        detail: 'C’est la vérification qui transforme une explication en maîtrise.',
+        micro: ['Termine par une question qui change l’angle : « et si… ? », un mini-cas, un item de QCM.'],
+      },
     ],
     example:
       'Explique l’osmose à voix haute sans le cours. Si « tonicité » sort sans définition possible, c’est là qu’il faut rouvrir le poly.',
@@ -96,11 +114,21 @@ export const comprendreMethods: Method[] = [
       'Reprends sans le modèle.',
     ],
     procedure: [
-      { text: 'À chaque étape demander : pourquoi ?' },
-      { text: 'Relier l’étape à une règle, une hypothèse ou une relation du cours.', detail: '« On divise par la masse parce que… » — si la phrase ne peut pas être finie, c’est un trou.' },
+      {
+        text: 'À chaque étape demander : pourquoi ?',
+        micro: ['À voix haute : « on fait ça parce que… » — et finis la phrase avant de passer à la ligne suivante.'],
+      },
+      {
+        text: 'Relier l’étape à une règle, une hypothèse ou une relation du cours.',
+        detail: '« On divise par la masse parce que… » — si la phrase ne peut pas être finie, c’est un trou.',
+        micro: ['Nomme la règle exacte qui autorise l’étape : loi, définition, hypothèse du modèle.'],
+      },
       { text: 'Préciser ce qui aurait changé si la condition était différente.' },
-      { text: 'Identifier un résultat impossible ou un contre-exemple.' },
-      { text: 'Reprendre sans le modèle.' },
+      {
+        text: 'Identifier un résultat impossible ou un contre-exemple.',
+        micro: ['Donne une valeur ou un cas qui serait absurde, et dis pourquoi il l’est.'],
+      },
+      { text: 'Reprendre sans le modèle.', micro: ['Cache l’exemple et refais le raisonnement seul, justifications comprises.'] },
     ],
     personal: [
       'Excellent pour les calculs et mécanismes, où tu retiens souvent l’architecture mais peux perdre le détail du lien.',
@@ -143,9 +171,16 @@ export const comprendreMethods: Method[] = [
       'Reteste plus tard.',
     ],
     procedure: [
-      { text: 'Formuler 2 à 5 questions sur les objectifs / titres.' },
-      { text: 'Tenter rapidement une réponse, même incertaine.', detail: 'Se tromper ici est utile : l’erreur prépare la correction.' },
-      { text: 'Lire / écouter ensuite avec ces questions en tête.' },
+      {
+        text: 'Formuler 2 à 5 questions sur les objectifs / titres.',
+        micro: ['Transforme chaque objectif ou titre en question directe : « Quel est le rôle de… ? Qu’est-ce qui déclenche… ? »'],
+      },
+      {
+        text: 'Tenter rapidement une réponse, même incertaine.',
+        detail: 'Se tromper ici est utile : l’erreur prépare la correction.',
+        micro: ['30 secondes par question, par écrit — même « je ne sais pas » s’accompagne d’une hypothèse.'],
+      },
+      { text: 'Lire / écouter ensuite avec ces questions en tête.', micro: ['Garde la liste sous les yeux et coche chaque question au moment où le cours y répond.'] },
       { text: 'Comparer la réponse initiale à la réponse apprise.' },
       { text: 'Retester plus tard.' },
     ],
@@ -188,12 +223,18 @@ export const comprendreMethods: Method[] = [
       'Réponds sans support et corrige.',
     ],
     procedure: [
-      { text: 'Créer des questions de définition.' },
+      {
+        text: 'Créer des questions de définition.',
+        micro: ['Pour chaque terme en gras du poly : « Définis exactement… ».'],
+      },
       { text: 'Ajouter des questions de fonctionnement et causalité.', detail: '« Comment ? », « Pourquoi ? », « Qu’est-ce qui déclenche… ? »' },
       { text: 'Ajouter des contrastes A/B.', detail: '« Quelle différence entre X et Y ? Quel critère tranche ? »' },
-      { text: 'Ajouter conditions / limites.' },
+      { text: 'Ajouter conditions / limites.', micro: ['« Dans quel cas ça ne s’applique pas ? Quelle est l’exception ? »'] },
       { text: 'Ajouter « si une variable change ? ».' },
-      { text: 'Répondre sans support et corriger.' },
+      {
+        text: 'Répondre sans support et corriger.',
+        micro: ['Réponds par écrit, à froid, en notant ta confiance (faible / moyenne / forte) dans la marge.'],
+      },
     ],
     mastery: [
       'La liste déclenche des productions, pas une nouvelle lecture.',

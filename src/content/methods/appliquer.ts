@@ -36,10 +36,20 @@ export const appliquerMethods: Method[] = [
       'Passe à un exemple à trous.',
     ],
     procedure: [
-      { text: 'Étudier la solution complète.' },
-      { text: 'À chaque étape, expliquer pourquoi cette loi / ce test / cette transformée est choisie.', detail: 'C’est l’auto-explication qui rend l’exemple utile : sans « pourquoi », tu mémorises une correction.' },
-      { text: 'Relier les étapes aux données et hypothèses.' },
-      { text: 'Reproduire une partie sans regarder.' },
+      {
+        text: 'Étudier la solution complète.',
+        micro: ['Lis d’abord l’énoncé seul et tente 30 secondes de plan avant d’ouvrir la solution.'],
+      },
+      {
+        text: 'À chaque étape, expliquer pourquoi cette loi / ce test / cette transformée est choisie.',
+        detail: 'C’est l’auto-explication qui rend l’exemple utile : sans « pourquoi », tu mémorises une correction.',
+        micro: ['Couvre la ligne suivante de la correction et prédis-la avant de la découvrir.'],
+      },
+      { text: 'Relier les étapes aux données et hypothèses.', micro: ['Pour chaque étape, pointe la donnée de l’énoncé ou l’hypothèse qui la justifie.'] },
+      {
+        text: 'Reproduire une partie sans regarder.',
+        micro: ['Cache la seconde moitié de la correction et refais-la seul·e, au propre.'],
+      },
       { text: 'Passer à un exemple à trous.', detail: 'La suite logique : Complétion / Fading, puis l’exercice à froid.' },
     ],
     example:
@@ -88,9 +98,15 @@ export const appliquerMethods: Method[] = [
     ],
     procedure: [
       { text: 'Prendre un exemple similaire.' },
-      { text: 'Masquer une étape clé.' },
-      { text: 'Compléter et justifier.' },
-      { text: 'Sur l’exemple suivant masquer davantage.' },
+      {
+        text: 'Masquer une étape clé.',
+        micro: ['Recopie l’exemple en laissant un blanc à l’étape choisie (le choix de la loi, la mise en équation…).'],
+      },
+      { text: 'Compléter et justifier.', micro: ['Remplis le blanc ET écris pourquoi c’est cette étape-là.'] },
+      {
+        text: 'Sur l’exemple suivant masquer davantage.',
+        micro: ['Fais tourner ce qui est masqué : jamais deux fois le même blanc.'],
+      },
       { text: 'Finir par un problème entièrement autonome.' },
     ],
     mastery: [
@@ -139,12 +155,27 @@ export const appliquerMethods: Method[] = [
       'Code l’erreur si échec.',
     ],
     procedure: [
-      { text: 'Cacher formule / correction.' },
-      { text: 'Identifier données et inconnue.' },
-      { text: 'Choisir le modèle.', detail: 'C’est le vrai test : quelle loi, quelles hypothèses, pourquoi celle-ci ?' },
-      { text: 'Écrire unités et prédiction qualitative.', detail: 'Prédire le sens du résultat avant de calculer protège des absurdités.' },
+      { text: 'Cacher formule / correction.', micro: ['Formulaire fermé, correction hors de vue — vraiment.'] },
+      {
+        text: 'Identifier données et inconnue.',
+        micro: ['Liste les données AVEC leurs unités ; encadre l’inconnue.'],
+      },
+      {
+        text: 'Choisir le modèle.',
+        detail: 'C’est le vrai test : quelle loi, quelles hypothèses, pourquoi celle-ci ?',
+        micro: ['Écris en une ligne pourquoi ce modèle s’applique : quelles hypothèses sont vérifiées ici ?'],
+      },
+      {
+        text: 'Écrire unités et prédiction qualitative.',
+        detail: 'Prédire le sens du résultat avant de calculer protège des absurdités.',
+        micro: ['Avant tout calcul : le résultat sera-t-il grand ou petit, positif ou négatif, croissant ou décroissant ?'],
+      },
       { text: 'Résoudre.' },
-      { text: 'Contrôler et interpréter.', detail: 'Contrôle dimensionnel, signe, ordre de grandeur, cas limites.' },
+      {
+        text: 'Contrôler et interpréter.',
+        detail: 'Contrôle dimensionnel, signe, ordre de grandeur, cas limites.',
+        micro: ['Passe les quatre contrôles dans l’ordre : dimension → signe → ordre de grandeur → cas limite.'],
+      },
       { text: 'Coder l’erreur si échec.', detail: 'Voir Correction par cause : K/C/T/L/F/Tps/G.' },
     ],
     mastery: [
@@ -184,10 +215,19 @@ export const appliquerMethods: Method[] = [
     ],
     procedure: [
       { text: 'Conserver le principe.' },
-      { text: 'Changer une donnée, l’inconnue, l’unité, l’hypothèse ou la formulation.' },
-      { text: 'Prédire ce qui reste invariant.' },
+      {
+        text: 'Changer une donnée, l’inconnue, l’unité, l’hypothèse ou la formulation.',
+        micro: ['Réécris l’énoncé en changeant UNE dimension, et note laquelle tu as changée.'],
+      },
+      {
+        text: 'Prédire ce qui reste invariant.',
+        micro: ['Avant de résoudre, dis ce qui ne doit PAS changer dans la stratégie.'],
+      },
       { text: 'Résoudre.' },
-      { text: 'Comparer la stratégie, pas seulement le résultat.' },
+      {
+        text: 'Comparer la stratégie, pas seulement le résultat.',
+        micro: ['Mets côte à côte les deux résolutions : mêmes étapes ? mêmes justifications ?'],
+      },
     ],
     mastery: [
       'Tu réussis malgré une formulation ou des données nouvelles.',
@@ -236,10 +276,19 @@ export const appliquerMethods: Method[] = [
     ],
     procedure: [
       { text: 'Apprendre chaque famille suffisamment.', detail: 'L’entrelacement vient après l’acquisition initiale, pas à la place.' },
-      { text: 'Créer une série contenant plusieurs familles.' },
+      {
+        text: 'Créer une série contenant plusieurs familles.',
+        micro: ['Prends 6 à 10 exercices issus de 2-3 chapitres et mélange-les.'],
+      },
       { text: 'Cacher le nom de la méthode attendue.', detail: 'Si l’énoncé annonce le chapitre, le choix est déjà fait pour toi.' },
-      { text: 'Pour chaque item, justifier le choix de stratégie.' },
-      { text: 'Analyser les confusions de catégorie.' },
+      {
+        text: 'Pour chaque item, justifier le choix de stratégie.',
+        micro: ['Avant de résoudre, écris la famille ET l’indice de l’énoncé qui te l’a fait choisir.'],
+      },
+      {
+        text: 'Analyser les confusions de catégorie.',
+        micro: ['À la fin, liste les items où tu as choisi la mauvaise famille : c’est eux qu’on retravaille en tableau A/B.'],
+      },
     ],
     personal: [
       'Très utile pour limiter ton interférence entre notions proches.',

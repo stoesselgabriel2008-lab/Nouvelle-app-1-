@@ -420,6 +420,53 @@ li + li > .row::before {
   font-weight: 500;
 }
 
+.chip-count {
+  font-size: var(--fs-caption);
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Survols — uniquement sur les appareils à pointeur (iPad avec trackpad, desktop). */
+@media (hover: hover) and (pointer: fine) {
+  .row:hover,
+  .option-btn:hover,
+  .sos-btn:hover,
+  .disclose:hover,
+  .check-step:hover {
+    background: var(--bg-tertiary);
+  }
+
+  .chip:hover {
+    background: var(--bg-tertiary);
+  }
+
+  .chip--tint:hover {
+    background: var(--tint-soft);
+    filter: brightness(0.96);
+  }
+
+  .chip--on:hover,
+  .btn:hover {
+    filter: brightness(1.06);
+  }
+
+  .btn--secondary:hover,
+  .btn--quiet:hover {
+    filter: none;
+    background: var(--bg-tertiary);
+  }
+
+  .tophit:hover,
+  .next-card:hover,
+  .hero-card:hover {
+    transform: translateY(-1px);
+  }
+
+  .search-pill:hover {
+    background: var(--bg-tertiary);
+  }
+}
+
 /* ----------------------------------------------- Fiche méthode */
 
 .method-header {
@@ -745,16 +792,29 @@ li + li > .row::before {
 
 /* ----------------------------------------------- Recherche */
 
+/* Sur iPhone, la recherche va droit au but : en-tête compact, champ tout
+   de suite (façon Spotlight). */
+@media (max-width: 739px) {
+  .content--search .page-title {
+    font-size: var(--fs-title2);
+    margin-bottom: 2px;
+  }
+
+  .content--search .page-sub {
+    font-size: var(--fs-footnote);
+    margin-bottom: var(--sp-1);
+  }
+}
+
+/* Champ EN HAUT et collant : rien ne flotte quand le clavier iOS s'ouvre —
+   la page défile naturellement sous le champ, qui reste stable. */
 .searchbar-wrap {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 14px);
-  display: flex;
-  justify-content: center;
-  padding: 0 max(var(--sp-3), var(--safe-left)) 0
-    max(var(--sp-3), var(--safe-right));
+  position: sticky;
+  top: var(--safe-top);
   z-index: 41;
+  padding: var(--sp-2) 0 var(--sp-3);
+  background: var(--bg);
+  margin-bottom: var(--sp-1);
 }
 
 @media (min-width: 740px) {
@@ -762,6 +822,7 @@ li + li > .row::before {
     position: static;
     padding: 0;
     margin-bottom: var(--sp-4);
+    background: none;
   }
 }
 
@@ -771,24 +832,18 @@ li + li > .row::before {
   gap: var(--sp-2);
   width: 100%;
   max-width: 560px;
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  border: 0.5px solid var(--glass-border);
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--separator);
   border-radius: var(--r-pill);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--card-shadow);
   padding: var(--sp-2) var(--sp-4);
   color: var(--label-2);
 }
 
-@media (min-width: 740px) {
-  .searchbar {
-    background: var(--bg-elevated);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    border: 0.5px solid var(--separator);
-    box-shadow: var(--card-shadow);
-  }
+/* Pendant la saisie (clavier ouvert), la tab bar s'efface : plus d'éléments
+   flottants au-dessus du clavier. Elle revient dès que le champ perd le focus. */
+body:has(.searchbar input:focus) .tabbar-wrap {
+  display: none;
 }
 
 .searchbar input {
@@ -1278,6 +1333,143 @@ li + li > .row::before {
 .next-card svg {
   margin-left: auto;
   color: var(--tint);
+}
+
+/* ----------------------------------------------- Micro-étapes */
+
+.micro-steps {
+  list-style: none;
+  margin-top: var(--sp-2);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.micro-steps li {
+  position: relative;
+  padding-left: var(--sp-4);
+  font-size: var(--fs-subhead);
+  color: var(--label-2);
+}
+
+.micro-steps li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.66em;
+  width: 6px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--tint);
+  opacity: 0.7;
+}
+
+.micro-steps--lg li {
+  font-size: var(--fs-callout);
+  color: var(--label);
+  padding-left: var(--sp-5);
+}
+
+.micro-steps--lg li::before {
+  width: 8px;
+  top: 0.7em;
+}
+
+/* ----------------------------------------------- Mode pas-à-pas */
+
+.guided {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guided {
+    animation: page-in 0.2s ease both;
+  }
+}
+
+.guided-head {
+  padding: max(var(--sp-3), var(--safe-top)) max(var(--sp-4), var(--safe-left)) 0
+    max(var(--sp-4), var(--safe-right));
+}
+
+.guided-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+}
+
+.guided-progress span {
+  display: block;
+  height: 100%;
+  background: var(--tint);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+}
+
+.guided-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+.guided-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-4) max(var(--sp-5), var(--safe-left)) var(--sp-6)
+    max(var(--sp-5), var(--safe-right));
+  max-width: var(--content-max);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.guided-num {
+  font-weight: 800;
+  color: var(--on-tint);
+  background: var(--tint);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-headline);
+  margin-bottom: var(--sp-4);
+}
+
+.guided-done-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-4);
+}
+
+.guided-foot {
+  display: flex;
+  gap: var(--sp-2);
+  padding: var(--sp-3) max(var(--sp-4), var(--safe-left))
+    max(var(--sp-4), calc(var(--safe-bottom) + var(--sp-2)))
+    max(var(--sp-4), var(--safe-right));
+  border-top: 0.5px solid var(--separator);
+  max-width: var(--content-max);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.guided-foot .btn {
+  flex: 1;
 }
 
 /* ----------------------------------------------- Récap diagnostic */

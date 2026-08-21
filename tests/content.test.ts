@@ -125,6 +125,20 @@ describe('bibliothèque des méthodes', () => {
     }
   });
 
+  it('chaque fiche a des micro-étapes qui opérationnalisent sa procédure', () => {
+    for (const m of METHODS) {
+      const withMicro = m.procedure.filter(
+        (s) => s.micro !== undefined && s.micro.length > 0,
+      );
+      expect(withMicro.length, `${m.id} : micro-étapes insuffisantes`).toBeGreaterThanOrEqual(2);
+      for (const s of withMicro) {
+        for (const line of s.micro ?? []) {
+          expect(line.length, `${m.id} micro trop courte`).toBeGreaterThan(15);
+        }
+      }
+    }
+  });
+
   it('chaque fiche a un exemple PASS concret', () => {
     for (const m of METHODS) {
       expect(m.example !== undefined && m.example.length > 30, `${m.id} sans exemple`).toBe(

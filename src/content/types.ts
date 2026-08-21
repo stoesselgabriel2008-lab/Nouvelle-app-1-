@@ -75,6 +75,11 @@ export interface ProcedureStep {
   text: string;
   /** Précision issue du corpus (matrice, protocole matière, règles), si utile. */
   detail?: string;
+  /**
+   * Micro-étapes : le geste exact à exécuter, dans l'ordre, avec le
+   * vocabulaire du corpus. Elles opérationnalisent l'étape sans la remplacer.
+   */
+  micro?: string[];
 }
 
 export interface AnkiGuidance {

@@ -37,11 +37,21 @@ export const structurerMethods: Method[] = [
       'Ajoute progressivement les détails.',
     ],
     procedure: [
-      { text: 'Identifier 3 à 7 grandes catégories.' },
-      { text: 'Classer les détails sous ces branches.' },
+      {
+        text: 'Identifier 3 à 7 grandes catégories.',
+        micro: ['Parcours le plan et les titres du poly : les catégories y sont presque toujours déjà — n’en invente pas.'],
+      },
+      {
+        text: 'Classer les détails sous ces branches.',
+        micro: ['Au brouillon : une ligne par catégorie, ses membres listés dessous.'],
+      },
       { text: 'Nommer les invariants et exceptions.', detail: 'Ce qui est toujours vrai structure ; ce qui fait exception se teste à part.' },
-      { text: 'Rappeler d’abord la structure.', detail: 'Sans support : les branches avant les feuilles.' },
-      { text: 'Ajouter progressivement les détails.' },
+      {
+        text: 'Rappeler d’abord la structure.',
+        detail: 'Sans support : les branches avant les feuilles.',
+        micro: ['Ferme et récite uniquement les 3-7 branches, dans l’ordre, avant tout détail.'],
+      },
+      { text: 'Ajouter progressivement les détails.', micro: ['Branche par branche : récite la branche, puis ses membres, puis passe à la suivante.'] },
     ],
     example:
       'Vingt acides aminés en vrac → 3 familles selon la chaîne latérale, puis les membres de chaque famille, puis les cas particuliers.',
@@ -86,12 +96,19 @@ export const structurerMethods: Method[] = [
       'Utilise la carte pour répondre à des questions.',
     ],
     procedure: [
-      { text: 'Fermer ou réduire le support.' },
+      { text: 'Fermer ou réduire le support.', micro: ['Accorde-toi 30 secondes sur le plan du chapitre, puis ferme.'] },
       { text: 'Mettre le concept central.' },
       { text: 'Limiter les branches principales.', detail: '3 à 7 branches : au-delà, la hiérarchie se dilue.' },
-      { text: 'Ajouter seulement relations et mots discriminants.', detail: 'Pas de phrases entières : des mots qui tranchent.' },
-      { text: 'Comparer au poly.' },
-      { text: 'Utiliser la map pour répondre à des questions.' },
+      {
+        text: 'Ajouter seulement relations et mots discriminants.',
+        detail: 'Pas de phrases entières : des mots qui tranchent.',
+        micro: ['Un à deux mots par nœud ; si tu écris une phrase, c’est de la prise de notes déguisée.'],
+      },
+      { text: 'Comparer au poly.', micro: ['Repère ce qui manque et où tu l’aurais accroché : c’est le trou à retravailler.'] },
+      {
+        text: 'Utiliser la map pour répondre à des questions.',
+        micro: ['Pose-toi trois questions du chapitre et réponds en suivant les branches du doigt.'],
+      },
     ],
     personal: [
       'Bonne pour exploiter ta structuration ; évite d’y passer du temps graphique.',
@@ -135,11 +152,15 @@ export const structurerMethods: Method[] = [
       'Reconstruis à froid.',
     ],
     procedure: [
-      { text: 'Lister les concepts clés.' },
-      { text: 'Relier chaque paire pertinente par un verbe précis.', detail: '« active », « inhibe », « transporte », « précède », « mesure »…' },
+      { text: 'Lister les concepts clés.', micro: ['8 à 15 concepts maximum, tirés des termes en gras du poly.'] },
+      {
+        text: 'Relier chaque paire pertinente par un verbe précis.',
+        detail: '« active », « inhibe », « transporte », « précède », « mesure »…',
+        micro: ['Lis chaque flèche à voix haute comme une phrase complète : sujet → verbe → complément. Si la phrase est fausse ou vide, corrige la flèche.'],
+      },
       { text: 'Ajouter conditions / causalités.' },
       { text: 'Retirer les relations redondantes.' },
-      { text: 'Reconstruire à froid.' },
+      { text: 'Reconstruire à froid.', micro: ['Page vide : replace concepts et flèches verbalisées, puis compare.'] },
     ],
     mastery: [
       'Chaque flèche peut être lue comme une phrase scientifique correcte.',
@@ -190,12 +211,30 @@ export const structurerMethods: Method[] = [
       'Perturbe une étape.',
     ],
     procedure: [
-      { text: 'Définir l’état initial.', detail: 'Où en est le système avant que rien ne se passe ? Quel compartiment, quel état ?' },
+      {
+        text: 'Définir l’état initial.',
+        detail: 'Où en est le système avant que rien ne se passe ? Quel compartiment, quel état ?',
+        micro: ['Écris une ligne : lieu, acteurs présents, état (actif / inactif) avant le signal.'],
+      },
       { text: 'Identifier le déclencheur.' },
-      { text: 'Placer les intermédiaires dans l’ordre.', detail: 'D’abord la logique de la chaîne, ensuite seulement les noms exacts.' },
-      { text: 'Nommer le type de relation : active, inhibe, transporte, phosphoryle…' },
+      {
+        text: 'Placer les intermédiaires dans l’ordre.',
+        detail: 'D’abord la logique de la chaîne, ensuite seulement les noms exacts.',
+        micro: [
+          'Dessine d’abord des cases vides reliées par des flèches : la logique sans les noms.',
+          'Remplis ensuite les cases avec les noms exacts, un par un.',
+        ],
+      },
+      {
+        text: 'Nommer le type de relation : active, inhibe, transporte, phosphoryle…',
+        micro: ['Étiquette chaque flèche avec son verbe — une flèche muette est une flèche non comprise.'],
+      },
       { text: 'Définir la conséquence et le résultat.' },
-      { text: 'Perturber une étape.', detail: 'Acteur absent, bloqué, surexprimé : que devient la sortie ? (voir Perturbations « si… alors… »)' },
+      {
+        text: 'Perturber une étape.',
+        detail: 'Acteur absent, bloqué, surexprimé : que devient la sortie ? (voir Perturbations « si… alors… »)',
+        micro: ['Choisis un maillon, barre-le, écris la conséquence immédiate puis la conséquence secondaire.'],
+      },
     ],
     example:
       'Voie de signalisation : ligand → récepteur → protéine relais → effecteur → réponse cellulaire. La logique d’abord, puis les noms exacts de chaque acteur, testés séparément.',
@@ -252,10 +291,13 @@ export const structurerMethods: Method[] = [
       'Compare au modèle.',
     ],
     procedure: [
-      { text: 'Choisir un acteur ou une variable.' },
+      { text: 'Choisir un acteur ou une variable.', micro: ['Prends ta chaîne écrite et entoure un acteur — au hasard, pas le plus facile.'] },
       { text: 'Le supprimer, l’inhiber, l’augmenter ou changer son compartiment selon le cours.' },
-      { text: 'Prédire la conséquence immédiate.' },
-      { text: 'Puis la conséquence secondaire.' },
+      {
+        text: 'Prédire la conséquence immédiate.',
+        micro: ['Écris ta prédiction AVANT toute vérification : « alors… », en une ligne.'],
+      },
+      { text: 'Puis la conséquence secondaire.', micro: ['Continue la chaîne : « et donc… », jusqu’à la sortie du système.'] },
       { text: 'Comparer au modèle.' },
     ],
     example:
@@ -311,11 +353,31 @@ export const structurerMethods: Method[] = [
       'Crée éventuellement une carte de contraste.',
     ],
     procedure: [
-      { text: 'Mettre A et B côte à côte.', detail: 'Arrête l’apprentissage séparé : c’est la comparaison directe qui désamorce l’interférence.' },
-      { text: 'Choisir 3 à 6 dimensions discriminantes.' },
-      { text: 'Identifier le « discriminant roi ».', detail: 'LE critère qui tranche à coup sûr, celui que tu vérifieras en premier en QCM.' },
-      { text: 'Produire A puis B sans support.' },
-      { text: 'Alterner des questions A/B.' },
+      {
+        text: 'Mettre A et B côte à côte.',
+        detail: 'Arrête l’apprentissage séparé : c’est la comparaison directe qui désamorce l’interférence.',
+        micro: ['Trace deux colonnes A et B sur une page ; remplis-les à livre ouvert cette première fois.'],
+      },
+      {
+        text: 'Choisir 3 à 6 dimensions discriminantes.',
+        micro: [
+          'Garde les lignes qui séparent vraiment A de B : localisation, activateur, cible, effet…',
+          'Supprime toute ligne où A et B sont identiques : elle n’aide pas à trancher.',
+        ],
+      },
+      {
+        text: 'Identifier le « discriminant roi ».',
+        detail: 'LE critère qui tranche à coup sûr, celui que tu vérifieras en premier en QCM.',
+        micro: ['Entoure cette ligne — c’est elle que tu réciteras en premier à chaque confusion.'],
+      },
+      {
+        text: 'Produire A puis B sans support.',
+        micro: ['Ferme, refais le tableau de mémoire : colonne A complète, puis colonne B.'],
+      },
+      {
+        text: 'Alterner des questions A/B.',
+        micro: ['Fais-toi six questions en alternance aléatoire : « ceci : A ou B ? pourquoi ? »'],
+      },
       { text: 'Créer éventuellement une carte de contraste.', detail: 'Une carte Anki qui teste le critère qui tranche (voir Carte piège / contraste).' },
     ],
     example:
@@ -365,12 +427,20 @@ export const structurerMethods: Method[] = [
       'Teste une inversion ou un décalage.',
     ],
     procedure: [
-      { text: 'Placer l’état initial.' },
+      { text: 'Placer l’état initial.', micro: ['Ligne horizontale, état de départ à gauche, en un mot.'] },
       { text: 'Ajouter les événements majeurs.' },
-      { text: 'Pour chaque flèche écrire « ce qui change ».', detail: 'La flèche porte la transformation, pas seulement l’ordre.' },
+      {
+        text: 'Pour chaque flèche écrire « ce qui change ».',
+        detail: 'La flèche porte la transformation, pas seulement l’ordre.',
+        micro: ['Au-dessus de chaque flèche, un verbe de transformation : se creuse, migre, fusionne, se ferme…'],
+      },
       { text: 'Relier chaque transformation à son résultat.' },
-      { text: 'Reconstruire de mémoire.' },
-      { text: 'Tester une inversion ou un décalage.', detail: '« Que se passe-t-il si cette étape est retardée ? » — le test de compréhension de la séquence.' },
+      { text: 'Reconstruire de mémoire.', micro: ['Ferme, retrace la frise entière — événements, flèches ET verbes.'] },
+      {
+        text: 'Tester une inversion ou un décalage.',
+        detail: '« Que se passe-t-il si cette étape est retardée ? » — le test de compréhension de la séquence.',
+        micro: ['Choisis une étape et réponds par écrit : « si elle est retardée ou absente, alors… »'],
+      },
     ],
     example:
       'Semaine de développement embryonnaire : chaque flèche porte la transformation (« se creuse », « migre », « fusionne »), pas juste un numéro de jour.',
@@ -415,10 +485,16 @@ export const structurerMethods: Method[] = [
       'Teste sur une formulation nouvelle.',
     ],
     procedure: [
-      { text: 'Écrire l’idée en une phrase.' },
-      { text: 'Construire un schéma minimal qui montre la relation.' },
-      { text: 'Aligner les mêmes concepts dans les deux formats.' },
-      { text: 'Masquer l’un et reconstruire l’autre.' },
+      { text: 'Écrire l’idée en une phrase.', micro: ['Une phrase complète, avec les termes exacts du poly.'] },
+      {
+        text: 'Construire un schéma minimal qui montre la relation.',
+        micro: ['Trois formes maximum : boîtes, flèches, axes. C’est un outil, pas un dessin.'],
+      },
+      { text: 'Aligner les mêmes concepts dans les deux formats.', micro: ['Chaque mot-clé de la phrase doit se retrouver quelque part sur le schéma.'] },
+      {
+        text: 'Masquer l’un et reconstruire l’autre.',
+        micro: ['Cache la phrase et redis-la depuis le schéma ; puis cache le schéma et retrace-le depuis la phrase.'],
+      },
       { text: 'Tester sur une formulation nouvelle.' },
     ],
     mastery: [

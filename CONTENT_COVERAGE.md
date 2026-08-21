@@ -130,3 +130,10 @@ Les requêtes du prompt maître (§24) sont verrouillées par `tests/search.test
   variation → entrelacement, chaîne causale → perturbations, etc.).
   Les protocoles chronométrés (démarrage 10 min, Pomodoro, 20-30 min)
   embarquent un minuteur réel.
+- Depuis la v1.2, chaque étape de procédure porte des **micro-étapes**
+  (« Concrètement ») : le geste exact à exécuter, dans l'ordre, avec le
+  vocabulaire du corpus (discriminant roi, sortie observable, compartiments,
+  codes K/C/T/L/F/Tps/G…). Les étapes du PDF restent le texte de référence ;
+  les micro-étapes les opérationnalisent sans les remplacer. Le **mode
+  pas-à-pas** déroule cette même procédure en plein écran, une étape à la
+  fois, et se conclut sur « C'est acquis si… ».

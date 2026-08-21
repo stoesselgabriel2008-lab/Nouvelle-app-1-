@@ -91,16 +91,20 @@ export function LibraryPage() {
             >
               Tout
             </button>
-            {CATEGORY_ORDER.map((c) => (
-              <button
-                key={c}
-                type="button"
-                className={`chip${cat === c ? ' chip--on' : ''}`}
-                onClick={() => setCat(cat === c ? null : c)}
-              >
-                {CATEGORY_LABELS[c]}
-              </button>
-            ))}
+            {CATEGORY_ORDER.map((c) => {
+              const count = METHODS.filter((m) => m.categories.includes(c)).length;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  className={`chip${cat === c ? ' chip--on' : ''}`}
+                  onClick={() => setCat(cat === c ? null : c)}
+                >
+                  {CATEGORY_LABELS[c]}
+                  <span className="chip-count">{count}</span>
+                </button>
+              );
+            })}
           </div>
 
           {cat !== null ? (

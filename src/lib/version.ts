@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.1.0';
+export const APP_VERSION = '1.2.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,18 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.2.0',
+    date: '2026-08',
+    items: [
+      'Recherche sur iPhone corrigée : le champ est maintenant en haut de l’écran — plus rien ne « monte » avec le clavier, et la barre d’onglets s’efface pendant la saisie.',
+      'Micro-étapes : chaque étape des procédures détaille désormais le geste exact (« lis en surlignant les mots discriminants, ferme, récite idées puis mots-clés… »).',
+      'Mode pas-à-pas : bouton « Suivre pas à pas » sur chaque fiche — la procédure défile en plein écran, une étape à la fois, et se termine sur « C’est acquis si… ».',
+      'Reprendre : si tu quittes une méthode en cours d’étapes, l’accueil te propose de reprendre exactement où tu en étais.',
+      'Bibliothèque : chaque catégorie affiche son nombre de méthodes.',
+      'Survols et finitions sur iPad et desktop.',
+    ],
+  },
   {
     version: '1.1.0',
     date: '2026-08',

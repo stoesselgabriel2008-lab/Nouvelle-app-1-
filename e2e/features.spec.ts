@@ -119,6 +119,66 @@ test('Pour moi : la carte d’entrée mène au diagnostic, la Bibliothèque a so
   await expect(page).toHaveURL(/recherche/);
 });
 
+test('recherche : champ en haut de l’écran, tab bar effacée pendant la saisie', async ({
+  page,
+}) => {
+  await page.goto('#/recherche');
+  const input = page.getByRole('searchbox');
+  const box = await input.boundingBox();
+  expect(box, 'champ de recherche introuvable').not.toBeNull();
+  // Le champ vit en HAUT de la page (fini la barre flottante que le clavier
+  // iOS faisait remonter) : il doit être dans le premier tiers de l'écran.
+  const viewport = page.viewportSize();
+  expect(box!.y).toBeLessThan((viewport?.height ?? 800) / 3);
+
+  const width = viewport?.width ?? 1280;
+  if (width < 740) {
+    await expect(page.locator('.tabbar-wrap')).toBeVisible();
+    await input.focus();
+    await expect(page.locator('.tabbar-wrap')).toBeHidden();
+    await input.blur();
+    await expect(page.locator('.tabbar-wrap')).toBeVisible();
+  }
+});
+
+test('micro-étapes : le geste exact est visible dans la procédure complète', async ({
+  page,
+}) => {
+  await page.goto('#/methode/rappel-actif');
+  await page.getByRole('button', { name: 'Voir la procédure complète' }).click();
+  const micro = page.locator('.micro-steps li').first();
+  await expect(micro).toBeVisible();
+  await expect(micro).toContainText('surlignant');
+});
+
+test('mode pas-à-pas : chaque étape défile jusqu’à « C’est acquis si »', async ({ page }) => {
+  await page.goto('#/methode/rappel-actif');
+  await page.getByRole('button', { name: 'Suivre pas à pas' }).click();
+  const guided = page.locator('.guided');
+  await expect(guided).toBeVisible();
+  await expect(guided).toContainText('Étape 1 sur 6');
+  await expect(guided).toContainText('Étudier / comprendre une unité courte.');
+  for (let i = 0; i < 5; i++) {
+    await guided.getByRole('button', { name: /Étape suivante/ }).click();
+  }
+  await guided.getByRole('button', { name: 'Terminer' }).click();
+  await expect(guided).toContainText('Procédure terminée');
+  await expect(guided).toContainText('C’est acquis si…');
+  await guided.getByRole('button', { name: 'Fermer' }).click();
+  await expect(guided).toBeHidden();
+});
+
+test('reprendre : l’accueil propose la méthode en cours', async ({ page }) => {
+  await page.goto('#/methode/rappel-actif');
+  await page.locator('.check-step').first().click();
+  await page.goto('#/');
+  const section = page.locator('.section', { hasText: 'Reprendre' });
+  await expect(section.locator('.row-title')).toContainText(
+    'Rappel actif / Retrieval practice',
+  );
+  await expect(section).toContainText('1/5');
+});
+
 test('vérification manuelle des mises à jour : un retour clair', async ({ page }) => {
   await page.goto('#/');
   await page.getByText('Vérifier les mises à jour').click();

@@ -41,8 +41,15 @@ export const testerMethods: Method[] = [
     procedure: [
       { text: 'Répondre sans correction.' },
       { text: 'Déclarer éventuellement la confiance.', detail: 'Faible / moyenne / forte suffit (voir Calibration de confiance).' },
-      { text: 'Pour chaque proposition, repérer le mot / la relation décisive.', detail: 'Négations, absolus (« toujours », « jamais »), inversions cible/effet : les pièges classiques.' },
-      { text: 'Corriger erreurs, hésitations et bonnes réponses chanceuses.' },
+      {
+        text: 'Pour chaque proposition, repérer le mot / la relation décisive.',
+        detail: 'Négations, absolus (« toujours », « jamais »), inversions cible/effet : les pièges classiques.',
+        micro: ['Souligne dans chaque proposition le mot qui la rend vraie ou fausse.'],
+      },
+      {
+        text: 'Corriger erreurs, hésitations et bonnes réponses chanceuses.',
+        micro: ['Transforme chaque proposition fausse en phrase exacte, par écrit — pas seulement « c’est faux ».'],
+      },
       { text: 'Coder la cause.', detail: 'K/C/T/L/F/Tps/G — voir Correction par cause.' },
       { text: 'Retester plus tard.' },
     ],
@@ -99,7 +106,11 @@ export const testerMethods: Method[] = [
     ],
     procedure: [
       { text: 'Noter l’item et la réponse attendue.' },
-      { text: 'Reconstruire ton raisonnement initial.', detail: 'Qu’as-tu pensé au moment de répondre ? C’est le raisonnement qu’on corrige, pas la trace.' },
+      {
+        text: 'Reconstruire ton raisonnement initial.',
+        detail: 'Qu’as-tu pensé au moment de répondre ? C’est le raisonnement qu’on corrige, pas la trace.',
+        micro: ['Écris ce que tu as réellement pensé en répondant — pas ce que tu aurais dû penser.'],
+      },
       {
         text: 'Choisir une cause principale : K/C/T/L/F/Tps/G.',
         detail:
@@ -110,7 +121,10 @@ export const testerMethods: Method[] = [
         detail:
           'K → réapprendre + carte ciblée · C → tableau A/B + carte contraste · T → exercices/variations · L → règle de lecture (souligner négations/absolus) · F → carte calcul + exercice · Tps → simulation chronométrée · G → retester sans indice.',
       },
-      { text: 'Noter le signal manqué.' },
+      {
+        text: 'Noter le signal manqué.',
+        micro: ['Le mot ou l’indice de l’énoncé qui aurait dû t’alerter — celui que tu chercheras la prochaine fois.'],
+      },
       { text: 'Retester plus tard.' },
     ],
     mastery: [
@@ -163,8 +177,14 @@ export const testerMethods: Method[] = [
     ],
     procedure: [
       { text: 'Répondre.' },
-      { text: 'Noter faible / moyenne / forte ou un pourcentage simple.' },
-      { text: 'Comparer confiance et exactitude.' },
+      {
+        text: 'Noter faible / moyenne / forte ou un pourcentage simple.',
+        micro: ['Avant de vérifier : écris F / M / F dans la marge, item par item.'],
+      },
+      {
+        text: 'Comparer confiance et exactitude.',
+        micro: ['Croise les deux colonnes : erreur + confiance forte = priorité rouge.'],
+      },
       { text: 'Prioriser les erreurs fausses avec forte confiance.', detail: 'Une erreur sûre d’elle-même reviendra à l’examen ; une hésitation juste, rarement.' },
       { text: 'Retester ces erreurs.' },
     ],
@@ -219,11 +239,23 @@ export const testerMethods: Method[] = [
       'Arrête les nouvelles cartes à faible rendement.',
     ],
     procedure: [
-      { text: 'Rappel actif.', detail: 'Produis d’abord : plans, mécanismes, formules — sans support.' },
-      { text: 'Erreurs antérieures.', detail: 'Ton carnet d’erreurs est la liste de révision la plus rentable qui existe.' },
-      { text: 'Distinctions et confusions.', detail: 'Reprends les discriminants rois de tes tableaux A/B.' },
+      {
+        text: 'Rappel actif.',
+        detail: 'Produis d’abord : plans, mécanismes, formules — sans support.',
+        micro: ['5 minutes : récite plans et mécanismes de la portion visée, support fermé.'],
+      },
+      {
+        text: 'Erreurs antérieures.',
+        detail: 'Ton carnet d’erreurs est la liste de révision la plus rentable qui existe.',
+        micro: ['Rouvre le carnet et redis la correction de chaque erreur récente.'],
+      },
+      {
+        text: 'Distinctions et confusions.',
+        detail: 'Reprends les discriminants rois de tes tableaux A/B.',
+        micro: ['Récite chaque discriminant roi : « ce qui sépare X de Y, c’est… ».'],
+      },
       { text: 'Chiffres / conditions / exceptions.' },
-      { text: 'QCM ciblés.' },
+      { text: 'QCM ciblés.', micro: ['Cinq items maximum, sur la portion travaillée uniquement.'] },
       { text: 'Arrêter les nouvelles cartes à faible rendement.' },
     ],
     mastery: [
@@ -270,11 +302,18 @@ export const testerMethods: Method[] = [
       'Reteste les familles d’erreurs.',
     ],
     procedure: [
-      { text: 'Reproduire le format réel.', detail: 'Même nombre d’items, même grille, même ordre de matières si possible.' },
+      {
+        text: 'Reproduire le format réel.',
+        detail: 'Même nombre d’items, même grille, même ordre de matières si possible.',
+        micro: ['Grille de réponse papier, téléphone hors de la pièce, aucune pause non prévue.'],
+      },
       { text: 'Pas d’indices.' },
       { text: 'Chronométrer.' },
       { text: 'Corriger seulement après la série prévue.' },
-      { text: 'Analyser score, temps, confiance et causes.' },
+      {
+        text: 'Analyser score, temps, confiance et causes.',
+        micro: ['Quatre colonnes : score par matière, temps passé, confiance déclarée, code d’erreur K/C/T/L/F/Tps/G.'],
+      },
       { text: 'Retester les familles d’erreurs.', detail: 'Chaque famille d’erreurs repart dans le circuit Correction par cause.' },
     ],
     mastery: [

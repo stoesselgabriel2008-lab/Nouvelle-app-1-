@@ -40,12 +40,40 @@ export const socleMethods: Method[] = [
       'Reteste plus tard sous une formulation différente.',
     ],
     procedure: [
-      { text: 'Étudier / comprendre une unité courte.', detail: 'Une unité logique : une définition, un mécanisme, un tableau, un schéma, une formule — pas un nombre fixe de pages.' },
-      { text: 'Fermer ou masquer le support.', detail: 'Retire-le avant que la familiarité ne donne une fausse impression de maîtrise.' },
-      { text: 'Produire la réponse, le plan, le schéma ou la formule sans indice.' },
-      { text: 'Comparer au support.' },
-      { text: 'Corriger uniquement les trous.', detail: 'Distingue omission, inversion, confusion, mauvais modèle et détail arbitraire : chaque type d’écart appelle une correction différente.' },
-      { text: 'Retester plus tard sous une formulation différente.', detail: 'Un rappel qui survit au délai et au changement de formulation est un vrai rappel.' },
+      {
+        text: 'Étudier / comprendre une unité courte.',
+        detail: 'Une unité logique : une définition, un mécanisme, un tableau, un schéma, une formule — pas un nombre fixe de pages.',
+        micro: [
+          'Lis l’unité une seule fois, lentement, en surlignant uniquement les mots qui discriminent — pas des phrases entières.',
+          'Reformule mentalement chaque paragraphe en une phrase avant de passer au suivant.',
+        ],
+      },
+      {
+        text: 'Fermer ou masquer le support.',
+        detail: 'Retire-le avant que la familiarité ne donne une fausse impression de maîtrise.',
+        micro: ['Retourne le poly ou change de page : le texte ne doit plus être dans ton champ de vision.'],
+      },
+      {
+        text: 'Produire la réponse, le plan, le schéma ou la formule sans indice.',
+        micro: [
+          'À voix haute ou par écrit : d’abord l’idée générale, puis les mots-clés exacts, puis les détails chiffrés.',
+          'Si un mot manque, ne rouvre pas : marque un trou (▢) et continue jusqu’au bout.',
+        ],
+      },
+      {
+        text: 'Comparer au support.',
+        micro: ['Rouvre et note chaque écart : correct, omis, inversé ou confondu.'],
+      },
+      {
+        text: 'Corriger uniquement les trous.',
+        detail: 'Distingue omission, inversion, confusion, mauvais modèle et détail arbitraire : chaque type d’écart appelle une correction différente.',
+        micro: ['Relis seulement les passages marqués ▢, puis redis-les immédiatement sans regarder.'],
+      },
+      {
+        text: 'Retester plus tard sous une formulation différente.',
+        detail: 'Un rappel qui survit au délai et au changement de formulation est un vrai rappel.',
+        micro: ['Note la cible et un moment précis (« demain, avant le cours ») et change l’angle : question inverse, exemple, QCM.'],
+      },
     ],
     example:
       'Après un paragraphe sur la mitochondrie : ferme le poly et récite ses rôles, puis vérifie. Ne surligne pas « une deuxième fois » à la place.',
@@ -107,12 +135,35 @@ export const socleMethods: Method[] = [
       'Refais seulement la zone défaillante.',
     ],
     procedure: [
-      { text: 'Définir une cible précise : plan, mécanisme, tableau, formule.', detail: 'Une cible floue (« le chapitre ») produit une restitution floue.' },
+      {
+        text: 'Définir une cible précise : plan, mécanisme, tableau, formule.',
+        detail: 'Une cible floue (« le chapitre ») produit une restitution floue.',
+        micro: ['Écris la cible en haut de la feuille : « plan du chapitre », « voie X avec ses régulations », « tableau A/B de… ».'],
+      },
       { text: 'Fermer le support.' },
-      { text: 'Écrire / dessiner tout ce qui revient.', detail: 'Commence par la structure : les grands blocs d’abord, les détails ensuite.' },
-      { text: 'Comparer au poly.' },
-      { text: 'Coder les omissions / inversions.', detail: 'Omission ≠ inversion ≠ confusion : note lequel, la correction n’est pas la même.' },
-      { text: 'Refaire seulement la zone défaillante.', detail: 'Rouvrir uniquement pour les trous, pas pour tout relire.' },
+      {
+        text: 'Écrire / dessiner tout ce qui revient.',
+        detail: 'Commence par la structure : les grands blocs d’abord, les détails ensuite.',
+        micro: [
+          'Pose d’abord les grands blocs : titres, compartiments, axes.',
+          'Sous chaque bloc, ajoute les idées, puis les mots-clés exacts, puis les chiffres.',
+          'N’efface rien, ne soigne pas la mise en page : c’est un test, pas une fiche.',
+        ],
+      },
+      {
+        text: 'Comparer au poly.',
+        micro: ['Corrige avec un autre stylo : O pour omis, I pour inversé, C pour confondu.'],
+      },
+      {
+        text: 'Coder les omissions / inversions.',
+        detail: 'Omission ≠ inversion ≠ confusion : note lequel, la correction n’est pas la même.',
+        micro: ['Compte les O, I et C : c’est ta carte des fragilités pour la suite.'],
+      },
+      {
+        text: 'Refaire seulement la zone défaillante.',
+        detail: 'Rouvrir uniquement pour les trous, pas pour tout relire.',
+        micro: ['Relis la zone marquée, referme, restitue-la seule — pas toute la feuille.'],
+      },
     ],
     example:
       'Cible : « les 3 grandes étapes de la glycolyse et leurs bilans ». Page vide, restitution, comparaison — puis seules les enzymes manquantes sont retravaillées.',
@@ -161,11 +212,18 @@ export const socleMethods: Method[] = [
       'Refais à distance.',
     ],
     procedure: [
-      { text: 'Choisir une petite section.' },
+      { text: 'Choisir une petite section.', micro: ['Un titre de paragraphe, pas un chapitre : la portion doit tenir en 3-5 minutes.'] },
       { text: 'Fermer le support.' },
-      { text: 'Écrire très vite tout ce qui revient, sans mise en page.', detail: 'La vitesse est le but : pas de belle copie, pas de couleurs.' },
+      {
+        text: 'Écrire très vite tout ce qui revient, sans mise en page.',
+        detail: 'La vitesse est le but : pas de belle copie, pas de couleurs.',
+        micro: [
+          'Lance 3 à 5 minutes et écris en vrac : mots, flèches, abréviations.',
+          'Interdit de t’arrêter pour formuler joliment — le débit prime.',
+        ],
+      },
       { text: 'Comparer.' },
-      { text: 'Surligner seulement les trous / erreurs.' },
+      { text: 'Surligner seulement les trous / erreurs.', micro: ['Un surligneur pour ce qui manque, rien d’autre : le reste est déjà su.'] },
       { text: 'Refaire à distance.' },
     ],
     personal: [
@@ -209,8 +267,15 @@ export const socleMethods: Method[] = [
     procedure: [
       { text: 'Corriger la notion.' },
       { text: 'La laisser disparaître de l’attention.', detail: 'Passe à autre chose : le délai fait partie du test.' },
-      { text: 'La réintroduire plus tard sans annoncer le retest.' },
-      { text: 'Changer la formulation ou le contexte.', detail: 'Même contenu, autre angle : question inverse, cas concret, QCM reformulé.' },
+      {
+        text: 'La réintroduire plus tard sans annoncer le retest.',
+        micro: ['Fixe un rendez-vous précis (« jeudi, avant le cours ») plutôt qu’un vague « plus tard ».'],
+      },
+      {
+        text: 'Changer la formulation ou le contexte.',
+        detail: 'Même contenu, autre angle : question inverse, cas concret, QCM reformulé.',
+        micro: ['Change au moins une chose : le sens de la question, le support (oral, écrit, schéma) ou le contexte.'],
+      },
       { text: 'Corriger à nouveau si nécessaire.' },
     ],
     personal: [

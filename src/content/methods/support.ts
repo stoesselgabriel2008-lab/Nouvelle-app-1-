@@ -38,9 +38,16 @@ export const supportMethods: Method[] = [
     ],
     procedure: [
       { text: 'Garder le poly comme source.' },
-      { text: 'Noter seulement le complément ou la précision.' },
-      { text: 'Utiliser des abréviations stables.' },
-      { text: 'Réserver un espace aux questions.', detail: 'Les questions notées deviennent ta liste de questions (voir la fiche dédiée).' },
+      {
+        text: 'Noter seulement le complément ou la précision.',
+        micro: ['N’écris que ce qui n’est PAS déjà dans le poly : précision de périmètre, exemple oral, lien entre chapitres.'],
+      },
+      { text: 'Utiliser des abréviations stables.', micro: ['Toujours les mêmes : ↑ ↓ → ⚠︎ df (définition), ex (exemple), NP (non exigible).'] },
+      {
+        text: 'Réserver un espace aux questions.',
+        detail: 'Les questions notées deviennent ta liste de questions (voir la fiche dédiée).',
+        micro: ['Une marge dédiée ; chaque question marquée d’un « ? » bien visible.'],
+      },
       { text: 'Ne pas recopier au propre sans bénéfice mesurable.' },
     ],
     mastery: [
@@ -88,10 +95,20 @@ export const supportMethods: Method[] = [
       'Rouvre uniquement pour corriger.',
     ],
     procedure: [
-      { text: 'Lire avec une question précise.' },
-      { text: 'Surligner seulement les discriminants si utile.' },
+      {
+        text: 'Lire avec une question précise.',
+        micro: ['Avant d’ouvrir, écris ce que tu cherches : « le critère qui distingue X de Y », « la condition d’application de… ».'],
+      },
+      {
+        text: 'Surligner seulement les discriminants si utile.',
+        micro: ['Surligne des MOTS, pas des phrases — uniquement ceux qui tranchent ou qui portent une exception.'],
+      },
       { text: 'Fermer le support.' },
-      { text: 'Produire.', detail: 'La relecture n’est finie que lorsqu’elle a déclenché une production.' },
+      {
+        text: 'Produire.',
+        detail: 'La relecture n’est finie que lorsqu’elle a déclenché une production.',
+        micro: ['Sur feuille blanche ou à voix haute : récite les idées puis les mots-clés de ce que tu viens de lire.'],
+      },
       { text: 'Rouvrir uniquement pour corriger.' },
     ],
     mastery: [

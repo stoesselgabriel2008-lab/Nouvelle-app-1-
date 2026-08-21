@@ -18,6 +18,7 @@ import { APP_VERSION } from '../lib/version';
 import { checkForUpdates, type UpdateCheckResult } from '../lib/sw';
 import { Disclose, MethodLinkList, Row, SectionLabel } from '../ui/bits';
 import { openWhatsNew } from '../ui/WhatsNew';
+import { getLastWorked } from '../ui/StepChecklist';
 import { Icon } from '../ui/Icon';
 
 function recentTarget(r: RecentEntry): { title: string; route: string; sub: string } | null {
@@ -93,6 +94,27 @@ export function ForMePage() {
           </Link>
         ))}
       </div>
+
+      {(() => {
+        const last = getLastWorked();
+        const m = last !== null ? getMethod(last.id) : undefined;
+        if (last === null || m === undefined) return null;
+        return (
+          <section className="section">
+            <SectionLabel>Reprendre</SectionLabel>
+            <ul className="list">
+              <li>
+                <Row
+                  to={`/methode/${m.id}`}
+                  icon="bolt"
+                  title={m.title}
+                  sub={`${last.done}/${last.total} étapes cochées — reprends où tu en étais.`}
+                />
+              </li>
+            </ul>
+          </section>
+        );
+      })()}
 
       <section className="section">
         <SectionLabel>Favoris</SectionLabel>

@@ -41,10 +41,17 @@ export const ankiMethods: Method[] = [
     ],
     procedure: [
       { text: 'Comprendre d’abord.', detail: 'Une carte sur une notion incomprise fabrique du par-cœur fragile.' },
-      { text: 'Créer une carte claire et atomique.', detail: 'Une seule décision mentale par carte : Q/R, cloze ciblé, calcul court, contraste — selon le contenu.' },
+      {
+        text: 'Créer une carte claire et atomique.',
+        detail: 'Une seule décision mentale par carte : Q/R, cloze ciblé, calcul court, contraste — selon le contenu.',
+        micro: ['Si le verso dépasse deux lignes, découpe en plusieurs cartes.'],
+      },
       { text: 'Laisser FSRS planifier les rappels.', detail: 'Pas de calendrier manuel : l’algorithme espace mieux que la méthode des J.' },
-      { text: 'Répondre honnêtement : oubli = Again, rappel correct difficile = Hard.' },
-      { text: 'Réécrire les cartes ambiguës.' },
+      {
+        text: 'Répondre honnêtement : oubli = Again, rappel correct difficile = Hard.',
+        micro: ['Oublié = Again, même si « c’était tout bête » ; correct mais lent = Hard.'],
+      },
+      { text: 'Réécrire les cartes ambiguës.', micro: ['Une carte ratée trois fois de suite est presque toujours mal écrite : réécris-la au lieu de la subir.'] },
     ],
     example:
       '« Quelle est la localisation de X ? » → une carte. « Résume la voie Y » → pas une carte : une feuille blanche.',
@@ -95,10 +102,13 @@ export const ankiMethods: Method[] = [
       'Réécris si plusieurs réponses sont défendables.',
     ],
     procedure: [
-      { text: 'Poser une question non ambiguë.' },
-      { text: 'Une réponse principale courte.' },
+      {
+        text: 'Poser une question non ambiguë.',
+        micro: ['Relis ta question seule : une seule réponse doit être défendable.'],
+      },
+      { text: 'Une réponse principale courte.', micro: ['Un mot, un chiffre, une phrase courte — pas un paragraphe.'] },
       { text: 'Ajouter une explication seulement en complément.', detail: 'Le champ extra explique ; le verso tranche.' },
-      { text: 'Tester avant d’afficher le verso.' },
+      { text: 'Tester avant d’afficher le verso.', micro: ['Réponds à voix haute AVANT de retourner la carte.'] },
       { text: 'Réécrire si plusieurs réponses sont défendables.' },
     ],
     mastery: [
@@ -137,10 +147,13 @@ export const ankiMethods: Method[] = [
       'Réécris si le trou donne un indice grammatical.',
     ],
     procedure: [
-      { text: 'Choisir le terme discriminant.' },
-      { text: 'Conserver assez de contexte.' },
+      {
+        text: 'Choisir le terme discriminant.',
+        micro: ['Masque le mot qui porte la connaissance — jamais un mot de liaison ni un article.'],
+      },
+      { text: 'Conserver assez de contexte.', micro: ['La phrase doit rester compréhensible trou compris.'] },
       { text: 'Masquer un élément cohérent.' },
-      { text: 'Vérifier que la réponse est unique.' },
+      { text: 'Vérifier que la réponse est unique.', micro: ['Relis la phrase trouée : si deux réponses collent, réécris.'] },
       { text: 'Réécrire si le trou donne un indice grammatical.', detail: 'Si l’article ou l’accord trahit la réponse, la carte teste la langue, pas le cours.' },
     ],
     mastery: [
@@ -178,10 +191,14 @@ export const ankiMethods: Method[] = [
       'Verso : étapes minimales + résultat + contrôle.',
     ],
     procedure: [
-      { text: 'Donner des données minimales.' },
+      { text: 'Donner des données minimales.', micro: ['Deux ou trois données chiffrées, avec unités — pas un énoncé complet.'] },
       { text: 'Demander une valeur ou une décision.' },
-      { text: 'Exiger unité et éventuellement signe.' },
-      { text: 'Verso : étapes minimales + résultat + contrôle.', detail: 'Le contrôle (dimension, ordre de grandeur) fait partie de la réponse attendue.' },
+      { text: 'Exiger unité et éventuellement signe.', micro: ['Sans l’unité, la réponse compte fausse — comme en QCM.'] },
+      {
+        text: 'Verso : étapes minimales + résultat + contrôle.',
+        detail: 'Le contrôle (dimension, ordre de grandeur) fait partie de la réponse attendue.',
+        micro: ['Verso en trois lignes : étapes clés, résultat avec unité, contrôle attendu.'],
+      },
     ],
     mastery: [
       'Tu sais calculer ET reconnaître quand ce mini-format est pertinent.',
@@ -226,8 +243,12 @@ export const ankiMethods: Method[] = [
     ],
     procedure: [
       { text: 'Nommer les deux notions ou la règle / exception.' },
-      { text: 'Poser une question sur le critère qui tranche.', detail: '« Qu’est-ce qui distingue A de B ? » ou « Dans quel cas la règle ne s’applique-t-elle pas ? »' },
-      { text: 'Verso : discriminant + mini-justification.' },
+      {
+        text: 'Poser une question sur le critère qui tranche.',
+        detail: '« Qu’est-ce qui distingue A de B ? » ou « Dans quel cas la règle ne s’applique-t-elle pas ? »',
+        micro: ['La question porte sur CE QUI DISTINGUE — pas deux cartes factuelles séparées.'],
+      },
+      { text: 'Verso : discriminant + mini-justification.', micro: ['Une ligne de discriminant, une ligne de pourquoi.'] },
       { text: 'Retester dans les deux sens si utile.' },
     ],
     personal: [
@@ -278,10 +299,14 @@ export const ankiMethods: Method[] = [
       'Ajoute seulement tes lacunes personnelles.',
     ],
     procedure: [
-      { text: 'Comparer le deck au poly officiel.', detail: 'C’est le poly de TA fac qui fait foi, pas celui d’une autre.' },
+      {
+        text: 'Comparer le deck au poly officiel.',
+        detail: 'C’est le poly de TA fac qui fait foi, pas celui d’une autre.',
+        micro: ['Échantillonne une vingtaine de cartes : combien sortent du périmètre de ton poly ?'],
+      },
       { text: 'Supprimer le hors-programme.' },
-      { text: 'Corriger les formulations ambiguës.' },
-      { text: 'Suspendre les cartes trop lourdes.' },
+      { text: 'Corriger les formulations ambiguës.', micro: ['Réécris avec les mots exacts de ton poly, pas ceux du deck.'] },
+      { text: 'Suspendre les cartes trop lourdes.', micro: ['Suspends (ne supprime pas) : c’est réversible si le chapitre le réclame.'] },
       { text: 'Ajouter seulement tes lacunes personnelles.' },
     ],
     mastery: [

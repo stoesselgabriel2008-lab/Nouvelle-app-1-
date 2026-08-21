@@ -32,7 +32,11 @@ export function SearchPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // Autofocus seulement quand la tab bar n'est pas en jeu (iPad / desktop) :
+    // sur iPhone, le focus masque la tab bar — il doit venir d'un vrai geste.
+    if (window.matchMedia('(min-width: 740px)').matches) {
+      inputRef.current?.focus();
+    }
   }, []);
 
   const results = useMemo(() => searchAll(query, 24), [query]);
@@ -47,7 +51,7 @@ export function SearchPage() {
   };
 
   return (
-    <main className="content">
+    <main className="content content--search">
       <h1 className="page-title large-title">Recherche</h1>
       <p className="page-sub subhead">
         Écris comme tu parles : « ça rentre pas », « je melange », « mécanisme biocell »…
