@@ -200,6 +200,44 @@ test('minuteur : anneau de progression présent et fonctionnel', async ({ page }
   await expect(page.locator('.timer-display')).toHaveText('45:00');
 });
 
+test.describe('coach mental : citations', () => {
+  test('accueil : citation affichée, un toucher passe à la suivante', async ({ page }) => {
+    await page.goto('#/');
+    const card = page.locator('.quote-card');
+    await expect(card).toBeVisible();
+    const text = page.locator('.quote-text');
+    const before = await text.textContent();
+    expect(before?.length ?? 0).toBeGreaterThan(10);
+    await expect(page.locator('.quote-author')).not.toBeEmpty();
+    await page.locator('.quote-tap').click();
+    await expect(text).not.toHaveText(before ?? '');
+  });
+
+  test('accueil → page Citations, filtre par thème', async ({ page }) => {
+    await page.goto('#/');
+    await page.getByRole('link', { name: 'Toutes les citations' }).click();
+    await expect(page).toHaveURL(/citations/);
+    await expect(page.getByRole('heading', { name: 'Citations' })).toBeVisible();
+    const items = page.locator('.quote-item');
+    const all = await items.count();
+    expect(all).toBeGreaterThanOrEqual(250);
+    await page.getByRole('button', { name: 'Persévérance' }).click();
+    await expect(page.getByText(/citations — Persévérance/)).toBeVisible();
+    const filtered = await items.count();
+    expect(filtered).toBeGreaterThan(10);
+    expect(filtered).toBeLessThan(all);
+  });
+
+  test('méthode du jour : la carte mène à la fiche', async ({ page }) => {
+    await page.goto('#/');
+    const daily = page.locator('.daily-card');
+    await expect(daily).toContainText('Méthode du jour');
+    await daily.click();
+    await expect(page).toHaveURL(/methode\//);
+    await expect(page.locator('h1')).not.toBeEmpty();
+  });
+});
+
 test('vérification manuelle des mises à jour : un retour clair', async ({ page }) => {
   await page.goto('#/');
   await page.getByText('Vérifier les mises à jour').click();

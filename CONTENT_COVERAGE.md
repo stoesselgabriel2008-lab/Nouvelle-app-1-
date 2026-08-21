@@ -137,3 +137,12 @@ Les requêtes du prompt maître (§24) sont verrouillées par `tests/search.test
   les micro-étapes les opérationnalisent sans les remplacer. Le **mode
   pas-à-pas** déroule cette même procédure en plein écran, une étape à la
   fois, et se conclut sur « C'est acquis si… ».
+- Depuis la v1.4, l'accueil porte deux éléments **hors Source V2**, ajoutés à la
+  demande de l'utilisateur et clairement séparés du contenu méthodologique :
+  une **banque de citations** (`src/content/quotes.ts`, ~290 entrées, rotation
+  quotidienne déterministe) et la **méthode du jour** (mise en avant cyclique
+  d'une des 47 fiches, sans en modifier le contenu). Règles de curation des
+  citations : réelles uniquement, œuvre/discours/lettre indiqué quand il est
+  documenté, « Attribué à » sinon, apocryphes connus exclus et verrouillés par
+  une liste noire testée (`tests/quotes.test.ts`). Les citations ne sont pas
+  indexées dans la recherche : la recherche reste un outil méthodologique.

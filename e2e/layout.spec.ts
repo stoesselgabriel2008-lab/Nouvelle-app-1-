@@ -24,6 +24,7 @@ const ROUTES = [
   '#/recherche',
   '#/reperes/matrice',
   '#/reperes/mythes',
+  '#/citations',
 ];
 
 async function assertNoHorizontalScroll(page: Page) {
@@ -37,7 +38,7 @@ async function assertNoHorizontalScroll(page: Page) {
 async function assertNoClippedText(page: Page) {
   const clipped = await page.evaluate(() => {
     const selectors =
-      'h1, h2, h3, .row-title, .sos-title, .tab-item span, .chip, .btn, .option-btn span, .steps > li, .summary-card p, .micro-steps li, .why-card p';
+      'h1, h2, h3, .row-title, .sos-title, .tab-item span, .chip, .btn, .option-btn span, .steps > li, .summary-card p, .micro-steps li, .why-card p, .quote-text, .quote-author, .quote-item blockquote p, .quote-item figcaption, .daily-title, .daily-sub';
     const bad: string[] = [];
     const hides = (v: string) => v === 'hidden' || v === 'clip';
     for (const el of Array.from(document.querySelectorAll<HTMLElement>(selectors))) {

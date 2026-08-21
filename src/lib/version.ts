@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.3.0';
+export const APP_VERSION = '1.4.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,16 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.4.0',
+    date: '2026-08',
+    items: [
+      'Coach mental : une citation s’affiche sur l’accueil et change toutes les 12 secondes (un toucher passe à la suivante). L’ordre est remélangé chaque jour.',
+      'Près de 300 citations réelles et vérifiées — la source est indiquée (œuvre, discours, lettre) ; quand la provenance n’est pas documentée, la phrase est honnêtement marquée « Attribué à ». Les fausses citations qui traînent partout sont bannies.',
+      'Nouvelle page Citations : toute la banque, filtrable par thème (discipline, persévérance, calme, apprendre, science & médecine, courage).',
+      'Méthode du jour sur l’accueil : chaque jour, une des 47 méthodes mise en avant — une façon simple d’élargir ta boîte à outils.',
+    ],
+  },
   {
     version: '1.3.0',
     date: '2026-08',

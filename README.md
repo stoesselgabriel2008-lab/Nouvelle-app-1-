@@ -7,7 +7,7 @@ utiliser maintenant, exactement, étape par étape ? »*
 Source de contenu unique : `PASS_Methods_App_Source_V2.pdf` (la correspondance
 exhaustive PDF → app est dans [`CONTENT_COVERAGE.md`](CONTENT_COVERAGE.md)).
 
-- **Pour moi** — règles personnalisées, méthodes adaptées, favoris, dernières consultations, raccourcis.
+- **Pour moi** — règles personnalisées, méthodes adaptées, favoris, dernières consultations, raccourcis, méthode du jour, et un coach mental : ~290 citations réelles et vérifiées en rotation quotidienne sur l'accueil (page Citations filtrable par thème ; hors corpus PDF, voir CONTENT_COVERAGE.md).
 - **Bibliothèque** — 47 fiches méthodes (quand / quand éviter / fais ça maintenant / procédure complète / Anki / c'est acquis si), 12 protocoles matière, repères (algorithme, matrice, mythes, sources).
 - **Diagnostic** — 3 à 5 questions adaptatives, locales et déterministes → 1 à 3 méthodes dans l'ordre, justifiées.
 - **SOS** — 10 protocoles très courts pour redémarrer, « Fais ça maintenant » en premier.

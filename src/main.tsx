@@ -13,6 +13,7 @@ import { SosListPage } from './pages/SosListPage';
 import { SosPage } from './pages/SosPage';
 import { SearchPage } from './pages/SearchPage';
 import { ReferencePage } from './pages/ReferencePage';
+import { CitationsPage } from './pages/CitationsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import './styles/tokens.css';
 import './styles/base.css';
@@ -45,6 +46,7 @@ const router = createHashRouter([
       { path: 'sos/:id', element: <SosPage /> },
       { path: 'recherche', element: <SearchPage /> },
       { path: 'reperes/:id', element: <ReferencePage /> },
+      { path: 'citations', element: <CitationsPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

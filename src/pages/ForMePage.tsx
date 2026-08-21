@@ -18,6 +18,8 @@ import { APP_VERSION } from '../lib/version';
 import { checkForUpdates, type UpdateCheckResult } from '../lib/sw';
 import { Disclose, MethodLinkList, Row, SectionLabel } from '../ui/bits';
 import { LargeTitleHeader } from '../ui/LargeTitleHeader';
+import { QuoteCard } from '../ui/QuoteCard';
+import { dailySeed } from '../content/quotes';
 import { openWhatsNew } from '../ui/WhatsNew';
 import { getLastWorked } from '../ui/StepChecklist';
 import { Icon } from '../ui/Icon';
@@ -78,6 +80,8 @@ export function ForMePage() {
     <main className="content">
       <LargeTitleHeader title="Pour moi" sub="Un problème, une méthode, tout de suite." />
 
+      <QuoteCard />
+
       <Link to="/diagnostic" className="hero-card" viewTransition>
         <span style={{ minWidth: 0 }}>
           <h2>Un blocage, là, maintenant ?</h2>
@@ -94,6 +98,20 @@ export function ForMePage() {
           </Link>
         ))}
       </div>
+
+      {(() => {
+        const daily = METHODS[dailySeed() % METHODS.length]!;
+        return (
+          <Link to={`/methode/${daily.id}`} className="daily-card" viewTransition>
+            <span className="daily-body">
+              <span className="daily-kicker">Méthode du jour</span>
+              <span className="daily-title">{daily.title}</span>
+              <span className="daily-sub">{daily.subtitle}</span>
+            </span>
+            <Icon name="chevronRight" size={18} />
+          </Link>
+        );
+      })()}
 
       {(() => {
         const last = getLastWorked();

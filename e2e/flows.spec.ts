@@ -73,6 +73,9 @@ test('favoris : persistants après rechargement', async ({ page }) => {
 
 test('historique : les dernières consultations apparaissent et s’effacent', async ({ page }) => {
   await page.goto('#/methode/chaine-causale');
+  // L'inscription dans l'historique est un effet post-rendu : on attend qu'elle
+  // soit réellement écrite avant de retourner à l'accueil (sinon course).
+  await page.waitForFunction(() => localStorage.getItem('pmos:v1:recents') !== null);
   await page.goto('#/');
   const section = page.locator('.section', { hasText: 'Dernières consultations' });
   await expect(section.locator('.row-title').first()).toContainText('Chaîne causale');
