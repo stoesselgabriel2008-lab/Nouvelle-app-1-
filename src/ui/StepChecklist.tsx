@@ -62,6 +62,14 @@ export function StepChecklist({ id, steps }: { id: string; steps: string[] }) {
     const next = done.includes(i) ? done.filter((d) => d !== i) : [...done, i];
     setDone(next);
     writeDone(id, next, steps.length);
+    // Retour haptique discret à la coche (silencieux là où c'est indisponible).
+    if (!done.includes(i)) {
+      try {
+        navigator.vibrate?.(8);
+      } catch {
+        /* rien */
+      }
+    }
   };
 
   const reset = () => {

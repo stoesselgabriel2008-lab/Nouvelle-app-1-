@@ -1,22 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  QUOTES,
-  QUOTE_THEME_LABELS,
-  dailySeed,
-  shuffledQuoteOrder,
-} from '../content/quotes';
+import { buildFeed, feedAuthorLine } from '../content/feed';
+import { frTypo } from '../lib/typo';
 import { Icon } from './Icon';
 
 /**
- * Citation sur l'accueil : l'ordre est remélangé chaque jour (graine = date),
- * puis les citations défilent toutes les 12 s — la nouvelle arrive en fondu
- * (remontage animé via `key`). Un toucher passe à la suivante et repart le
- * compte à rebours. La rotation s'arrête quand l'onglet est caché, et n'existe
- * pas du tout si l'utilisateur préfère réduire les animations.
+ * Carte « coach mental » de l'accueil : un aperçu sombre et immersif du mode
+ * plein écran. Le flux du jour (phrases de coach + citations vérifiées) défile
+ * toutes les 12 s ; toucher la carte ouvre le plein écran sur la même phrase.
+ * La rotation se met en pause quand l'onglet est caché et disparaît si
+ * l'utilisateur préfère réduire les animations.
  */
 
 const ROTATE_MS = 12_000;
+/** Sur la carte compacte, on ne fait tourner que les textes courts. */
+const CARD_MAX_LEN = 150;
 
 function prefersReducedMotion(): boolean {
   try {
@@ -27,10 +25,15 @@ function prefersReducedMotion(): boolean {
 }
 
 export function QuoteCard() {
-  const [order] = useState<number[]>(() => shuffledQuoteOrder(dailySeed()));
+  const feed = useMemo(() => buildFeed(), []);
+  const short = useMemo(
+    () =>
+      feed
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.text.length <= CARD_MAX_LEN),
+    [feed],
+  );
   const [pos, setPos] = useState(0);
-  // Recréé à chaque toucher : le compte à rebours de 12 s repart de zéro.
-  const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -38,38 +41,29 @@ export function QuoteCard() {
       if (!document.hidden) setPos((p) => p + 1);
     }, ROTATE_MS);
     return () => window.clearInterval(id);
-  }, [cycle]);
+  }, []);
 
-  const quote = QUOTES[order[pos % order.length] ?? 0]!;
+  const current = short[pos % short.length] ?? { item: feed[0]!, index: 0 };
+  const { item } = current;
+  const authorLine = feedAuthorLine(item);
 
   return (
-    <section className="quote-card" aria-label="Citation pour le mental">
-      <button
-        type="button"
-        className="quote-tap"
-        onClick={() => {
-          setCycle((c) => c + 1);
-          setPos((p) => p + 1);
-        }}
-        title="Citation suivante"
-      >
-        <span className="quote-body" key={pos}>
-          <span className="quote-text">« {quote.text} »</span>
-          <span className="quote-author">
-            {quote.attributed === true ? `Attribué à ${quote.author}` : quote.author}
-            {quote.note !== undefined ? (
-              <span className="quote-note"> — {quote.note}</span>
-            ) : null}
-          </span>
+    <Link
+      to={`/citations/plein-ecran?i=${current.index}`}
+      className={`quote-hero quote-hero--${item.theme}`}
+      viewTransition
+      aria-label="Ouvrir les citations en plein écran"
+    >
+      <span className="quote-hero-top">
+        <span className="quote-hero-kicker">Coach mental</span>
+        <Icon name="expand" size={16} />
+      </span>
+      <span className="quote-hero-body" key={pos}>
+        <span className="quote-hero-text">{frTypo(item.text)}</span>
+        <span className="quote-hero-author">
+          {authorLine !== '' ? authorLine : 'Axel · ton coach'}
         </span>
-      </button>
-      <div className="quote-foot">
-        <span className="quote-kicker">{QUOTE_THEME_LABELS[quote.theme]}</span>
-        <Link to="/citations" className="quote-all" viewTransition>
-          Toutes les citations
-          <Icon name="chevronRight" size={13} />
-        </Link>
-      </div>
-    </section>
+      </span>
+    </Link>
   );
 }

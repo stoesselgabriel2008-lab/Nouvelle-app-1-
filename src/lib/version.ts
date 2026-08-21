@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.4.0';
+export const APP_VERSION = '1.5.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,16 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.5.0',
+    date: '2026-08',
+    items: [
+      'Axel, ton coach : une mascotte maison et un vrai chat local. Décris ton blocage avec tes mots (fautes et abréviations comprises), il répond naturellement — jamais deux fois pareil — avec les bons protocoles en un toucher. 100 % sur ton appareil.',
+      'Citations en plein écran, façon fond d’écran : une phrase à la fois sur fond profond, toucher = suivante, cœur = favori, partage natif. La carte d’accueil ouvre directement ce mode.',
+      'Le flux du jour mélange désormais les citations vérifiées avec des phrases de coach courtes et percutantes — écrites pour l’app, jamais faussement attribuées.',
+      'Si ça ne va vraiment pas, Axel ne joue pas au thérapeute : il oriente vers de vraies personnes et le protocole Détresse.',
+    ],
+  },
   {
     version: '1.4.0',
     date: '2026-08',

@@ -43,6 +43,26 @@ export function toggleFavorite(methodId: string): string[] {
   return next;
 }
 
+// ------------------------------------------------- Citations favorites (cœur)
+
+/** Identifiée par son texte (unicité garantie par test). */
+export function getQuoteFavs(): string[] {
+  return read<string[]>('quoteFavs', []);
+}
+
+export function isQuoteFav(text: string): boolean {
+  return getQuoteFavs().includes(text);
+}
+
+export function toggleQuoteFav(text: string): string[] {
+  const current = getQuoteFavs();
+  const next = current.includes(text)
+    ? current.filter((t) => t !== text)
+    : [text, ...current];
+  write('quoteFavs', next);
+  return next;
+}
+
 // ------------------------------------------------------ Dernières consultations
 
 export interface RecentEntry {

@@ -19,6 +19,7 @@ import { checkForUpdates, type UpdateCheckResult } from '../lib/sw';
 import { Disclose, MethodLinkList, Row, SectionLabel } from '../ui/bits';
 import { LargeTitleHeader } from '../ui/LargeTitleHeader';
 import { QuoteCard } from '../ui/QuoteCard';
+import { Axel } from '../ui/Axel';
 import { dailySeed } from '../content/quotes';
 import { openWhatsNew } from '../ui/WhatsNew';
 import { getLastWorked } from '../ui/StepChecklist';
@@ -88,6 +89,19 @@ export function ForMePage() {
           <p>3 à 5 questions et tu sais exactement quoi faire.</p>
         </span>
         <Icon name="arrow" size={22} />
+      </Link>
+
+      <Link to="/coach" className="coach-card" viewTransition>
+        <span className="coach-card-avatar" aria-hidden="true">
+          <Axel mood="happy" size={54} />
+        </span>
+        <span className="coach-card-body">
+          <span className="coach-card-title">Parle à Axel</span>
+          <span className="coach-card-sub">
+            Ton coach : dis ce qui coince, il répond en méthodes concrètes.
+          </span>
+        </span>
+        <Icon name="chevronRight" size={18} />
       </Link>
 
       <div className="chip-row">

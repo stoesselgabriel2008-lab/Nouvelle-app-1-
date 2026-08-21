@@ -308,6 +308,9 @@ export const QUOTES: Quote[] = [
   { text: 'Va au bout de tes rêves — commence par aller au bout de tes journées.', author: 'Proverbe populaire', theme: 'discipline' },
   { text: 'Le courage croît en osant et la peur en hésitant.', author: 'Proverbe latin', theme: 'courage' },
   { text: 'Fais ce que tu peux, avec ce que tu as, là où tu es.', author: 'Theodore Roosevelt', note: 'Autobiographie, 1913', theme: 'courage' },
+  { text: 'Commence là où tu es. Utilise ce que tu as. Fais ce que tu peux.', author: 'Arthur Ashe', attributed: true, theme: 'courage' },
+  { text: 'Que tu penses en être capable ou non, dans les deux cas tu as raison.', author: 'Henry Ford', attributed: true, theme: 'courage' },
+  { text: 'Fais de ta vie un rêve, et d’un rêve, une réalité.', author: 'Antoine de Saint-Exupéry', attributed: true, theme: 'courage' },
   { text: 'Ce n’est pas le critique qui compte. Le mérite appartient à celui qui est réellement dans l’arène.', author: 'Theodore Roosevelt', note: 'Discours de la Sorbonne, 1910', theme: 'courage' },
   { text: 'Regarde toujours du côté du soleil et les ombres tomberont derrière toi.', author: 'Walt Whitman', attributed: true, theme: 'calme' },
   { text: 'Deux routes divergeaient dans un bois ; j’ai pris la moins fréquentée, et cela a fait toute la différence.', author: 'Robert Frost', note: 'The Road Not Taken, 1916', theme: 'courage' },
@@ -344,9 +347,9 @@ export const QUOTES: Quote[] = [
   { text: 'Tout peut être retiré à un homme, sauf une chose : la dernière des libertés humaines — choisir son attitude en toutes circonstances.', author: 'Viktor Frankl', note: 'Découvrir un sens à sa vie, 1946', theme: 'courage' },
 ];
 
-/** Mélange déterministe (même graine → même ordre) pour la rotation. */
-export function shuffledQuoteOrder(seed: number): number[] {
-  const order = QUOTES.map((_, i) => i);
+/** Mélange déterministe (même graine → même ordre) d'indices 0..length-1. */
+export function shuffledOrder(seed: number, length: number): number[] {
+  const order = Array.from({ length }, (_, i) => i);
   let state = seed >>> 0;
   const next = () => {
     // xorshift32 — suffisant pour un mélange d'affichage.
@@ -362,6 +365,11 @@ export function shuffledQuoteOrder(seed: number): number[] {
     order[j] = a;
   }
   return order;
+}
+
+/** Mélange de la banque de citations pour la rotation. */
+export function shuffledQuoteOrder(seed: number): number[] {
+  return shuffledOrder(seed, QUOTES.length);
 }
 
 /** Graine du jour : la rotation change chaque jour, stable dans la journée. */

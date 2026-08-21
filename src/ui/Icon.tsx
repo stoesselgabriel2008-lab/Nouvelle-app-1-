@@ -23,6 +23,10 @@ export type IconName =
   | 'bolt'
   | 'info'
   | 'heart'
+  | 'heartFill'
+  | 'share'
+  | 'expand'
+  | 'send'
   | 'grid';
 
 const PATHS: Record<IconName, React.ReactNode> = {
@@ -105,6 +109,28 @@ const PATHS: Record<IconName, React.ReactNode> = {
   heart: (
     <path d="M12 19.5C7 15.7 4 12.9 4 9.6 4 7.3 5.8 5.5 8 5.5c1.6 0 3 .9 4 2.3 1-1.4 2.4-2.3 4-2.3 2.2 0 4 1.8 4 4.1 0 3.3-3 6.1-8 9.9Z" />
   ),
+  heartFill: (
+    <path
+      d="M12 19.5C7 15.7 4 12.9 4 9.6 4 7.3 5.8 5.5 8 5.5c1.6 0 3 .9 4 2.3 1-1.4 2.4-2.3 4-2.3 2.2 0 4 1.8 4 4.1 0 3.3-3 6.1-8 9.9Z"
+      fill="currentColor"
+    />
+  ),
+  share: (
+    <>
+      <path d="M12 3.5v11" />
+      <path d="M8.5 6.5 12 3l3.5 3.5" />
+      <path d="M7 10H6a2 2 0 0 0-2 2v6.5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V12a2 2 0 0 0-2-2h-1" />
+    </>
+  ),
+  expand: (
+    <>
+      <path d="M14.5 4.5H19.5V9.5" />
+      <path d="M9.5 19.5H4.5V14.5" />
+      <path d="M19.5 4.5 13.8 10.2" />
+      <path d="M4.5 19.5l5.7-5.7" />
+    </>
+  ),
+  send: <path d="M4.5 12 19 5.2 15.6 19l-4.2-4.6L4.5 12Zm6.9 2.4L19 5.2" />,
   grid: (
     <>
       <rect x="4.5" y="4.5" width="6.4" height="6.4" rx="1.6" />

@@ -72,6 +72,15 @@ export function Sidebar() {
         <Icon name="search" size={21} />
         <span>Recherche</span>
       </NavLink>
+      <div className="side-sep" aria-hidden="true" />
+      <NavLink to="/coach" className="side-item" viewTransition>
+        <Icon name="heart" size={21} />
+        <span>Axel, ton coach</span>
+      </NavLink>
+      <NavLink to="/citations" className="side-item" viewTransition>
+        <Icon name="expand" size={21} />
+        <span>Citations</span>
+      </NavLink>
       <div className="sidebar-foot">
         <p>
           Recherche rapide : <span className="kbd">⌘K</span>

@@ -146,3 +146,16 @@ Les requêtes du prompt maître (§24) sont verrouillées par `tests/search.test
   documenté, « Attribué à » sinon, apocryphes connus exclus et verrouillés par
   une liste noire testée (`tests/quotes.test.ts`). Les citations ne sont pas
   indexées dans la recherche : la recherche reste un outil méthodologique.
+- Depuis la v1.5, deux couches « coach » s'ajoutent, toujours hors Source V2 et
+  clairement séparées du corpus :
+  - des **phrases de coach** (`src/content/coach-lines.ts`, ~110 entrées) —
+    courtes, percutantes, écrites pour l'app et signées « Axel · ton coach » ;
+    jamais de fausse attribution (c'est la règle qui les distingue des
+    citations) ;
+  - **Axel**, mascotte originale (`src/ui/Axel.tsx`) et chat local
+    (`src/coach/engine.ts`) : moteur d'intentions à mots-clés normalisés
+    (accents/fautes), réponses pré-écrites à variantes non répétitives, liens
+    directs vers les fiches du corpus. Le contenu méthodologique des réponses
+    reprend les fiches sans les modifier. La détresse est prioritaire et
+    oriente vers des humains (3114, proches, médecin) et le protocole §8 —
+    jamais présentée comme un soin (règle Source V2 conservée).

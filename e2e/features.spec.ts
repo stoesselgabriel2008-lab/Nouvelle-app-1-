@@ -201,31 +201,54 @@ test('minuteur : anneau de progression présent et fonctionnel', async ({ page }
 });
 
 test.describe('coach mental : citations', () => {
-  test('accueil : citation affichée, un toucher passe à la suivante', async ({ page }) => {
+  test('accueil : la carte immersive ouvre le plein écran sur la même phrase', async ({
+    page,
+  }) => {
     await page.goto('#/');
-    const card = page.locator('.quote-card');
-    await expect(card).toBeVisible();
-    const text = page.locator('.quote-text');
-    const before = await text.textContent();
-    expect(before?.length ?? 0).toBeGreaterThan(10);
-    await expect(page.locator('.quote-author')).not.toBeEmpty();
-    await page.locator('.quote-tap').click();
-    await expect(text).not.toHaveText(before ?? '');
+    const hero = page.locator('.quote-hero');
+    await expect(hero).toBeVisible();
+    const before = (await page.locator('.quote-hero-text').textContent()) ?? '';
+    expect(before.length).toBeGreaterThan(10);
+    await hero.click();
+    await expect(page).toHaveURL(/citations\/plein-ecran/);
+    await expect(page.locator('.zen-text')).toHaveText(before);
   });
 
-  test('accueil → page Citations, filtre par thème', async ({ page }) => {
-    await page.goto('#/');
-    await page.getByRole('link', { name: 'Toutes les citations' }).click();
-    await expect(page).toHaveURL(/citations/);
-    await expect(page.getByRole('heading', { name: 'Citations' })).toBeVisible();
+  test('plein écran : toucher = suivante, cœur = favori retrouvé dans la liste', async ({
+    page,
+  }) => {
+    await page.goto('#/citations/plein-ecran');
+    const text = page.locator('.zen-text');
+    const first = (await text.textContent()) ?? '';
+    await page.locator('.zen-body').click();
+    await expect(text).not.toHaveText(first);
+    const favText = (await text.textContent()) ?? '';
+    const heart = page.getByRole('button', { name: 'Ajouter aux favoris' });
+    await heart.click();
+    await expect(
+      page.getByRole('button', { name: 'Retirer des favoris' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    await page.getByRole('button', { name: 'Fermer' }).click();
+    await expect(page).not.toHaveURL(/plein-ecran/);
+    await page.goto('#/citations');
+    await page.getByRole('button', { name: 'Favoris' }).click();
+    await expect(page.locator('.quote-item')).toContainText([favText.slice(0, 40)]);
+  });
+
+  test('page Citations : filtres thème et coach', async ({ page }) => {
+    await page.goto('#/citations');
+    await expect(page.locator('.zen-launch')).toContainText('Mode plein écran');
     const items = page.locator('.quote-item');
     const all = await items.count();
-    expect(all).toBeGreaterThanOrEqual(250);
+    expect(all).toBeGreaterThanOrEqual(350);
     await page.getByRole('button', { name: 'Persévérance' }).click();
-    await expect(page.getByText(/citations — Persévérance/)).toBeVisible();
+    await expect(page.getByText(/entrées — Persévérance/)).toBeVisible();
     const filtered = await items.count();
     expect(filtered).toBeGreaterThan(10);
     expect(filtered).toBeLessThan(all);
+    await page.getByRole('button', { name: 'Coach', exact: true }).click();
+    await expect(page.getByText(/phrases du coach/)).toBeVisible();
+    await expect(items.first()).toContainText('Axel');
   });
 
   test('méthode du jour : la carte mène à la fiche', async ({ page }) => {
@@ -235,6 +258,59 @@ test.describe('coach mental : citations', () => {
     await daily.click();
     await expect(page).toHaveURL(/methode\//);
     await expect(page.locator('h1')).not.toBeEmpty();
+  });
+});
+
+test.describe('Axel, le coach', () => {
+  test('accueil → chat : accueil d’Axel, réponse méthode avec lien', async ({ page }) => {
+    await page.goto('#/');
+    await page.locator('.coach-card').click();
+    await expect(page).toHaveURL(/coach/);
+    await expect(page.locator('.bubble--axel').first()).toContainText('Axel');
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('je procrastine');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    await expect(page.locator('.bubble--me')).toContainText('je procrastine');
+    const reply = page.locator('.chat-row--axel .bubble--axel').last();
+    await expect(reply.locator('.bubble-link').first()).toContainText('Démarrage', {
+      timeout: 5_000,
+    });
+  });
+
+  test('les réponses varient : deux fois la même question, deux formulations', async ({
+    page,
+  }) => {
+    await page.goto('#/coach');
+    const input = page.getByRole('textbox', { name: 'Ton message à Axel' });
+    const send = page.getByRole('button', { name: 'Envoyer' });
+    // Le voyant « Axel écrit » partage la classe bubble--axel : on l'exclut.
+    const bubbles = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)');
+    await input.fill('je stresse');
+    await send.click();
+    await expect(bubbles).toHaveCount(2, { timeout: 5_000 });
+    const first = (await bubbles.last().textContent()) ?? '';
+    expect(first.length).toBeGreaterThan(20);
+    await input.fill('je stresse');
+    await send.click();
+    await expect(bubbles).toHaveCount(3, { timeout: 5_000 });
+    const second = (await bubbles.last().textContent()) ?? '';
+    expect(second.length).toBeGreaterThan(20);
+    expect(second).not.toBe(first);
+  });
+
+  test('détresse : Axel oriente vers des humains et le protocole', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('je vais craquer');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel').last();
+    await expect(reply).toContainText('3114', { timeout: 5_000 });
+    await expect(reply.locator('.bubble-link')).toContainText('Détresse');
+  });
+
+  test('les suggestions rapides envoient et répondent', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('button', { name: 'Motive-moi' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel').last();
+    await expect(reply).toContainText('«', { timeout: 5_000 });
   });
 });
 

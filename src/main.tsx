@@ -14,6 +14,8 @@ import { SosPage } from './pages/SosPage';
 import { SearchPage } from './pages/SearchPage';
 import { ReferencePage } from './pages/ReferencePage';
 import { CitationsPage } from './pages/CitationsPage';
+import { QuoteZenPage } from './pages/QuoteZenPage';
+import { CoachPage } from './pages/CoachPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import './styles/tokens.css';
 import './styles/base.css';
@@ -47,6 +49,8 @@ const router = createHashRouter([
       { path: 'recherche', element: <SearchPage /> },
       { path: 'reperes/:id', element: <ReferencePage /> },
       { path: 'citations', element: <CitationsPage /> },
+      { path: 'citations/plein-ecran', element: <QuoteZenPage /> },
+      { path: 'coach', element: <CoachPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
