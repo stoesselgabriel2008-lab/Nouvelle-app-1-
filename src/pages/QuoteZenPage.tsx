@@ -2,7 +2,7 @@ import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { buildFeed, feedAuthorLine } from '../content/feed';
 import { QUOTE_THEME_LABELS } from '../content/quotes';
-import { isQuoteFav, toggleQuoteFav } from '../lib/storage';
+import { advanceFeedPos, isQuoteFav, peekFeedPos, toggleQuoteFav } from '../lib/storage';
 import { frTypo } from '../lib/typo';
 import { Icon } from '../ui/Icon';
 
@@ -24,19 +24,31 @@ export function QuoteZenPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const feed = useMemo(() => buildFeed(), []);
-  const start = Number.parseInt(params.get('i') ?? '0', 10);
-  const [pos, setPos] = useState(Number.isFinite(start) && start >= 0 ? start : 0);
+  const raw = Number.parseInt(params.get('i') ?? '', 10);
+  const [pos, setPos] = useState(() =>
+    Number.isFinite(raw) && raw >= 0 ? raw : Math.max(0, peekFeedPos()),
+  );
+  const [dir, setDir] = useState<'up' | 'down'>('up');
   const [, bump] = useReducer((x: number) => x + 1, 0);
   const [copied, setCopied] = useState(false);
   const touchY = useRef<number | null>(null);
   const touchX = useRef<number | null>(null);
 
-  const item = feed[pos % feed.length]!;
+  const item = feed[((pos % feed.length) + feed.length) % feed.length]!;
   const fav = isQuoteFav(item.text);
   const authorLine = feedAuthorLine(item);
 
-  const next = () => setPos((p) => p + 1);
-  const prev = () => setPos((p) => (p === 0 ? feed.length - 1 : p - 1));
+  const next = () => {
+    setDir('up');
+    setPos((p) => p + 1);
+    // Le curseur global avance aussi : à la prochaine ouverture de l'app,
+    // on repart plus loin — jamais sur une phrase déjà vue à l'instant.
+    advanceFeedPos();
+  };
+  const prev = () => {
+    setDir('down');
+    setPos((p) => (p === 0 ? feed.length - 1 : p - 1));
+  };
 
   const close = () => {
     if (window.history.length > 1) {
@@ -121,7 +133,7 @@ export function QuoteZenPage() {
         </button>
       </header>
 
-      <div className="zen-body" key={pos}>
+      <div className={`zen-body zen-body--${dir}`} key={pos}>
         <p className={`zen-text${long ? ' zen-text--long' : ''}`}>{frTypo(item.text)}</p>
         {authorLine !== '' ? (
           <p className="zen-author">

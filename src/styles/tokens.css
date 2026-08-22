@@ -77,9 +77,10 @@
   --on-red: #ffffff;
   --green: #1f9d55;
 
-  /* Verre — réservé à la couche navigation (tab bar, barres, recherche). */
-  --glass-bg: rgba(248, 248, 252, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.55);
+  /* Verre — réservé à la couche navigation (tab bar, barres, recherche).
+     Assez opaque pour que le contenu qui défile derrière ne gêne jamais. */
+  --glass-bg: rgba(249, 249, 253, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.6);
   --glass-shadow:
     0 12px 32px rgba(20, 24, 40, 0.14),
     0 2px 8px rgba(20, 24, 40, 0.08);
@@ -116,7 +117,7 @@
     --on-red: #200404;
     --green: #43c478;
 
-    --glass-bg: rgba(22, 22, 26, 0.74);
+    --glass-bg: rgba(24, 24, 30, 0.86);
     --glass-border: rgba(255, 255, 255, 0.09);
     --glass-shadow:
       0 12px 36px rgba(0, 0, 0, 0.55),
@@ -153,7 +154,7 @@
   --on-red: #200404;
   --green: #43c478;
 
-  --glass-bg: rgba(22, 22, 26, 0.74);
+  --glass-bg: rgba(24, 24, 30, 0.86);
   --glass-border: rgba(255, 255, 255, 0.09);
   --glass-shadow:
     0 12px 36px rgba(0, 0, 0, 0.55),

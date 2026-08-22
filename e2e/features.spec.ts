@@ -201,6 +201,18 @@ test('minuteur : anneau de progression présent et fonctionnel', async ({ page }
 });
 
 test.describe('coach mental : citations', () => {
+  test('jamais la même citation à la réouverture (curseur persistant)', async ({ page }) => {
+    await page.goto('#/');
+    const text = page.locator('.quote-hero-text');
+    const t1 = await text.textContent();
+    await page.reload();
+    const t2 = await text.textContent();
+    expect(t2).not.toBe(t1);
+    await page.reload();
+    const t3 = await text.textContent();
+    expect(t3).not.toBe(t2);
+  });
+
   test('accueil : la carte immersive ouvre le plein écran sur la même phrase', async ({
     page,
   }) => {

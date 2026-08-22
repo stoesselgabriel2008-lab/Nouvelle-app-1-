@@ -147,39 +147,47 @@ export function CoachPage() {
           <div ref={endRef} />
         </div>
 
-        <div className="coach-chips" role="group" aria-label="Suggestions">
-          {QUICK_CHIPS.map((c) => (
-            <button key={c} type="button" className="chip" onClick={() => send(c)}>
-              {c}
+        <div className="composer">
+          <div className="coach-chips" role="group" aria-label="Suggestions">
+            {QUICK_CHIPS.map((c) => (
+              <button key={c} type="button" className="chip" onClick={() => send(c)}>
+                {c}
+              </button>
+            ))}
+          </div>
+          <form
+            className="coach-input"
+            onSubmit={(e) => {
+              e.preventDefault();
+              send(draft);
+            }}
+          >
+            <input
+              type="text"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="Dis ce qui coince…"
+              aria-label="Ton message à Axel"
+              autoComplete="off"
+              enterKeyHint="send"
+            />
+            <button
+              type="submit"
+              className="coach-send"
+              aria-label="Envoyer"
+              disabled={draft.trim() === ''}
+              // Le champ garde le focus (le clavier reste ouvert pour enchaîner),
+              // et le composer ne saute pas sous le doigt au moment du toucher.
+              onMouseDown={(e) => e.preventDefault()}
+            >
+              <Icon name="send" size={20} />
             </button>
-          ))}
+          </form>
+          <p className="coach-note">
+            Axel n’est pas un professionnel de santé — si ça ne va vraiment pas, le
+            protocole Détresse oriente vers de vraies personnes.
+          </p>
         </div>
-
-        <form
-          className="coach-input"
-          onSubmit={(e) => {
-            e.preventDefault();
-            send(draft);
-          }}
-        >
-          <input
-            type="text"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="Dis ce qui coince…"
-            aria-label="Ton message à Axel"
-            autoComplete="off"
-            enterKeyHint="send"
-          />
-          <button type="submit" className="coach-send" aria-label="Envoyer" disabled={draft.trim() === ''}>
-            <Icon name="send" size={20} />
-          </button>
-        </form>
-        <p className="footnote muted-3 coach-note">
-          Axel est un coach de méthodes — pas un professionnel de santé. Si ça ne va
-          vraiment pas, ouvre le protocole Détresse : il oriente vers de vraies
-          personnes.
-        </p>
       </main>
     </>
   );

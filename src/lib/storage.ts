@@ -43,6 +43,23 @@ export function toggleFavorite(methodId: string): string[] {
   return next;
 }
 
+// ------------------------------------------------- Curseur du flux mental
+
+/**
+ * Position persistante dans le flux de citations : chaque ouverture de l'app
+ * et chaque passage à la suivante avancent ce curseur — on ne retombe jamais
+ * sur la même phrase en rouvrant l'app.
+ */
+export function peekFeedPos(): number {
+  return read<number>('feedPos', -1);
+}
+
+export function advanceFeedPos(): number {
+  const next = peekFeedPos() + 1;
+  write('feedPos', next);
+  return next;
+}
+
 // -------------------------------------------------- Carte d'installation
 
 export function isInstallCardHidden(): boolean {

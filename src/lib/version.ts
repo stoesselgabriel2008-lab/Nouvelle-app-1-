@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.6.0';
+export const APP_VERSION = '1.7.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,16 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.7.0',
+    date: '2026-08',
+    items: [
+      'Les citations tournent vraiment tout le temps : ta position dans le flux est mémorisée — chaque ouverture de l’app affiche la phrase suivante, jamais la même. La rotation de l’accueil passe à 8 secondes et le plein écran reprend là où tu en étais.',
+      'Plein écran : vraie glisse directionnelle entre les phrases (vers le haut = suivante, vers le bas = précédente).',
+      'Chat d’Axel : suggestions + zone de saisie regroupées sur un fond plein — plus rien ne se chevauche, et le champ se cale au ras du clavier quand il s’ouvre.',
+      'Barres en verre plus nettes : le contenu qui défile derrière ne gêne plus la lecture ; fondu de bord sur la rangée de suggestions.',
+    ],
+  },
   {
     version: '1.6.0',
     date: '2026-08',
@@ -114,10 +124,14 @@ export function markVersionSeen(): void {
 
 /** L'utilisateur a-t-il déjà utilisé l'app (favoris, historique, thème…) ? */
 function hasPriorUsage(): boolean {
+  // Clés techniques écrites par l'app elle-même dès le premier rendu :
+  // elles ne prouvent aucun usage réel et ne doivent jamais déclencher
+  // le panneau « mise à jour » chez un tout nouvel utilisateur.
+  const technical = new Set([SEEN_KEY, `${PREFIX}feedPos`]);
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k !== null && k.startsWith(PREFIX) && k !== SEEN_KEY) return true;
+      if (k !== null && k.startsWith(PREFIX) && !technical.has(k)) return true;
     }
     return false;
   } catch {

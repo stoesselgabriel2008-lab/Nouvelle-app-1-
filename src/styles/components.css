@@ -1756,6 +1756,10 @@ body:has(.coach-input input:focus) .tabbar-wrap {
   line-height: 1.4;
 }
 
+.quote-hero-text--long {
+  font-size: 1.05rem;
+}
+
 .quote-hero-author {
   font-size: var(--fs-footnote);
   font-weight: 600;
@@ -1819,7 +1823,33 @@ body.zen-open {
   text-align: center;
   max-width: 36rem;
   margin: 0 auto;
-  animation: quote-in 0.4s ease both;
+  animation: zen-up 0.34s cubic-bezier(0.32, 0.72, 0.35, 1) both;
+}
+
+.zen-body--down {
+  animation-name: zen-down;
+}
+
+@keyframes zen-up {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zen-down {
+  from {
+    opacity: 0;
+    transform: translateY(-48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .zen-text {
@@ -2189,14 +2219,42 @@ body.zen-open {
   }
 }
 
+/* Composer : suggestions + saisie + note, collés en bas sur fond PLEIN —
+   rien ne défile derrière, le chat glisse proprement dessous. */
+.composer {
+  position: sticky;
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+  margin: var(--sp-2) calc(-1 * var(--sp-1)) 0;
+  padding: var(--sp-2) var(--sp-1) var(--sp-3);
+  background: var(--bg);
+  box-shadow: 0 -18px 16px -10px var(--bg);
+  transition: bottom 0.25s ease;
+}
+
+@media (min-width: 740px) {
+  .composer {
+    bottom: 0;
+    padding-bottom: var(--sp-3);
+  }
+}
+
+/* Clavier ouvert : la tab bar s'efface, le composer descend au ras. */
+body:has(.coach-input input:focus) .composer {
+  bottom: 0;
+  padding-bottom: var(--sp-2);
+}
+
 .coach-chips {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: var(--sp-3) 2px var(--sp-2);
-  margin-top: var(--sp-2);
+  padding: var(--sp-1) 2px var(--sp-2);
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  /* Fondu du bord droit : on voit qu'il y a la suite. */
+  -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+  mask-image: linear-gradient(to right, #000 88%, transparent);
 }
 
 .coach-chips::-webkit-scrollbar {
@@ -2205,20 +2263,12 @@ body.zen-open {
 
 .coach-chips .chip {
   flex-shrink: 0;
+  scroll-snap-align: start;
 }
 
 .coach-input {
-  position: sticky;
-  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 12px);
   display: flex;
   gap: 8px;
-  padding-top: var(--sp-1);
-}
-
-@media (min-width: 740px) {
-  .coach-input {
-    bottom: var(--sp-4);
-  }
 }
 
 .coach-input input {
@@ -2263,7 +2313,10 @@ body.zen-open {
 }
 
 .coach-note {
-  margin: var(--sp-3) var(--sp-1) 0;
+  padding: var(--sp-2) var(--sp-2) 0;
+  font-size: var(--fs-caption);
+  color: var(--label-3);
+  text-align: center;
 }
 
 /* ----------------------------------------------- Carte « vraie app » */

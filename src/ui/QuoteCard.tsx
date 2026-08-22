@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { buildFeed, feedAuthorLine } from '../content/feed';
+import { advanceFeedPos } from '../lib/storage';
 import { frTypo } from '../lib/typo';
 import { Icon } from './Icon';
 
 /**
- * Carte « coach mental » de l'accueil : un aperçu sombre et immersif du mode
- * plein écran. Le flux du jour (phrases de coach + citations vérifiées) défile
- * toutes les 12 s ; toucher la carte ouvre le plein écran sur la même phrase.
- * La rotation se met en pause quand l'onglet est caché et disparaît si
+ * Carte « coach mental » de l'accueil. La position dans le flux est
+ * PERSISTANTE : chaque ouverture de l'app avance d'une phrase, et la rotation
+ * (8 s) continue d'avancer le même curseur — on ne retombe jamais sur la même
+ * citation en rouvrant l'app. Toucher la carte ouvre le plein écran sur la
+ * phrase affichée. Pause quand l'onglet est caché ; pas de rotation si
  * l'utilisateur préfère réduire les animations.
  */
 
-const ROTATE_MS = 12_000;
-/** Sur la carte compacte, on ne fait tourner que les textes courts. */
-const CARD_MAX_LEN = 150;
+const ROTATE_MS = 8_000;
 
 function prefersReducedMotion(): boolean {
   try {
@@ -26,30 +26,25 @@ function prefersReducedMotion(): boolean {
 
 export function QuoteCard() {
   const feed = useMemo(() => buildFeed(), []);
-  const short = useMemo(
-    () =>
-      feed
-        .map((item, index) => ({ item, index }))
-        .filter(({ item }) => item.text.length <= CARD_MAX_LEN),
-    [feed],
-  );
-  const [pos, setPos] = useState(0);
+  // Chaque montage (ouverture de l'app, retour à l'accueil) = phrase suivante.
+  const [pos, setPos] = useState(() => advanceFeedPos());
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
     const id = window.setInterval(() => {
-      if (!document.hidden) setPos((p) => p + 1);
+      if (!document.hidden) setPos(advanceFeedPos());
     }, ROTATE_MS);
     return () => window.clearInterval(id);
   }, []);
 
-  const current = short[pos % short.length] ?? { item: feed[0]!, index: 0 };
-  const { item } = current;
+  const index = ((pos % feed.length) + feed.length) % feed.length;
+  const item = feed[index]!;
   const authorLine = feedAuthorLine(item);
+  const long = item.text.length > 140;
 
   return (
     <Link
-      to={`/citations/plein-ecran?i=${current.index}`}
+      to={`/citations/plein-ecran?i=${index}`}
       className={`quote-hero quote-hero--${item.theme}`}
       viewTransition
       aria-label="Ouvrir les citations en plein écran"
@@ -59,7 +54,9 @@ export function QuoteCard() {
         <Icon name="expand" size={16} />
       </span>
       <span className="quote-hero-body" key={pos}>
-        <span className="quote-hero-text">{frTypo(item.text)}</span>
+        <span className={`quote-hero-text${long ? ' quote-hero-text--long' : ''}`}>
+          {frTypo(item.text)}
+        </span>
         <span className="quote-hero-author">
           {authorLine !== '' ? authorLine : 'Axel · ton coach'}
         </span>
