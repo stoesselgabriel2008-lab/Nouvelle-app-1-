@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.5.0';
+export const APP_VERSION = '1.6.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,15 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.6.0',
+    date: '2026-08',
+    items: [
+      'Vraie app sur iPhone et iPad : nouvelle icône Axel digne d’une app native, écrans de lancement pour tous les formats d’écran (fini le flash blanc à l’ouverture), et un guide d’installation en 3 gestes sur l’accueil.',
+      'Une fois installée depuis Safari (Partager → « Sur l’écran d’accueil »), l’app est plein écran, hors ligne, avec son icône — sans App Store, sans compte, sans rien payer. C’est la seule voie qu’Apple autorise gratuitement, et elle est très bien.',
+      'Tes données (favoris, historique, citations aimées) restent stockées sur ton appareil et survivent aux mises à jour.',
+    ],
+  },
   {
     version: '1.5.0',
     date: '2026-08',

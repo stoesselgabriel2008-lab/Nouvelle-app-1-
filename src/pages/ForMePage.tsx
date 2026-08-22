@@ -20,6 +20,7 @@ import { Disclose, MethodLinkList, Row, SectionLabel } from '../ui/bits';
 import { LargeTitleHeader } from '../ui/LargeTitleHeader';
 import { QuoteCard } from '../ui/QuoteCard';
 import { Axel } from '../ui/Axel';
+import { InstallCard, isInstalled } from '../ui/InstallCard';
 import { dailySeed } from '../content/quotes';
 import { openWhatsNew } from '../ui/WhatsNew';
 import { getLastWorked } from '../ui/StepChecklist';
@@ -43,17 +44,6 @@ const THEME_OPTIONS: { value: ThemePref; label: string }[] = [
   { value: 'light', label: 'Clair' },
   { value: 'dark', label: 'Sombre' },
 ];
-
-function isInstalled(): boolean {
-  try {
-    return (
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (navigator as Navigator & { standalone?: boolean }).standalone === true
-    );
-  } catch {
-    return false;
-  }
-}
 
 const CHECK_LABELS: Record<UpdateCheckResult | 'checking', string> = {
   checking: 'Vérification…',
@@ -80,6 +70,8 @@ export function ForMePage() {
   return (
     <main className="content">
       <LargeTitleHeader title="Pour moi" sub="Un problème, une méthode, tout de suite." />
+
+      <InstallCard />
 
       <QuoteCard />
 

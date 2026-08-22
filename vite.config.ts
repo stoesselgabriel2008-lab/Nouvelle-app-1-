@@ -42,6 +42,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+        // Les écrans de lancement ne servent qu'à iOS au démarrage : inutile
+        // de les mettre dans le cache hors ligne de l'app.
+        globIgnores: ['**/splash/**'],
         navigateFallback: `${BASE}index.html`,
         // Tout le contenu est embarqué dans le bundle : après le premier
         // chargement, l'app entière (bibliothèque, diagnostic, SOS, recherche)

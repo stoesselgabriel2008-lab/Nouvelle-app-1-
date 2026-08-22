@@ -43,6 +43,16 @@ export function toggleFavorite(methodId: string): string[] {
   return next;
 }
 
+// -------------------------------------------------- Carte d'installation
+
+export function isInstallCardHidden(): boolean {
+  return read<boolean>('installCardHidden', false);
+}
+
+export function hideInstallCard(): void {
+  write('installCardHidden', true);
+}
+
 // ------------------------------------------------- Citations favorites (cœur)
 
 /** Identifiée par son texte (unicité garantie par test). */

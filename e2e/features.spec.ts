@@ -314,6 +314,22 @@ test.describe('Axel, le coach', () => {
   });
 });
 
+test('carte d’installation : visible hors app installée, « Plus tard » persiste', async ({
+  page,
+}) => {
+  await page.goto('#/');
+  const card = page.locator('.install-card');
+  await expect(card).toBeVisible();
+  await expect(card).toContainText('Sur l’écran d’accueil');
+  await expect(card.locator('.install-icon')).toBeVisible();
+  await card.getByRole('button', { name: 'Plus tard' }).click();
+  await expect(card).toBeHidden();
+  await page.reload();
+  await expect(page.locator('.install-card')).toHaveCount(0);
+  // L'installation reste accessible depuis la section Application.
+  await expect(page.getByText('Installer l’app sur iPhone / iPad')).toBeVisible();
+});
+
 test('vérification manuelle des mises à jour : un retour clair', async ({ page }) => {
   await page.goto('#/');
   await page.getByText('Vérifier les mises à jour').click();
