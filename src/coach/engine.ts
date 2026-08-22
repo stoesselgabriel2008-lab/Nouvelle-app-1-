@@ -1,22 +1,30 @@
 import { foldPhrase } from '../search/normalize';
 import { COACH_LINES } from '../content/coach-lines';
 import { SUBJECTS } from '../content/subjects';
+import { METHODS } from '../content/methods/index';
+import { SOS_PROTOCOLS } from '../content/sos';
+import {
+  ACK_NO,
+  ACK_YES,
+  GENERIC_MORE,
+  INTENTS,
+  type CoachLink,
+  type Intent,
+} from './kb';
 import type { AxelMood } from '../ui/Axel';
 
 /**
- * Le moteur d'Axel : 100 % local et déterministe dans sa logique.
- * - le message est normalisé comme la recherche (accents, casse, apostrophes),
- *   donc « je STRESSE !! » et « jé stresse » se comprennent pareil ;
- * - chaque intention a plusieurs formulations de réponse : on n'envoie jamais
- *   deux fois la même d'affilée, pour que ça parle naturellement ;
- * - la détresse passe toujours en premier et oriente vers des humains — Axel
- *   est un coach de méthodes, jamais un soin.
+ * Le moteur de compréhension d'Axel — 100 % local.
+ *
+ * Pipeline : normalisation (accents, casse, ponctuation) → détresse d'abord,
+ * toujours → suivi de conversation (« ça n'a pas marché », « oui », « encore »)
+ * → score pondéré des intentions (locutions > mots forts > indices, fautes de
+ * frappe tolérées par distance d'édition) → entités (chaque fiche méthode et
+ * SOS est connue par son titre ET ses alias étudiants) → réponse, avec un
+ * second sujet ajouté quand le message mélange deux problèmes.
  */
 
-export interface CoachLink {
-  label: string;
-  to: string;
-}
+export type { CoachLink };
 
 export interface CoachReply {
   text: string;
@@ -25,18 +33,8 @@ export interface CoachReply {
   intent: string;
 }
 
-interface Intent {
-  id: string;
-  /** Mots-clés en forme normalisée (minuscules, sans accents). */
-  keywords: string[];
-  /** Plus haut = gagne en cas de concurrence (détresse = 100). */
-  priority: number;
-  variants: string[];
-  links: CoachLink[];
-  mood: AxelMood;
-}
+// ------------------------------------------------------------ Normalisation
 
-/** Normalisation : pliage recherche + ponctuation neutralisée. */
 function norm(input: string): string {
   return foldPhrase(input)
     .replace(/[^a-z0-9 ]/g, ' ')
@@ -44,483 +42,274 @@ function norm(input: string): string {
     .trim();
 }
 
-/** Les mots très courts exigent un mot entier (évite « con » dans « concours »). */
-function matches(padded: string, keyword: string): boolean {
-  if (keyword.length <= 4) return padded.includes(` ${keyword} `);
-  return padded.includes(keyword);
+function tokenize(input: string): string[] {
+  return norm(input).split(' ').filter((t) => t.length > 0);
 }
 
-const INTENTS: Intent[] = [
-  {
-    id: 'detresse',
-    priority: 100,
-    keywords: [
-      'craquer', 'craque', 'pleure', 'pleurer', 'plus envie de rien', 'envie de rien',
-      'abandonner', 'tout arreter', 'arreter medecine', 'deprime', 'deprimee',
-      'je vais pas bien', 'vais mal', 'mal etre', 'me faire du mal', 'plus de sens',
-      'desespere', 'desesperee', 'plus la force', 'a bout', 'je n en peux plus',
-      'n en peux plus', 'envie de disparaitre', 'suicid',
-    ],
-    mood: 'care',
-    links: [{ label: 'Protocole Détresse (avec les bons numéros)', to: '/sos/detresse' }],
-    variants: [
-      'Ce que tu ressens compte plus que n’importe quel cours. Je suis un coach de méthodes, pas un soutien psychologique — et là, c’est d’un humain dont tu as besoin : un proche, ton médecin, ou le 3114 (gratuit, 24 h/24). Le protocole Détresse de l’app liste les bons contacts. Le travail attendra, toi d’abord.',
-      'Merci de me le dire. Là, ce n’est plus une question de méthode : parle à quelqu’un de vrai — un proche, ton médecin, ou le 3114, gratuit, jour et nuit. J’ai mis le protocole Détresse juste en dessous, il est fait exactement pour ce moment. Les cours peuvent attendre, vraiment.',
-      'Stop, on met les révisions de côté une minute. Ce que tu décris mérite un humain, pas une app : un proche de confiance, ton médecin, ou le 3114 à toute heure. Ouvre le protocole Détresse ci-dessous — première étape : ne pas rester seul·e avec ça.',
-      'Je te prends au sérieux. Une app ne soigne pas, et je ne vais pas faire semblant : contacte quelqu’un de vrai — un proche, ton médecin, le 3114 (gratuit, 24 h/24). Le protocole Détresse ci-dessous te guide pas à pas. Reviens vers les méthodes quand ça ira mieux, elles t’attendront.',
-    ],
-  },
-  {
-    id: 'panique',
-    priority: 60,
-    keywords: [
-      'panique', 'crise d angoisse', 'crise de panique', 'respire plus',
-      'coeur qui bat', 'tetanise', 'tetanisee', 'bloque devant ma copie',
-    ],
-    mood: 'care',
-    links: [
-      { label: 'SOS Panique avant une épreuve', to: '/sos/panique' },
-      { label: 'Protocole anti-stress NRAR', to: '/methode/nrar-stress' },
-    ],
-    variants: [
-      'D’accord. D’abord le corps, ensuite les cours : expire lentement, plus long que l’inspiration, quatre fois. Puis ouvre le SOS Panique ci-dessous — il te prend par la main, étape par étape.',
-      'Respire avec moi : inspire 4 secondes, expire 6, quatre cycles. La panique monte puis redescend toujours — laisse-la passer. Le SOS Panique ci-dessous enchaîne exactement les bons gestes.',
-      'Ça arrive même aux meilleurs, et ça se gère : allonge tes expirations pendant une minute, pose les deux pieds au sol. Ensuite, suis le SOS Panique — chaque étape est écrite pour ce moment précis.',
-      'Une chose à la fois. Ton cerveau est en alarme, pas en panne : une minute d’expirations longues, puis le protocole NRAR ci-dessous pour redescendre et te remettre en route.',
-    ],
-  },
-  {
-    id: 'stress',
-    priority: 30,
-    keywords: [
-      'stress', 'stresse', 'stressee', 'pression', 'anxieux', 'anxieuse', 'anxiete',
-      'peur du concours', 'peur de rater', 'boule au ventre',
-    ],
-    mood: 'care',
-    links: [
-      { label: 'Protocole anti-stress NRAR', to: '/methode/nrar-stress' },
-      { label: 'SOS Panique (si ça monte fort)', to: '/sos/panique' },
-    ],
-    variants: [
-      'Le stress te dit que c’est important — pas que tu vas échouer. Transforme-le en carburant : une expiration longue, puis UNE tâche précise. Le protocole NRAR ci-dessous fait exactement ça.',
-      'Normal d’avoir la pression : l’enjeu est réel. Mais l’anxiété regarde demain, le travail regarde maintenant. Reviens à l’heure qui vient : une unité de cours, un vrai rappel. Le NRAR t’aide à redescendre d’abord.',
-      'Le concours se joue sur des mois, pas sur ton angoisse de ce soir. Réduis la fenêtre : la prochaine heure seulement. Et si ça monte trop fort, le SOS Panique est là pour ça.',
-      'Ce que tu contrôles : ta prochaine heure, ta méthode, ton sommeil. Ce que tu ne contrôles pas : le classement des autres. Investis à 100 % dans la première colonne — commence par le NRAR ci-dessous.',
-    ],
-  },
-  {
-    id: 'procrastination',
-    priority: 20,
-    keywords: [
-      'procrastin', 'arrive pas a commencer', 'arrive pas a m y mettre', 'repousse',
-      'flemme', 'me lance pas', 'pas motive', 'pas motivee', 'demarre pas',
-      'glande', 'perds mon temps', 'traine', 'commence pas',
-    ],
-    mood: 'happy',
-    links: [
-      { label: 'Démarrage en 10 minutes', to: '/methode/demarrage-10-minutes' },
-      { label: 'SOS Je n’arrive pas à commencer', to: '/sos/commencer' },
-    ],
-    variants: [
-      'On ne va pas attendre la motivation — elle arrive toujours APRÈS le démarrage, jamais avant. Contrat minimal : 10 minutes, une seule unité de cours, minuteur lancé. Après, tu décides. Ouvre le Démarrage en 10 minutes ci-dessous.',
-      'Ce n’est pas de la paresse, c’est un démarrage trop gros. Réduis : pas « bosser l’anat », mais « lire une page et la réciter ». 10 minutes chrono, c’est tout ce qu’on décide maintenant.',
-      'Règle anti-procrastination : rends le premier pas ridicule de facilité. Ouvre le poly à la bonne page, mets le téléphone dans une autre pièce, lance 10 minutes. Le protocole ci-dessous fait le reste.',
-      'Tu réfléchis à ta session au lieu de la faire — ça arrive à tout le monde. Bascule en mode exécution : le Démarrage en 10 minutes te donne un contrat court et précis. Lance-le, on en reparle après.',
-      'La flemme adore le flou. Tue le flou : UNE unité (une page, un schéma), UN minuteur de 10 minutes, ZÉRO onglet ouvert. Vas-y maintenant, pas à l’heure pile.',
-    ],
-  },
-  {
-    id: 'ca-rentre-pas',
-    priority: 20,
-    keywords: [
-      'rentre pas', 'retiens rien', 'retiens pas', 'memorise pas', 'oublie tout',
-      'oublie tout le temps', 'rien ne reste', 'memoire', 'retenir mon cours',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'SOS Ça ne rentre pas', to: '/sos/ca-rentre-pas' },
-      { label: 'Rappel actif — la méthode reine', to: '/methode/rappel-actif' },
-      { label: 'Répétition espacée', to: '/methode/repetition-espacee' },
-    ],
-    variants: [
-      'Si ça ne rentre pas, c’est presque toujours le même coupable : tu relis au lieu de te tester. Ferme le cours, feuille blanche, écris tout ce que tu sais — puis compare. C’est inconfortable, et c’est exactement pour ça que ça marche.',
-      'La mémoire ne se remplit pas, elle se muscle : chaque rappel de mémoire creuse le chemin. Le SOS ci-dessous te fait basculer de la relecture au rappel actif en une session.',
-      'Trois leviers, dans l’ordre : te tester (rappel actif), espacer les reprises (répétition espacée), dormir. Si tu fais déjà les trois, on affine — dis-m’en plus ou lance le diagnostic.',
-      'Ce qui glisse, c’est ce qu’on regarde. Ce qui tient, c’est ce qu’on récupère. Transforme chaque relecture en question : cache, récite, vérifie. Les deux fiches ci-dessous sont tes armes de base.',
-    ],
-  },
-  {
-    id: 'confusion',
-    priority: 20,
-    keywords: [
-      'confonds', 'confond', 'melange', 'melange tout', 'ressemblent', 'se ressemble',
-      'deux notions', 'similaires',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'Tableau de contraste', to: '/methode/tableau-contraste' },
-      { label: 'Entrelacement (mélanger les cas)', to: '/methode/interleaving' },
-    ],
-    variants: [
-      'Deux notions qui se mélangent, c’est qu’elles ne se sont jamais rencontrées : mets-les côte à côte dans un tableau, ligne par ligne, et cherche LE détail qui tranche — le discriminant roi. Après ça, impossible de les confondre.',
-      'Le cerveau confond ce qu’il apprend séparément. Le remède : le tableau de contraste (face à face, critère par critère), puis des questions mélangées pour t’entraîner à trancher.',
-      'Classique en PASS — isoformes, voies, molécules jumelles… Le tableau de contraste ci-dessous est fait pour ça : deux colonnes, les différences en gras, et tu récites le discriminant de mémoire.',
-      'Ne réapprends pas chaque notion de zéro : travaille la frontière entre les deux. Tableau de contraste d’abord, entrelacement ensuite pour tester la frontière dans le désordre.',
-    ],
-  },
-  {
-    id: 'par-coeur',
-    priority: 15,
-    keywords: [
-      'par coeur', 'liste a retenir', 'apprendre une liste', 'noms a retenir',
-      'valeurs a retenir', 'arbitraire', 'classification', 'nomenclature', 'moyen mnemotechnique', 'mnemotechnique',
-    ],
-    mood: 'happy',
-    links: [
-      { label: 'Imagerie mentale interactive', to: '/methode/imagerie-interactive' },
-      { label: 'Association phonétique', to: '/methode/association-phonetique' },
-      { label: 'Histoire-chaînage (pour les séquences)', to: '/methode/histoire-chainage' },
-    ],
-    variants: [
-      'Pour l’arbitraire pur (noms, valeurs, listes), la compréhension ne suffit pas — il faut des accroches : image mentale interactive, jeu de mots phonétique, ou histoire qui enchaîne les éléments. Choisis l’arme selon la cible ci-dessous.',
-      'Une liste sans logique s’apprend avec des béquilles assumées : une image frappante par élément, ou une histoire courte qui les enchaîne dans l’ordre. Quelques secondes de fabrication, des semaines de rappel.',
-      'Le par-cœur se gagne en deux temps : une accroche mémorable (image, son, histoire) pour installer, puis la répétition espacée pour faire durer. Commence par l’accroche — les trois fiches ci-dessous.',
-      'Astuce de concours : plus c’est absurde, mieux ça tient. Fabrique une image vivante et exagérée par élément à retenir — puis teste-toi de mémoire. L’imagerie interactive t’explique le geste exact.',
-    ],
-  },
-  {
-    id: 'qcm',
-    priority: 20,
-    keywords: [
-      'qcm', 'rate les qcm', 'items', 'pieges', 'tombe dans les pieges',
-      'colles blanches', 'banque de qcm',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'SOS Je rate mes QCM', to: '/sos/qcm-rates' },
-      { label: 'QCM actif (bien s’entraîner)', to: '/methode/qcm-actif' },
-      { label: 'Correction par cause d’erreur', to: '/methode/correction-par-cause' },
-    ],
-    variants: [
-      'Rater des QCM, c’est une mine d’or si tu corriges par CAUSE : cours pas su ? mal lu ? piège de formulation ? mauvais raisonnement ? Chaque cause a son remède — le SOS ci-dessous te fait faire le tri en une session.',
-      'Ne compte pas ton score, dissèque-le : chaque erreur va dans une colonne (connaissance, lecture, piège, raisonnement). Tu sauras enfin QUOI corriger au lieu de « refaire des QCM » au hasard.',
-      'Le QCM est une épreuve de discrimination fine : entraîne-toi en justifiant chaque item À VOIX HAUTE, vrai comme faux. C’est le QCM actif — bien plus rentable que d’en enchaîner des paquets.',
-      'Trois questions à te poser après chaque colle : quelles erreurs viennent du cours ? lesquelles de la lecture ? lesquelles du piège ? La correction par cause ci-dessous transforme chaque échec en points.',
-    ],
-  },
-  {
-    id: 'fatigue',
-    priority: 25,
-    keywords: [
-      'fatigue', 'fatiguee', 'epuise', 'epuisee', 'creve', 'crevee', 'mal dormi',
-      'nuit blanche', 'sommeil', 'dormir', 'plus d energie', 'vide',
-    ],
-    mood: 'care',
-    links: [
-      { label: 'SOS Fatigue', to: '/sos/fatigue' },
-      { label: 'Journée minimale (jour sans forme)', to: '/methode/journee-minimale' },
-    ],
-    variants: [
-      'La fatigue n’est pas un manque de volonté, c’est une donnée physiologique. Aujourd’hui : journée minimale — un objectif réduit mais réel, pas zéro. Et le sommeil de ce soir est ta séance de consolidation la plus rentable.',
-      'On n’apprend rien contre un cerveau épuisé : il consolide en dormant. Fais la version minimale de ta journée (le SOS Fatigue te la donne), couche-toi tôt, et reprends demain à pleine puissance.',
-      'Sois stratège : mieux vaut 45 minutes efficaces + une vraie nuit que 4 heures de présence molle. La Journée minimale ci-dessous définit le strict nécessaire — fais-le, puis repos sans culpabilité.',
-      'Signal reçu. Deux règles : pas de nuit blanche (jamais rentable en PASS), et un minimum incompressible aujourd’hui pour garder la chaîne intacte. Le SOS Fatigue t’organise ça en trois étapes.',
-    ],
-  },
-  {
-    id: 'retard',
-    priority: 20,
-    keywords: [
-      'retard', 'deborde', 'debordee', 'submerge', 'submergee', 'trop de cours',
-      'jamais a jour', 'accumule', 'course apres', 'rattraper',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'SOS Je suis débordé·e', to: '/sos/retard' },
-      { label: 'Triage du retard', to: '/methode/triage-retard' },
-    ],
-    variants: [
-      'Le retard se triage, il ne se rattrape pas en bloc : classe chaque cours en « rentable maintenant / plus tard / à sacrifier partiellement », et commence par le plus rentable pour le concours. Le Triage ci-dessous te donne les critères exacts.',
-      'Mauvaise nouvelle : tu ne rattraperas pas tout. Bonne nouvelle : tu n’en as pas besoin — le concours récompense la maîtrise du rentable, pas l’exhaustivité. On triage d’abord, on fonce ensuite.',
-      'Arrête la course, pose-toi 20 minutes avec le SOS Débordé·e : inventaire, tri par rentabilité, plan de reprise réaliste. Tu repartiras avec une liste claire au lieu d’une boule au ventre.',
-      'Être à jour est un mythe en PASS — viser 100 % te coûte les 80 % qui comptent. Le Triage du retard t’apprend à choisir froidement. C’est une compétence de major, pas un aveu d’échec.',
-    ],
-  },
-  {
-    id: 'comprends-rien',
-    priority: 20,
-    keywords: [
-      'comprends rien', 'comprend rien', 'comprends pas', 'comprend pas', 'trop dur',
-      'perdu', 'perdue', 'aucun sens', 'obscur',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'SOS Je ne comprends plus rien', to: '/sos/comprends-plus-rien' },
-      { label: 'Méthode de Feynman (expliquer simple)', to: '/methode/feynman' },
-      { label: 'Exemple résolu (partir d’un cas)', to: '/methode/exemple-resolu' },
-    ],
-    variants: [
-      'Quand plus rien n’a de sens, on redescend d’un étage : trouve la dernière chose que tu comprenais VRAIMENT, repars de là, et avance par exemples résolus plutôt que par théorie. Le SOS ci-dessous fait ce chemin avec toi.',
-      'Ne relis pas plus fort — change d’angle : prends un exemple concret résolu et remonte vers la règle. Puis explique le passage bloquant avec tes mots, comme à un enfant : le trou exact apparaîtra.',
-      'C’est le signal Feynman : essaie d’expliquer le passage simplement, à voix haute. Là où tu bloques, c’est LE point précis à retravailler — pas tout le chapitre. Fiche ci-dessous.',
-      '« Je ne comprends rien » cache presque toujours UN maillon manquant précis. On le localise (SOS ci-dessous), on le répare par un exemple résolu, et la suite se débloque en cascade.',
-    ],
-  },
-  {
-    id: 'concentration',
-    priority: 20,
-    keywords: [
-      'concentre', 'concentrer', 'concentration', 'distrait', 'distraite', 'deconcentre',
-      'telephone', 'tiktok', 'instagram', 'reseaux', 'scrolle', 'scroll', 'focus',
-    ],
-    mood: 'happy',
-    links: [
-      { label: 'Friction numérique (téléphone hors-jeu)', to: '/methode/friction-numerique' },
-      { label: 'Pomodoro (blocs + pauses)', to: '/methode/pomodoro' },
-    ],
-    variants: [
-      'La concentration ne se force pas, elle s’organise : téléphone physiquement dans une autre pièce (la friction fait tout), un bloc de 25-50 minutes, une seule unité de cours. Les deux fiches ci-dessous montent le dispositif.',
-      'Ton attention est le vrai enjeu du concours. Rends la distraction coûteuse : téléphone loin, notifications coupées, un onglet. Puis des blocs courts avec de vraies pauses — c’est le Pomodoro.',
-      'Chaque coup d’œil au téléphone coûte plusieurs minutes de re-concentration. La solution n’est pas la volonté, c’est la friction : mets-le hors de portée AVANT la session. Fiche ci-dessous, elle est radicale et elle marche.',
-      'Scroller pendant la pause, c’est saboter la pause. Blocs de travail nets, pauses SANS écran (marcher, boire, regarder loin). Le Pomodoro cadre tout ça proprement.',
-    ],
-  },
-  {
-    id: 'anki',
-    priority: 20,
-    keywords: [
-      'anki', 'flashcard', 'flashcards', 'cartes memoire', 'deck', 'paquets de cartes',
-      'anki deborde', 'anki me deborde', 'trop de cartes', 'revisions anki',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'SOS Anki me déborde', to: '/sos/anki-deborde' },
-      { label: 'Répétition espacée (le principe)', to: '/methode/repetition-espacee' },
-      { label: 'Audit de deck', to: '/methode/audit-deck' },
-    ],
-    variants: [
-      'Anki est un outil de RÉTENTION, pas de compréhension : n’y mets que ce qui est déjà compris, en cartes atomiques (une question, une réponse). Si les révisions débordent, le SOS ci-dessous assainit ton deck en une session.',
-      'Règle d’or : une carte = un fait précis, formulé en question. Les cartes fourre-tout créent la montagne de révisions qui t’écrase. L’Audit de deck te fait le grand tri.',
-      'Si Anki devient une corvée, c’est le deck qui est malade, pas toi : trop de cartes non comprises, mal découpées ou inutiles. Audit ci-dessous : supprimer, reformuler, atomiser.',
-      'Anki oui, mais après compréhension et premier rappel actif — jamais à la place. Et est-ce que tout mérite une carte ? Le SOS t’aide à trancher ce qui entre et ce qui sort.',
-    ],
-  },
-  {
-    id: 'planning',
-    priority: 15,
-    keywords: [
-      'planning', 'planifier', 'organiser ma semaine', 'organiser mes revisions',
-      'emploi du temps', 'todo', 'to do', 'organisation',
-    ],
-    mood: 'think',
-    links: [
-      { label: 'Journée minimale', to: '/methode/journee-minimale' },
-      { label: 'Triage (choisir quoi bosser)', to: '/methode/triage-retard' },
-    ],
-    variants: [
-      'Choix assumé : pas de planner ni de méthode des J ici — les usines à planning consomment le temps qu’elles prétendent organiser. À la place : un socle minimal quotidien (Journée minimale) et un tri froid de ce qui est rentable (Triage). Simple et tenable.',
-      'Le meilleur planning est celui qui survit à une mauvaise journée : définis ton minimum incompressible (fiche ci-dessous), fais-le CHAQUE jour, et ajoute par-dessus quand ça va. La régularité bat l’architecture.',
-      'Planifie en unités de travail, pas en heures : « 2 rappels d’anat + 1 série de QCM », pas « 3 h d’anat ». Les heures se subissent, les unités se valident. La Journée minimale t’installe ce réflexe.',
-    ],
-  },
-  {
-    id: 'note-ratee',
-    priority: 15,
-    keywords: [
-      'mauvaise note', 'rate ma colle', 'rate mon concours blanc', 'echoue', 'echec',
-      'classement', 'mal classe', 'mal classee', 'resultat decevant', 'note decevante',
-    ],
-    mood: 'care',
-    links: [
-      { label: 'Correction par cause d’erreur', to: '/methode/correction-par-cause' },
-      { label: 'Calibration de confiance', to: '/methode/calibration-confiance' },
-    ],
-    variants: [
-      'Une note, c’est une mesure à un instant T — pas ton niveau final, encore moins ta valeur. Ce qui compte : d’où viennent les points perdus ? La Correction par cause te le dit noir sur blanc, et c’est là que sont tes prochains points.',
-      'Les classements bougent énormément sur une année — ceux qui montent sont ceux qui corrigent par cause au lieu de ruminer le rang. Une session d’analyse ci-dessous, puis on repart.',
-      'D’abord : encaisser, c’est normal que ça pique. Ensuite, à froid : chaque erreur classée par cause (cours, lecture, piège, raisonnement), chaque cause son remède. C’est LA séance la plus rentable de ta semaine.',
-      'Un concours blanc raté qui est bien analysé vaut mieux qu’un réussi par chance : tu sais exactement quoi réparer. Fiche ci-dessous — et la Calibration t’apprend à savoir quand tu sais.',
-    ],
-  },
-  {
-    id: 'pause',
-    priority: 12,
-    keywords: ['pause', 'pauses', 'combien de temps travailler', 'rythme de travail', 'pomodoro'],
-    mood: 'happy',
-    links: [{ label: 'Pomodoro (blocs + pauses)', to: '/methode/pomodoro' }],
-    variants: [
-      'Les pauses font partie du travail : 25-50 minutes de bloc, 5-10 minutes de vraie pause SANS écran (marcher, boire, regarder loin). Le Pomodoro cadre tout ça — et ne coupe jamais un raisonnement en plein élan.',
-      'Règle simple : des blocs nets, des pauses nettes. Une pause à scroller n’est pas une pause — ton attention ne récupère pas. Fiche Pomodoro ci-dessous pour le tempo exact.',
-      'Si tu satures, la pause est un outil, pas une triche : 5 minutes debout, fenêtre, eau. Tu reviens avec un cerveau qui classe mieux. Le minuteur intégré à la fiche fait le chef d’orchestre.',
-    ],
-  },
-  {
-    id: 'motive-moi',
-    priority: 15,
-    keywords: [
-      'motive', 'motive moi', 'motivation', 'citation', 'booste', 'booste moi',
-      'encourage', 'inspire', 'donne moi de la force', 'remonte le moral',
-    ],
-    mood: 'cheer',
-    links: [{ label: 'Toutes les citations en plein écran', to: '/citations/plein-ecran' }],
-    variants: [
-      '{line}\n\nMaintenant, du concret : choisis UNE unité de cours et lance 10 minutes. La motivation suit l’action, jamais l’inverse.',
-      '{line}\n\nGarde ça en tête — puis transforme-le en geste : une page, un rappel de mémoire, maintenant.',
-      '{line}\n\nEt souviens-toi : tu n’as pas besoin d’être au top pour bosser. C’est en bossant qu’on se remet au top.',
-      '{line}\n\nRespire, redresse-toi, et prends le prochain petit pas. C’est comme ça qu’on gagne une année.',
-    ],
-  },
-  {
-    id: 'quelle-methode',
-    priority: 12,
-    keywords: [
-      'quelle methode', 'quelles methodes', 'par ou commencer', 'comment apprendre',
-      'comment reviser', 'comment travailler', 'quoi faire ce soir', 'que faire',
-      'meilleure methode', 'conseille',
-    ],
-    mood: 'happy',
-    links: [
-      { label: 'Lancer le diagnostic (3 à 5 questions)', to: '/diagnostic' },
-      { label: 'Parcourir la bibliothèque', to: '/bibliotheque' },
-    ],
-    variants: [
-      'La bonne méthode dépend de trois choses : le type d’info (mécanisme ? liste ? formule ?), ton problème (comprendre ? retenir ? appliquer ?) et l’échéance. Le diagnostic ci-dessous croise tout ça en 3 à 5 questions et te sort la méthode exacte.',
-      'Plutôt que de te donner une méthode au hasard, je te renvoie vers le diagnostic : il pose les bonnes questions et applique la matrice du corpus. Trente secondes, réponse sur mesure.',
-      'Dis-m’en plus (quelle matière ? quel blocage ?) ou fais plus rapide : le diagnostic ci-dessous est exactement fait pour « je ne sais pas quoi utiliser ». Il ne se trompe pas de méthode.',
-    ],
-  },
-  {
-    id: 'matiere',
-    priority: 18,
-    keywords: [], // rempli dynamiquement ci-dessous à partir des matières
-    mood: 'happy',
-    links: [],
-    variants: [
-      'Bonne nouvelle : cette matière a son protocole dédié, avec les méthodes dominantes et les pièges classiques. C’est le chemin le plus court — fiche ci-dessous.',
-      'Pour cette matière, ne réinvente rien : le protocole ci-dessous te donne la combinaison de méthodes qui correspond à son type d’informations. Suis-le tel quel une semaine, ajuste ensuite.',
-      'Chaque matière a sa nature (mécanismes, structures, calculs, listes…) et donc ses méthodes. Le protocole ci-dessous fait le tri pour celle-là précisément.',
-    ],
-  },
-  {
-    id: 'sos',
-    priority: 12,
-    keywords: ['sos', 'urgence', 'au secours', 'a l aide', 'aide moi', 'besoin d aide'],
-    mood: 'care',
-    links: [{ label: 'Ouvrir les protocoles SOS', to: '/sos' }],
-    variants: [
-      'Les protocoles SOS sont faits pour les moments chauds : blocage, panique, fatigue, retard… Chacun commence par « Fais ça maintenant ». Dis-moi ce qui se passe, ou ouvre la liste ci-dessous.',
-      'Je suis là. Dis-moi en un mot ce qui coince (commencer ? retenir ? panique ? fatigue ?) et je te donne le protocole exact — ou parcours les SOS ci-dessous, ils sont très courts.',
-      'D’accord, on gère. Décris ton blocage en une phrase, ou va directement aux SOS : dix protocoles ultra-courts, un par situation de crise.',
-    ],
-  },
-  {
-    id: 'salut',
-    priority: 5,
-    keywords: ['salut', 'bonjour', 'bonsoir', 'hello', 'coucou', 'yo', 'slt', 'cc', 'hey'],
-    mood: 'happy',
-    links: [],
-    variants: [
-      'Salut ! Prêt·e quand tu l’es. Dis-moi ce qui coince — démarrage, mémorisation, stress, QCM… — ou touche une suggestion en dessous.',
-      'Hello ! Je suis là pour transformer ton problème en méthode. Décris ton blocage en une phrase, même vague, je m’occupe du reste.',
-      'Salut ! Question du jour : qu’est-ce qui te ralentit le plus en ce moment ? Dis-le avec tes mots, on règle ça.',
-    ],
-  },
-  {
-    id: 'merci',
-    priority: 5,
-    keywords: ['merci', 'thanks', 'nickel', 'genial', 'parfait', 'super', 'top'],
-    mood: 'cheer',
-    links: [],
-    variants: [
-      'Avec plaisir ! Maintenant, la vraie victoire : appliquer dans les 5 minutes. File !',
-      'De rien — c’est toi qui fais le travail, moi je montre juste la porte. Bonne session !',
-      'Toujours là quand il faut. Allez, une unité de cours et on valide la journée.',
-      'Content que ça aide ! Reviens quand tu veux, même à 2 h du matin — je ne dors pas, moi.',
-    ],
-  },
-  {
-    id: 'qui-es-tu',
-    priority: 8,
-    keywords: ['qui es tu', 't es qui', 'tu es qui', 'ton nom', 'tu es quoi', 'c est quoi axel', 'presente toi'],
-    mood: 'happy',
-    links: [{ label: 'Lancer le diagnostic', to: '/diagnostic' }],
-    variants: [
-      'Moi c’est Axel — un neurone qui a beaucoup potentialisé. Je suis ton coach méthodes : tu me dis ce qui coince, je te donne le bon protocole du corpus. 100 % local, zéro compte, et je ne raconte rien à personne.',
-      'Axel, neurone de compagnie et coach de révisions. Mon boulot : transformer « j’y arrive pas » en « voilà exactement quoi faire ». Tout se passe sur ton appareil, rien ne sort.',
-      'Je suis Axel. Pas un humain, pas une IA en ligne — un coach local avec les 47 méthodes de ton corpus en tête. Pose-moi ton blocage, je te réponds en méthodes concrètes.',
-    ],
-  },
-  {
-    id: 'blague',
-    priority: 8,
-    keywords: ['blague', 'drole', 'marrant', 'rigoler', 'fais moi rire', 'joke'],
-    mood: 'cheer',
-    links: [],
-    variants: [
-      'Pourquoi je suis toujours optimiste ? Parce qu’en tant que neurone, je vois partout du potentiel… d’action. Allez, au travail — c’était ta pause.',
-      'On dit que je manque d’humour, mais c’est faux : j’ai des synapses très excitables. Bon, une unité de cours maintenant ?',
-      'Ma blague préférée : « je vais juste regarder mon téléphone 5 minutes ». Hilarant à chaque fois. Téléphone loin, et on y retourne !',
-    ],
-  },
-  {
-    id: 'vexant',
-    priority: 8,
-    keywords: ['nul cette app', 'sert a rien', 'tu sers a rien', 'debile', 'stupide', 'merde', 'chier', 'ta gueule'],
-    mood: 'care',
-    links: [{ label: 'Lancer le diagnostic', to: '/diagnostic' }],
-    variants: [
-      'Reçu cinq sur cinq — la frustration fait partie du jeu, surtout en PASS. Dis-moi ce qui t’a agacé : je peux sûrement mieux viser. Ou décris ton blocage autrement, j’écoute.',
-      'Pas de souci, je ne me vexe pas (avantage d’être un neurone). Reformule ton problème avec d’autres mots, ou lance le diagnostic — il pose de meilleures questions que moi.',
-      'OK. Souffle un coup, et réessaie avec une phrase simple : « je n’arrive pas à… ». C’est tout ce qu’il me faut pour t’aider vraiment.',
-    ],
-  },
-];
+/** Distance de Damerau-Levenshtein bornée (transpositions comprises). */
+function editDistanceAtMost(a: string, b: string, max: number): boolean {
+  if (Math.abs(a.length - b.length) > max) return false;
+  const m = a.length;
+  const n = b.length;
+  let prev2: number[] = [];
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    let rowMin = i;
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      let v = Math.min(prev[j]! + 1, cur[j - 1]! + 1, prev[j - 1]! + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        v = Math.min(v, prev2[j - 2]! + cost);
+      }
+      cur.push(v);
+      if (v < rowMin) rowMin = v;
+    }
+    if (rowMin > max) return false;
+    prev2 = prev;
+    prev = cur;
+  }
+  return prev[n]! <= max;
+}
 
-// Les matières alimentent l'intention « matiere » avec leurs noms pliés.
-const SUBJECT_KEYWORDS: { key: string; id: string; name: string }[] = SUBJECTS.flatMap((s) => {
-  const keys = new Set<string>([norm(s.name), norm(s.id)]);
-  return Array.from(keys).map((key) => ({ key, id: s.id, name: s.name }));
+/** Correspondance nette : identique, ou racine (« procrastin » → « procrastine »). */
+function tokenExact(token: string, kw: string): boolean {
+  if (token === kw) return true;
+  return kw.length >= 6 && token.startsWith(kw);
+}
+
+/** Un token du message correspond-il à un mot-clé, faute de frappe comprise ? */
+function tokenMatches(token: string, kw: string): boolean {
+  if (tokenExact(token, kw)) return true;
+  // Les mots courts exigent l'exactitude (évite « con » → « concours », etc.).
+  if (kw.length < 5 || token.length < 4) return false;
+  return editDistanceAtMost(token, kw, kw.length >= 8 ? 2 : 1);
+}
+
+// ------------------------------------------------- Compilation des intentions
+
+interface Compiled {
+  intent: Intent;
+  phrasesStrong: string[];
+  phrasesWeak: string[];
+  wordsStrong: string[];
+  wordsWeak: string[];
+}
+
+const COMPILED: Compiled[] = INTENTS.map((intent) => {
+  const split = (list: string[] | undefined) => {
+    const phrases: string[] = [];
+    const words: string[] = [];
+    for (const kw of list ?? []) {
+      if (kw.includes(' ')) phrases.push(kw);
+      else words.push(kw);
+    }
+    return { phrases, words };
+  };
+  const s = split(intent.strong);
+  const w = split(intent.weak);
+  return {
+    intent,
+    phrasesStrong: s.phrases,
+    phrasesWeak: w.phrases,
+    wordsStrong: s.words,
+    wordsWeak: w.words,
+  };
 });
-const MATIERE_INTENT = INTENTS.find((i) => i.id === 'matiere')!;
-MATIERE_INTENT.keywords = SUBJECT_KEYWORDS.map((s) => s.key);
 
-const FALLBACK: Intent = {
-  id: 'fallback',
-  priority: 0,
-  keywords: [],
-  mood: 'think',
-  links: [
-    { label: 'Lancer le diagnostic (il pose les questions)', to: '/diagnostic' },
-    { label: 'Chercher dans les méthodes', to: '/recherche' },
-  ],
-  variants: [
-    'Je ne suis pas sûr d’avoir bien compris — et je préfère te le dire que répondre à côté. Reformule en une phrase simple (« je n’arrive pas à… », « comment retenir… »), ou lance le diagnostic ci-dessous.',
-    'Hmm, ça dépasse mes mots-clés. Essaie avec d’autres mots — ou plus efficace : le diagnostic ci-dessous pose 3 à 5 questions et trouve la méthode exacte, sans se tromper.',
-    'Là je sèche (ça arrive aux meilleurs neurones). Dis-le autrement — « je bloque sur… », « je confonds… », « je stresse pour… » — ou passe par la recherche, elle comprend même les fautes de frappe.',
-    'Pas certain de te suivre. Donne-moi le problème brut, sans faire de belles phrases : « anat rentre pas », « pas motivé », « QCM ratés »… Je parle couramment le raccourci.',
-  ],
+const DETRESSE = COMPILED.find((c) => c.intent.id === 'detresse')!;
+
+/** La détresse se détecte sans tolérance aux fautes : exactitude requise. */
+function detresseHit(padded: string, tokens: string[]): boolean {
+  for (const p of DETRESSE.phrasesStrong) if (padded.includes(p)) return true;
+  for (const w of DETRESSE.wordsStrong) {
+    if (w.length <= 4) {
+      if (tokens.includes(w)) return true;
+    } else if (tokens.some((t) => t === w || (w === 'suicid' && t.startsWith('suicid')))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function scoreIntent(c: Compiled, padded: string, tokens: string[]): number {
+  let s = 0;
+  for (const p of c.phrasesStrong) if (padded.includes(p)) s += 6;
+  for (const p of c.phrasesWeak) if (padded.includes(p)) s += 2;
+  for (const w of c.wordsStrong) {
+    if (tokens.some((t) => tokenExact(t, w))) s += 3;
+    else if (tokens.some((t) => tokenMatches(t, w))) s += 2;
+  }
+  for (const w of c.wordsWeak) if (tokens.includes(w)) s += 1;
+  return s;
+}
+
+// ------------------------------------------------------------------ Matières
+
+/** Abréviations étudiantes courantes, en plus des noms et ids officiels. */
+const SUBJECT_ABBREV: Record<string, string[]> = {
+  anatomie: ['anat'],
+  histologie: ['histo'],
+  embryologie: ['embryo'],
+  biostats: ['biostat', 'biostatistique', 'biostatistiques', 'stats'],
+  'sante-publique': ['sp', 'spu'],
+  medicament: ['pharma', 'pharmaco'],
+  biocell: ['bio cell', 'biologie cellulaire'],
+  biophysique: ['biophy'],
 };
 
-const GREETINGS: string[] = [
-  'Salut, moi c’est Axel — ton coach méthodes. Dis-moi ce qui coince en ce moment : démarrer, retenir, comprendre, gérer le stress… J’ai un protocole pour chaque situation.',
-  'Hello ! Axel, coach de révisions (et neurone à mes heures). Décris ton blocage avec tes mots, même en abrégé — je te réponds en méthodes concrètes, pas en discours.',
-  'Salut ! Ici Axel. Une règle entre nous : pas de blabla, des protocoles. Qu’est-ce qui te ralentit aujourd’hui ?',
-  'Bienvenue ! Je suis Axel, ton coach 100 % local (rien ne quitte ton appareil). Raconte : c’est quoi le problème du moment ?',
+const SUBJECT_KEYS: { key: string; id: string; name: string }[] = SUBJECTS.flatMap((s) => {
+  const keys = new Set<string>([norm(s.name), norm(s.id), ...(SUBJECT_ABBREV[s.id] ?? [])]);
+  return Array.from(keys).map((key) => ({ key, id: s.id, name: s.name }));
+});
+
+function subjectHits(padded: string): { id: string; name: string }[] {
+  const seen = new Set<string>();
+  const out: { id: string; name: string }[] = [];
+  for (const s of SUBJECT_KEYS) {
+    const hit = s.key.includes(' ') ? padded.includes(s.key) : padded.includes(` ${s.key} `);
+    if (hit && !seen.has(s.id)) {
+      seen.add(s.id);
+      out.push({ id: s.id, name: s.name });
+    }
+  }
+  return out;
+}
+
+// ------------------------------------------------------------------ Entités
+
+interface Entity {
+  kind: 'method' | 'sos';
+  id: string;
+  title: string;
+  summary: string;
+  phrases: string[];
+  words: string[];
+  links: CoachLink[];
+}
+
+const STOPWORDS = new Set(
+  'le la les un une des de du d l c ca cest je tu il on nous vous ils j y en et ou mais donc or ni car a au aux pour par avec sans sur sous dans que qui quoi quel quelle quels quelles est es suis sont etre avoir ai as ont fait faire faut il me te se moi toi lui mon ma mes ton ta tes son sa ses ce cet cette ces plus moins tres bien mal pas ne non oui si comment pourquoi quand combien explique moi'
+    .split(' '),
+);
+
+function entityWordOk(w: string): boolean {
+  return w.length >= 5 && !STOPWORDS.has(w);
+}
+
+const ENTITIES: Entity[] = [
+  ...METHODS.map((m): Entity => {
+    const phrases = new Set<string>();
+    const words = new Set<string>();
+    for (const part of m.title.split('/')) {
+      const p = norm(part);
+      if (p.includes(' ')) phrases.add(p);
+      else if (entityWordOk(p)) words.add(p);
+    }
+    for (const alias of m.aliases) {
+      const p = norm(alias);
+      if (p.includes(' ')) phrases.add(p);
+      else if (entityWordOk(p)) words.add(p);
+    }
+    return {
+      kind: 'method',
+      id: m.id,
+      title: m.title,
+      summary: m.summary,
+      phrases: Array.from(phrases),
+      words: Array.from(words),
+      links: [{ label: `Fiche complète : ${m.title}`, to: `/methode/${m.id}` }],
+    };
+  }),
+  ...SOS_PROTOCOLS.map((s): Entity => {
+    const p = norm(s.title);
+    return {
+      kind: 'sos',
+      id: s.id,
+      title: s.title,
+      summary:
+        'C’est un protocole SOS : très court, à suivre tel quel dans le moment chaud — il commence par « Fais ça maintenant ».',
+      phrases: p.includes(' ') ? [p] : [],
+      words: !p.includes(' ') && entityWordOk(p) ? [p] : [],
+      links: [{ label: `Protocole SOS : ${s.title}`, to: `/sos/${s.id}` }],
+    };
+  }),
 ];
 
-export const QUICK_CHIPS: string[] = [
-  'Motive-moi',
-  'J’arrive pas à commencer',
-  'Ça ne rentre pas',
-  'Je stresse',
-  'Je confonds deux notions',
-  'Je rate mes QCM',
-  'Je suis débordé·e',
-  'Quelle méthode ce soir ?',
+const INFO_PATTERN =
+  /(c est quoi|cest quoi|c est koi|quest ce que|qu est ce que|explique|definition|resume moi|parle moi de|ca consiste|comment faire (le|la|un|une)|comment marche|ca marche comment|en quoi consiste)/;
+
+function findEntity(padded: string, tokens: string[]): Entity | null {
+  let best: Entity | null = null;
+  let bestLen = 0;
+  for (const e of ENTITIES) {
+    for (const p of e.phrases) {
+      if (padded.includes(p) && p.length > bestLen) {
+        best = e;
+        bestLen = p.length;
+      }
+    }
+    for (const w of e.words) {
+      const hit = tokens.some((t) => t === w || tokenMatches(t, w));
+      if (hit && w.length > bestLen) {
+        best = e;
+        bestLen = w.length;
+      }
+    }
+  }
+  return best;
+}
+
+/** Le message est-il essentiellement le nom de l'entité (± mots outils) ?
+    Correspondance exacte seulement : « je stresse » ne doit pas devenir la
+    fiche anti-stress par approximation. */
+function isBareEntity(tokens: string[], e: Entity): boolean {
+  const entityTokens = new Set<string>();
+  for (const p of e.phrases) for (const t of p.split(' ')) entityTokens.add(t);
+  for (const w of e.words) entityTokens.add(w);
+  const meaningful = tokens.filter((t) => !STOPWORDS.has(t));
+  if (meaningful.length === 0) return false;
+  return meaningful.every((t) => entityTokens.has(t));
+}
+
+const ENTITY_TEMPLATES: ((e: Entity) => string)[] = [
+  (e) => `${e.title} — en 20 secondes : ${e.summary}\n\nLa fiche complète ci-dessous détaille quand l’utiliser, quand l’éviter, et la procédure pas à pas.`,
+  (e) => `Voilà l’essentiel. ${e.title} : ${e.summary}\n\nOuvre la fiche pour la procédure exacte — et le mode « Suivre pas à pas » te tient la main.`,
+  (e) => `${e.summary}\n\nC’est ça, ${e.title}. Tout le détail (conditions, pièges, étapes) est dans la fiche ci-dessous.`,
 ];
 
-// Mémoire de session : jamais deux fois la même formulation d'affilée.
+// ----------------------------------------------------------------- Suivi
+
+const FOLLOW_NOT_WORKED = [
+  'ca marche pas', 'ca ne marche pas', 'marche pas', 'ca n a pas marche', 'ca a pas marche',
+  'toujours pareil', 'ca change rien', 'deja essaye', 'j ai deja essaye', 'ca aide pas',
+];
+const FOLLOW_EXPLAIN = ['explique', 'dis m en plus', 'developpe', 'plus de details', 'precise', 'comment ca'];
+const FOLLOW_YES = ['oui', 'ok', 'okay', 'd accord', 'daccord', 'vas y', 'ca marche', 'bien recu', 'compris'];
+const FOLLOW_NO = ['non', 'pas ca', 'pas vraiment', 'bof', 'pas convaincu'];
+const FOLLOW_AGAIN = ['encore', 'une autre', 'autre', 'encore une', 'la suivante'];
+
+type FollowKind = 'notWorked' | 'explain' | 'yes' | 'no' | 'again' | null;
+
+function followKind(padded: string, tokens: string[]): FollowKind {
+  const t = padded.trim();
+  const short = tokens.length <= 5;
+  const inList = (list: string[]) =>
+    list.some((p) => (p.includes(' ') ? padded.includes(p) : short && tokens.includes(p)));
+  if (inList(FOLLOW_NOT_WORKED)) return 'notWorked';
+  if (short && inList(FOLLOW_AGAIN)) return 'again';
+  if (short && inList(FOLLOW_EXPLAIN)) return 'explain';
+  if (tokens.length <= 3 && inList(FOLLOW_YES)) return 'yes';
+  if (tokens.length <= 3 && inList(FOLLOW_NO)) return 'no';
+  void t;
+  return null;
+}
+
+// ------------------------------------------------------------------ État
+
 const lastVariant = new Map<string, number>();
+let lastIntentId: string | null = null;
+let lastLinks: CoachLink[] = [];
 
 function pickVariant(id: string, variants: string[], rng: () => number): string {
   let idx = Math.floor(rng() * variants.length);
@@ -534,8 +323,36 @@ function fillSlots(text: string, rng: () => number): string {
   if (!text.includes('{line}')) return text;
   const line = COACH_LINES[Math.floor(rng() * COACH_LINES.length)]!.text;
   // Espaces insécables : le guillemet ne se retrouve jamais orphelin.
-  return text.replace('{line}', `« ${line} »`);
+  return text.replace('{line}', `« ${line} »`);
 }
+
+export function _resetCoachForTests(): void {
+  lastVariant.clear();
+  lastIntentId = null;
+  lastLinks = [];
+}
+
+// ------------------------------------------------------------------ Accueil
+
+const GREETINGS: string[] = [
+  'Salut, moi c’est Axel — ton coach méthodes. Dis-moi ce qui coince en ce moment : démarrer, retenir, comprendre, gérer le stress… J’ai un protocole pour chaque situation.',
+  'Hello ! Axel, coach de révisions (et neurone à mes heures). Décris ton blocage avec tes mots, même en abrégé — je te réponds en méthodes concrètes, pas en discours.',
+  'Salut ! Ici Axel. Une règle entre nous : pas de blabla, des protocoles. Qu’est-ce qui te ralentit aujourd’hui ?',
+  'Bienvenue ! Je suis Axel, ton coach 100 % local (rien ne quitte ton appareil). Raconte : c’est quoi le problème du moment ?',
+];
+
+export const QUICK_CHIPS: string[] = [
+  'Motive-moi',
+  'J’arrive pas à commencer',
+  'Ça ne rentre pas',
+  'Je stresse',
+  'C’est quoi le rappel actif ?',
+  'Je confonds deux notions',
+  'Je rate mes QCM',
+  'Je dors mal',
+  'Je suis débordé·e',
+  'Quelle méthode ce soir ?',
+];
 
 export function greet(rng: () => number = Math.random): CoachReply {
   return {
@@ -546,42 +363,162 @@ export function greet(rng: () => number = Math.random): CoachReply {
   };
 }
 
-/** Réinitialise la mémoire anti-répétition (tests). */
-export function _resetCoachForTests(): void {
-  lastVariant.clear();
+// ------------------------------------------------------------------ Réponse
+
+const NO_SECONDARY = new Set([
+  'salut', 'merci', 'au-revoir', 'vexant', 'blague', 'qui-es-tu', 'aide-app',
+  'motive-moi', 'quelle-methode', 'sos', 'detresse',
+]);
+
+function remember(id: string, links: CoachLink[]): void {
+  lastIntentId = id;
+  lastLinks = links;
 }
 
 export function respond(input: string, rng: () => number = Math.random): CoachReply {
-  const padded = ` ${norm(input)} `;
+  const tokens = tokenize(input);
+  const padded = ` ${tokens.join(' ')} `;
 
-  let best: Intent = FALLBACK;
-  let bestScore = 0;
-  for (const intent of INTENTS) {
-    let matched = 0;
-    for (const kw of intent.keywords) {
-      if (matches(padded, kw)) matched++;
+  // 1. La détresse d'abord, toujours — sans tolérance approximative.
+  if (detresseHit(padded, tokens)) {
+    const d = DETRESSE.intent;
+    const reply: CoachReply = {
+      text: pickVariant(d.id, d.variants, rng),
+      links: d.links ?? [],
+      mood: d.mood ?? 'care',
+      intent: d.id,
+    };
+    remember(d.id, reply.links);
+    return reply;
+  }
+
+  // 2. Scores des intentions (la matière compte comme intention dynamique).
+  const subjects = subjectHits(padded);
+  const scored = COMPILED.map((c) => ({
+    c,
+    score: c.intent.id === 'matiere' ? (subjects.length > 0 ? 6 : 0) : scoreIntent(c, padded, tokens),
+  })).filter((s) => s.score > 0);
+  scored.sort(
+    (a, b) =>
+      ((b.c.intent.priority ?? 10) * 1000 + b.score) -
+      ((a.c.intent.priority ?? 10) * 1000 + a.score),
+  );
+  const best = scored[0];
+
+  // 3. Suivi de conversation — seulement si le message n'est pas un nouveau
+  //    sujet net par lui-même.
+  const follow = followKind(padded, tokens);
+  if (follow !== null && lastIntentId !== null && (best === undefined || best.score < 6)) {
+    const lastIntent = INTENTS.find((i) => i.id === lastIntentId);
+    if (follow === 'yes') {
+      const r: CoachReply = { text: pickVariant('ack-yes', ACK_YES, rng), links: lastLinks, mood: 'cheer', intent: 'suivi' };
+      return r;
     }
-    if (matched === 0) continue;
-    const score = intent.priority * 100 + matched;
-    if (score > bestScore) {
-      best = intent;
-      bestScore = score;
+    if (follow === 'no') {
+      const r: CoachReply = {
+        text: pickVariant('ack-no', ACK_NO, rng),
+        links: [{ label: 'Lancer le diagnostic', to: '/diagnostic' }],
+        mood: 'think',
+        intent: 'suivi',
+      };
+      return r;
+    }
+    // notWorked / explain / again → l'approfondissement du dernier sujet.
+    const pool =
+      lastIntent?.more !== undefined && lastIntent.more.length > 0
+        ? lastIntent.more
+        : GENERIC_MORE;
+    const r: CoachReply = {
+      text: fillSlots(pickVariant(`${lastIntentId}:more`, pool, rng), rng),
+      links: lastLinks,
+      mood: lastIntent?.mood ?? 'think',
+      intent: 'suivi',
+    };
+    return r;
+  }
+
+  // 4. Entités : « c'est quoi X », message réduit au nom d'une fiche, ou
+  //    rien d'autre ne matche. Une vraie situation vécue garde la priorité.
+  const entity = findEntity(padded, tokens);
+  const asksInfo = INFO_PATTERN.test(padded);
+  if (
+    entity !== null &&
+    (asksInfo ||
+      (isBareEntity(tokens, entity) && (best === undefined || best.score < 3)) ||
+      best === undefined)
+  ) {
+    const tpl = ENTITY_TEMPLATES[Math.floor(rng() * ENTITY_TEMPLATES.length)]!;
+    const reply: CoachReply = {
+      text: tpl(entity),
+      links: entity.links,
+      mood: 'happy',
+      intent: `entite:${entity.id}`,
+    };
+    remember(reply.intent, reply.links);
+    return reply;
+  }
+
+  // 5. Repli honnête si rien ne matche.
+  if (best === undefined || best.score < 2) {
+    const FALLBACK_VARIANTS = [
+      'Je ne suis pas sûr d’avoir bien compris — et je préfère te le dire que répondre à côté. Reformule en une phrase simple (« je n’arrive pas à… », « comment retenir… »), ou lance le diagnostic ci-dessous.',
+      'Hmm, ça dépasse mes mots-clés. Essaie avec d’autres mots — ou plus efficace : le diagnostic ci-dessous pose 3 à 5 questions et trouve la méthode exacte, sans se tromper.',
+      'Là je sèche (ça arrive aux meilleurs neurones). Dis-le autrement — « je bloque sur… », « je confonds… », « je stresse pour… » — ou passe par la recherche, elle comprend même les fautes de frappe.',
+      'Pas certain de te suivre. Donne-moi le problème brut, sans faire de belles phrases : « anat rentre pas », « pas motivé », « QCM ratés »… Je parle couramment le raccourci.',
+    ];
+    const reply: CoachReply = {
+      text: pickVariant('fallback', FALLBACK_VARIANTS, rng),
+      links: [
+        { label: 'Lancer le diagnostic (il pose les questions)', to: '/diagnostic' },
+        { label: 'Chercher dans les méthodes', to: '/recherche' },
+      ],
+      mood: 'think',
+      intent: 'fallback',
+    };
+    return reply;
+  }
+
+  // 6. Réponse principale + éventuel second sujet si le message en mélange deux.
+  const intent = best.c.intent;
+  let links: CoachLink[] =
+    intent.id === 'matiere'
+      ? subjects.map((s) => ({ label: `Protocole ${s.name}`, to: `/matiere/${s.id}` }))
+      : [...(intent.links ?? [])];
+  let text = fillSlots(pickVariant(intent.id, intent.variants, rng), rng);
+
+  if (!NO_SECONDARY.has(intent.id)) {
+    const second = scored.find(
+      (s) =>
+        s.c.intent.id !== intent.id &&
+        s.c.intent.id !== 'matiere' &&
+        s.score >= 3 &&
+        s.c.intent.also !== undefined &&
+        !NO_SECONDARY.has(s.c.intent.id),
+    );
+    if (second !== undefined) {
+      text += `\n\n${second.c.intent.also}`;
+      const extra = (second.c.intent.links ?? []).filter(
+        (l) => !links.some((x) => x.to === l.to),
+      );
+      links = [...links, ...extra].slice(0, 5);
+    }
+    // Une matière citée en passant devient un raccourci en plus.
+    if (intent.id !== 'matiere' && subjects.length > 0) {
+      const extras = subjects
+        .map((s) => ({ label: `Protocole ${s.name}`, to: `/matiere/${s.id}` }))
+        .filter((l) => !links.some((x) => x.to === l.to));
+      if (extras.length > 0 && links.length < 5) {
+        links = [...links, ...extras].slice(0, 5);
+      }
     }
   }
 
-  let links = best.links;
-  if (best.id === 'matiere') {
-    const hits = SUBJECT_KEYWORDS.filter((s) => matches(padded, s.key));
-    const seen = new Set<string>();
-    links = hits
-      .filter((h) => (seen.has(h.id) ? false : (seen.add(h.id), true)))
-      .map((h) => ({ label: `Protocole ${h.name}`, to: `/matiere/${h.id}` }));
-  }
-
-  return {
-    text: fillSlots(pickVariant(best.id, best.variants, rng), rng),
+  const reply: CoachReply = {
+    text,
     links,
-    mood: best.mood,
-    intent: best.id,
+    mood: intent.mood ?? 'happy',
+    intent: intent.id,
   };
+  remember(intent.id, links);
+  return reply;
 }

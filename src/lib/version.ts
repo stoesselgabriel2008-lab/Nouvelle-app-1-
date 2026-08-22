@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.7.0';
+export const APP_VERSION = '1.8.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,17 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.8.0',
+    date: '2026-08',
+    items: [
+      'Axel comprend beaucoup plus de choses : plus de 50 situations couvertes — sommeil, comparaison aux autres, pression familiale, doublants, fiches ou pas, musique, volume d’heures, échéances proches, perfectionnisme, trou noir en colle, plateau de progression, et bien d’autres.',
+      'Il connaît chaque fiche par son nom : demande « c’est quoi le blurting ? » ou juste « feynman », il répond avec le vrai résumé de la fiche et le lien direct.',
+      'Il suit la conversation : « ça n’a pas marché », « explique », « oui », « encore » — il approfondit le même sujet au lieu de repartir de zéro. Et si ton message mélange deux problèmes (« crevé et débordé »), il traite les deux.',
+      'Il rattrape les fautes de frappe par distance d’édition, cite le protocole de ta matière quand tu la mentionnes, et démonte les mythes classiques (relire, surligner, recopier, « je suis visuel »).',
+      'Le tout reste 100 % local et vérifié par une table d’évaluation de plus de 100 phrases testées.',
+    ],
+  },
   {
     version: '1.7.0',
     date: '2026-08',
