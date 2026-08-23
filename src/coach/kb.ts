@@ -41,7 +41,7 @@ export const INTENTS: Intent[] = [
       'craquer', 'craque', 'pleure', 'pleurer', 'plus envie de rien', 'envie de rien',
       'abandonner', 'tout arreter', 'arreter medecine', 'deprime', 'je vais pas bien',
       'vais mal', 'mal etre', 'me faire du mal', 'plus de sens', 'desespere',
-      'plus la force', 'a bout', 'n en peux plus', 'envie de disparaitre', 'suicid',
+      'plus la force', 'a bout', 'n en peux plus', 'j en peux plus', 'en peux plus', 'envie de disparaitre', 'suicid',
       'me deteste', 'plus dormir plus manger', 'crise de larmes',
     ],
     mood: 'care',
@@ -109,7 +109,8 @@ export const INTENTS: Intent[] = [
     id: 'procrastination',
     strong: [
       'procrastin', 'arrive pas a commencer', 'arrive pas a m y mettre', 'repousse',
-      'flemme', 'me lance pas', 'pas motive', 'demarre pas', 'glande', 'jarrive pas', 'my mettre', 'remets', 'remets a demain',
+      'flemme', 'me lance pas', 'pas motive', 'demarre pas', 'glande', 'jarrive pas', 'my mettre',
+      'remets', 'remets a demain', 'remets tout a demain',
       'perds mon temps', 'traine', 'commence pas', 'motivation',
     ],
     weak: ['canape', 'lit', 'netflix'],
@@ -294,7 +295,7 @@ export const INTENTS: Intent[] = [
     id: 'qcm',
     strong: [
       'qcm', 'rate les qcm', 'items', 'pieges', 'tombe dans les pieges',
-      'banque de qcm', 'entrainement qcm',
+      'banque de qcm', 'entrainement qcm', 'entre deux reponses',
     ],
     mood: 'think',
     links: [
@@ -1011,6 +1012,263 @@ export const INTENTS: Intent[] = [
     also: 'Et pour le rythme : blocs nets, pauses nettes, sans écran.',
   },
 
+  {
+    id: 'moral-bas',
+    priority: 20,
+    strong: [
+      'ca va pas fort', 'moral a zero', 'moral dans les chaussettes', 'coup de mou',
+      'pas le moral', 'moral en berne', 'gros coup de blues', 'je sature',
+      'ras le bol de tout', 'au bout de ma vie', 'envie de rien aujourd hui',
+      'journee pourrie', 'semaine pourrie', 'pas bien en ce moment', 'du mal en ce moment',
+    ],
+    mood: 'care',
+    links: [
+      { label: 'Une citation pour la route', to: '/citations/plein-ecran' },
+      { label: 'Journée minimale (garder la chaîne)', to: '/methode/journee-minimale' },
+      { label: 'Si c’est plus profond : protocole Détresse', to: '/sos/detresse' },
+    ],
+    variants: [
+      'Les jours gris font partie de l’année — surtout d’une année comme la tienne, et ça ne dit rien de ta valeur ni de tes chances. Aujourd’hui, on vise petit : UNE unité de travail (la Journée minimale te la donne), un peu d’air dehors, un vrai repas. Et si ce « pas fort » dure depuis des semaines, ne le porte pas seul·e : le protocole Détresse a les bons contacts.',
+      'Merci de le dire — c’est déjà un bon réflexe. Le moral bas ment beaucoup : il te dit « à quoi bon », alors qu’une petite victoire concrète le fait souvent reculer. Une page, un rappel, dix minutes. Puis quelque chose de gentil pour toi ce soir. Si ça s’installe ou s’alourdit, le protocole Détresse est là, sans honte.',
+      'D’accord, journée difficile. On ne va pas faire semblant qu’une citation règle tout — mais on protège l’essentiel : le minimum de travail pour ne pas culpabiliser demain, du sommeil ce soir, et un moment de vraie coupure. Le reste peut attendre 24 h. Et parle-le à quelqu’un ce soir, même juste pour dire que c’était dur.',
+    ],
+    more: [
+      'Si le moral reste bas plusieurs semaines, que le sommeil ou l’appétit s’en mêlent, ce n’est plus un « coup de mou » : c’est le moment d’en parler à un humain — proche, médecin, ou les contacts du protocole Détresse. C’est fréquent en PASS, ça se soigne, et demander de l’aide est une décision intelligente.',
+      'Un truc concret qui aide les jours gris : la règle des 3 — une chose utile (même minuscule), une chose agréable, une personne à qui parler. Trois cases, pas plus. La journée devient récupérable.',
+    ],
+    also: 'Et pour le moral : vise une petite victoire aujourd’hui, et n’hésite pas à en parler autour de toi.',
+  },
+  {
+    id: 'reveil',
+    strong: [
+      'panne de reveil', 'rate mon reveil', 'me reveille pas', 'du mal a me lever',
+      'me lever le matin', 'snooze', 'reste au lit', 'traine au lit', 'emerge pas',
+      'matins difficiles', 'me leve a midi',
+    ],
+    mood: 'happy',
+    links: [
+      { label: 'Journée minimale (redémarrer proprement)', to: '/methode/journee-minimale' },
+      { label: 'Démarrage en 10 minutes', to: '/methode/demarrage-10-minutes' },
+    ],
+    variants: [
+      'Le lever se gagne la veille : heure de coucher stable, réveil À TRAVERS la pièce (obligé de te lever pour l’éteindre), et le premier geste du matin déjà décidé et préparé (le poly ouvert à la bonne page sur le bureau). Le matin, on n’improvise pas — on exécute.',
+      'Règle d’or anti-snooze : les 10 premières minutes ne se négocient pas au réveil, elles se décident la veille. Lumière direct (volets, lampe forte), un verre d’eau, et le Démarrage en 10 minutes déjà prêt. Chaque snooze re-endort le cerveau pour un cycle qu’il ne finira pas — c’est pire que se lever.',
+      'Si tu émerges à midi malgré tout, c’est le rythme entier qui a glissé : recale par le LEVER (heure fixe, même le week-end), pas par le coucher — le sommeil suivra en quelques jours. Et une matinée ratée ne condamne pas la journée : Journée minimale, et on repart.',
+    ],
+    also: 'Et pour le réveil : réveil loin du lit, premier geste préparé la veille.',
+  },
+  {
+    id: 'impasses',
+    strong: [
+      'faire des impasses', 'impasse sur', 'des impasses', 'sacrifier un chapitre',
+      'sacrifier une matiere', 'zapper un chapitre', 'laisser tomber un chapitre',
+      'tout apprendre ou pas', 'abandonner un cours',
+    ],
+    mood: 'think',
+    links: [
+      { label: 'Triage du retard (les critères)', to: '/methode/triage-retard' },
+      { label: 'Liste de questions (cibler le rentable)', to: '/methode/liste-questions' },
+    ],
+    variants: [
+      'L’impasse totale est une roulette russe — mais le tri d’intensité est une stratégie de major : chaque chapitre reçoit un niveau (maîtrise complète / squelette + QCM / survol des annales), selon son poids au concours et ton retard. Le Triage ci-dessous te donne les critères froids pour décider sans culpabiliser.',
+      'La vraie question n’est pas « impasse ou pas » mais « quel niveau d’investissement pour quel rendement ». Un chapitre jamais tombé en annales mérite le mode squelette, pas tes soirées. Décide par écrit, une fois, et ne re-négocie pas chaque jour — c’est la re-négociation qui épuise.',
+      'Règle prudente : jamais d’impasse totale sur un chapitre poids lourd, mais des niveaux d’intensité partout ailleurs. Et garde une passe « annales » même sur les chapitres sacrifiés : 30 minutes de QCM te donnent les 3 questions récurrentes — le meilleur rapport temps/points qui existe.',
+    ],
+    also: 'Et pour les impasses : des niveaux d’intensité plutôt qu’un tout-ou-rien.',
+  },
+  {
+    id: 'profs-poly',
+    strong: [
+      'prof incomprehensible', 'prof nul', 'prof mauvais', 'cours mal fait',
+      'poly nul', 'poly incomprehensible', 'diapos illisibles', 'prof va trop vite',
+      'mal explique', 'explique mal', 'explique trop mal', 'cours brouillon', 'diapos',
+      'illisible', 'illisibles', 'prof', 'profs', 'prof qui lit ses diapos',
+    ],
+    mood: 'think',
+    links: [
+      { label: 'Exemple résolu (contourner par le concret)', to: '/methode/exemple-resolu' },
+      { label: 'Feynman (reconstruire l’explication)', to: '/methode/feynman' },
+      { label: 'Sources : que privilégier', to: '/reperes/sources' },
+    ],
+    variants: [
+      'Un cours mal fait, ça arrive — et râler ne rapporte pas de points. Stratégie de contournement : garde le poly officiel comme RÉFÉRENCE de ce qui tombe (même moche, c’est lui qui fait foi), mais construis ta compréhension ailleurs : exemples résolus, annales commentées, et l’explication que TU reconstruis avec Feynman. Le prof n’est qu’une source parmi d’autres — l’examen, lui, reste basé sur son contenu.',
+      'Sépare deux choses : le CONTENU à connaître (celui du poly officiel, non négociable) et l’EXPLICATION pour le comprendre (n’importe quelle source claire fait l’affaire). Beaucoup perdent des points en apprenant un autre cours « mieux expliqué » — les détails qui tombent sont ceux de TA fac. Comprendre ailleurs, mémoriser ici.',
+      'Prof trop rapide : n’essaie pas de tout suivre en direct. Note la structure et les insistances, marque « ?? » aux trous, et comble dans les 24 h avec le poly + un exemple résolu. Un cours magistral n’est pas fait pour tout comprendre en direct — personne n’y arrive.',
+    ],
+    also: 'Et pour le cours mal fait : comprendre ailleurs, mémoriser sur le poly officiel.',
+  },
+  {
+    id: 'contradictions',
+    strong: [
+      'infos contradictoires', 'pas la meme chose selon', 'versions differentes',
+      'le tutorat dit autre chose', 'contradiction entre', 'deux versions',
+      'qui croire', 'sources qui se contredisent', 'le prof dit l inverse',
+    ],
+    mood: 'think',
+    links: [
+      { label: 'Hiérarchie des sources', to: '/reperes/sources' },
+      { label: 'Tableau de contraste (poser les deux versions)', to: '/methode/tableau-contraste' },
+    ],
+    variants: [
+      'Règle simple quand deux sources se contredisent : celle qui NOTE gagne. Le poly / le cours officiel de ta fac fait foi au concours, même si le tutorat ou un livre dit autre chose (la science évolue, les concours moins vite). Note la contradiction dans un coin (elle peut devenir une question piège), apprends la version officielle.',
+      'Pose les deux versions côte à côte dans un mini-tableau : source, affirmation, laquelle est celle de la fac. Neuf fois sur dix, la « contradiction » est une différence de contexte ou de niveau de détail. Et pour l’examen : la version du prof qui rédige les sujets, toujours.',
+      'C’est frustrant mais fréquent. Priorité : 1) le cours officiel de TA fac, 2) les annales (elles montrent la version attendue), 3) le reste. Si le doute persiste sur un point important, la question au prof ou au tutorat de ta fac vaut mieux que des heures de forums.',
+    ],
+    also: 'Et pour les contradictions : la version de ta fac fait foi — c’est elle qui note.',
+  },
+  {
+    id: 'arbitrage-soir',
+    strong: [
+      'quoi bosser ce soir', 'bosse quoi ce soir', 'je bosse quoi', 'je revise quoi',
+      'quelle matiere ce soir', 'choisir entre deux matieres',
+      'par quoi je commence ce soir', 'quel cours bosser', 'quelle matiere prioriser',
+      'plusieurs matieres en attente', 'choisir quoi reviser',
+    ],
+    mood: 'think',
+    links: [
+      { label: 'Triage (décider froidement)', to: '/methode/triage-retard' },
+      { label: 'Entrelacement (alterner utile)', to: '/methode/interleaving' },
+    ],
+    variants: [
+      'Décision en 60 secondes, pas plus (l’hésitation coûte plus cher que n’importe quel « mauvais » choix) : 1) une échéance proche ? elle gagne. 2) Sinon, la matière la plus en retard SUR SON POIDS au concours. 3) Égalité ? Celle que tu évites depuis le plus longtemps — c’est là que dorment les points. Et si la soirée est longue, alterne deux matières par blocs : l’entrelacement rend les deux plus solides.',
+      'Le piège du soir : passer 30 minutes à choisir, puis bosser mou. Inverse : choisis en 1 minute avec la règle échéance > rentabilité > évitement, écris l’unité exacte (« biochimie : cycle X, rappel + 20 QCM »), et fonce. Un choix moyen exécuté bat un choix parfait discuté.',
+      'Astuce durable : décide la veille pour le lendemain (3 unités notées sur un papier). Le soir venu, zéro délibération — tu exécutes. La fatigue du soir est mauvaise conseillère pour choisir, très correcte pour exécuter.',
+    ],
+    also: 'Et pour choisir ce soir : échéance > rentabilité > matière évitée — en 60 secondes.',
+  },
+  {
+    id: 'argent-job',
+    strong: [
+      'job etudiant', 'travailler a cote', 'baby sitting', 'financer mes etudes',
+      'probleme d argent', 'soucis d argent', 'bourse', 'payer mon loyer',
+    ],
+    mood: 'care',
+    links: [{ label: 'Triage (protéger le rentable)', to: '/methode/triage-retard' }],
+    variants: [
+      'Sujet sérieux, et pas un détail : un job pendant le PASS coûte cher en points, donc chaque heure doit être choisie. Deux pistes avant tout : le service social de ta fac (bourses, aides d’urgence, exonérations — beaucoup d’étudiants passent à côté d’aides auxquelles ils ont droit) ; et si le job est incontournable, vise des créneaux compatibles (baby-sitting où tu peux réviser, week-end plutôt que soirs de semaine).',
+      'Je ne vais pas faire semblant que ça n’impacte pas — ça impacte. Donc on optimise ce qui reste : tes heures d’étude deviennent non négociables et ultra-actives (rappels, QCM — zéro relecture molle), le Triage décide froidement où elles vont, et tes trajets/pauses deviennent des micro-rappels. Et vérifie tes droits aux aides : CROUS, assistante sociale de la fac. C’est leur travail de t’aider.',
+      'La règle si tu dois travailler : protège le sommeil AVANT tout (c’est lui qui rend tes heures d’étude rentables), sanctuarise des blocs d’étude fixes dans la semaine, et accepte le mode « intensité triée » plutôt que l’exhaustivité. Des étudiants passent le concours en travaillant à côté — avec une organisation au cordeau et zéro temps mou.',
+    ],
+    also: 'Et côté budget : vérifie tes droits (CROUS, service social de la fac) — c’est fait pour ça.',
+  },
+  {
+    id: 'logement-bruit',
+    strong: [
+      'coloc bruyant', 'colocs bruyants', 'voisins bruyants', 'trop de bruit chez moi',
+      'pas d endroit calme', 'famille bruyante', 'petit frere', 'petite soeur',
+      'impossible de bosser chez moi', 'du bruit a la maison', 'coloc', 'colocs',
+      'colocation', 'voisins', 'trop de bruit',
+    ],
+    mood: 'think',
+    links: [
+      { label: 'Friction numérique (et environnement)', to: '/methode/friction-numerique' },
+      { label: 'Pomodoro (blocs courts déplaçables)', to: '/methode/pomodoro' },
+    ],
+    variants: [
+      'Le bruit subi est un vrai voleur de points — on ne « s’habitue » pas, on paye en re-concentrations. Trois parades par ordre d’efficacité : déplacer les sessions exigeantes (BU, salle de la fac, médiathèque municipale — souvent vide et calme) ; bouchons d’oreilles + bruit stable au casque pour couvrir ; négocier des créneaux de silence à la maison (2 h précises valent mieux qu’un « moins de bruit » vague).',
+      'Stratégie réaliste : garde pour la maison les tâches qui tolèrent le bruit (QCM, cartes, recopie de schémas) et sors pour ce qui exige du silence profond (apprentissage neuf, rappels). Même 2 h de BU par jour bien utilisées changent une semaine.',
+      'Si tu ne peux pas sortir : bouchons en mousse (3 €, sous-cotés), bruit blanc au casque par-dessus, et blocs Pomodoro courts calés sur les moments calmes de la maison (tôt le matin, c’est souvent l’or du silence). Le réveil avancé d’une heure peut te rendre ta meilleure heure de la journée.',
+    ],
+    also: 'Et pour le bruit : sessions exigeantes dehors, tâches tolérantes à la maison.',
+  },
+  {
+    id: 'transports',
+    strong: [
+      'dans le train', 'dans le bus', 'dans le metro', 'temps de trajet',
+      'une heure de trajet', '1h de trajet', 'trajets longs', 'pendant le trajet',
+      'rentabiliser le trajet',
+    ],
+    mood: 'happy',
+    links: [
+      { label: 'Répétition espacée (le format trajet)', to: '/methode/repetition-espacee' },
+      { label: 'Rappel actif (en mode mental)', to: '/methode/rappel-actif' },
+    ],
+    variants: [
+      'Les trajets sont parfaits pour la RÉVISION, mauvais pour l’apprentissage neuf (trop d’interruptions). Le combo gagnant : cartes de rappel sur téléphone (répétition espacée), ou le rappel mental pur — tu fermes les yeux et récites le squelette du dernier cours, puis vérifies en arrivant. Une heure de trajet = ta session de consolidation quotidienne, gratuite.',
+      'Adapte au mode de transport : assis au calme → cartes ou lecture ciblée de tes erreurs ; debout/bruyant → rappel mental (récite la cascade d’hier, liste les enzymes, refais le schéma dans ta tête). Le rappel mental sans support est sous-coté : c’est exactement le format de l’examen.',
+      'Piège du trajet : le scroll par défaut. Décide AVANT de monter ce que tu y fais (« 20 cartes de biochimie » ou « rappel mental de l’anat d’hier ») — sinon le téléphone gagne par défaut. Et garde un trajet par jour SANS travail : la décompression compte aussi.',
+    ],
+    also: 'Et pour les trajets : cartes espacées ou rappel mental — jamais du neuf.',
+  },
+  {
+    id: 'soiree-alcool',
+    strong: [
+      'soiree hier', 'bu hier soir', 'gueule de bois', 'lendemain de soiree',
+      'trop bu', 'cuite', 'soiree la veille de',
+    ],
+    mood: 'think',
+    links: [{ label: 'Journée minimale (mode dégradé)', to: '/methode/journee-minimale' }],
+    variants: [
+      'Sans jugement — mais avec les faits : l’alcool abîme précisément le sommeil profond, celui qui consolide la mémoire. Une vraie soirée coûte en pratique 24-48 h de rendement. Aujourd’hui : hydratation, journée minimale (rappels légers, pas d’apprentissage neuf), coucher tôt. Et pense « calendrier » : une soirée se place APRÈS une colle, jamais avant.',
+      'Aujourd’hui, ton cerveau tourne en mode dégradé — inutile de forcer de l’apprentissage neuf qui ne s’imprimera pas. Programme minimum : de l’eau, un vrai repas, 45 minutes de QCM faciles pour garder la chaîne, sieste courte si besoin, et la vraie nuit ce soir répare le reste.',
+      'Le deal honnête avec les soirées en PASS : rares, choisies, et placées stratégiquement (après une échéance, avant un jour léger). Celle d’hier est passée — pas de culpabilité rétroactive, juste la version minimale d’aujourd’hui et une vraie nuit. Demain tu repars à pleine puissance.',
+    ],
+    also: 'Et après la soirée : journée minimale, hydratation, vraie nuit — pas de neuf aujourd’hui.',
+  },
+  {
+    id: 'alimentation',
+    strong: [
+      'je mange mal', 'saute des repas', 'saute le dejeuner', 'pas le temps de manger',
+      'malbouffe', 'grignote', 'grignotage', 'plus d appetit', 'perdu l appetit',
+    ],
+    mood: 'care',
+    links: [{ label: 'Pomodoro (caser les vrais repas)', to: '/methode/pomodoro' }],
+    variants: [
+      'Manger n’est pas du temps volé aux révisions : le cerveau est l’organe le plus gourmand du corps, et l’hypoglycémie de 16 h te coûte plus qu’une vraie pause déjeuner. Minimum vital : trois repas ancrés à heures à peu près fixes, de quoi tenir sous la main (fruits, oléagineux — pas que des gâteaux), et l’eau en continu. C’est de la maintenance de ton outil de travail.',
+      'Le grignotage permanent est souvent un symptôme : ennui, stress, ou repas trop légers. Traite la cause (vrais repas, vraies pauses) plutôt que de culpabiliser sur le symptôme. Et le déjeuner sauté « pour gagner une heure » se paye l’après-midi en concentration — c’est un prêt à taux usuraire.',
+      'Attention à un signal : si l’appétit a VRAIMENT disparu depuis plusieurs semaines (ou que tu manges compulsivement sans faim), ce n’est plus de la logistique — c’est souvent le stress ou le moral qui parlent. Ça mérite un médecin, pas un régime. Pour le reste : simple, régulier, suffisant.',
+    ],
+    also: 'Et côté repas : trois vrais repas ancrés — le cerveau est ton outil de travail.',
+  },
+  {
+    id: 'oral-entretien',
+    strong: [
+      'un oral', 'l oral', 'entretien', 'presenter a l oral', 'exposer a l oral',
+      'parler en public', 'mineure orale',
+    ],
+    mood: 'think',
+    links: [
+      { label: 'Feynman (verbaliser clairement)', to: '/methode/feynman' },
+      { label: 'Simulation (répéter en conditions)', to: '/methode/simulation-examen' },
+    ],
+    variants: [
+      'Honnêteté : le corpus de l’app est taillé pour l’écrit et les QCM — l’oral n’y a pas de protocole dédié. Mais deux méthodes s’y transposent très bien : Feynman (expliquer simplement à voix haute, c’est littéralement l’entraînement d’un oral) et la Simulation (répéter en conditions réelles, chrono, debout, enregistré au téléphone pour t’entendre). Répéter DEVANT quelqu’un une fois vaut dix répétitions seul.',
+      'Pour un oral, la boucle efficace : écrire le squelette (pas le texte mot à mot — il s’effondre sous le stress), le dérouler à voix haute en Feynman, s’enregistrer une fois (douloureux et magique), et une répétition en conditions réelles. Le par-cœur intégral est le piège : vise la maîtrise du plan + des transitions.',
+      'Trois répétitions bien faites suffisent souvent : une pour structurer (avec notes), une pour fluidifier (sans notes, enregistrée), une en conditions (tenue, debout, chrono, public d’un ami). Et le jour J, le NRAR marche aussi avant un oral — même corps, même stress, mêmes gestes.',
+    ],
+    also: 'Et pour l’oral : Feynman à voix haute + une répétition en conditions réelles.',
+  },
+  {
+    id: 'las-orientation',
+    strong: [
+      'las ou pass', 'choisir las', 'la las', 'las', 'en las', 'mineure', 'passerelle',
+      'me reorienter', 'reorientation', 'changer de filiere', 'plan b concret',
+    ],
+    mood: 'care',
+    links: [{ label: 'Protocole anti-stress NRAR', to: '/methode/nrar-stress' }],
+    variants: [
+      'Vraie question, mauvaise adresse : je suis un coach de MÉTHODES, et l’orientation (LAS, mineures, passerelles) est un sujet réglementaire qui change selon les facs et les années — je refuse de te répondre à moitié juste. Les bonnes portes : le service orientation de TA fac (les règles locales priment), les journées d’info, et des étudiants passés par ces parcours. Ce que je peux te dire : y réfléchir n’est pas « abandonner » — c’est de la stratégie adulte.',
+      'Je ne vais pas jouer au conseiller d’orientation — les règles LAS/passerelles sont trop locales et trop mouvantes pour un coach hors ligne. Par contre : avoir un plan B réfléchi REND PLUS FORT au concours (moins de terreur de l’échec = meilleur travail). Prends un rendez-vous au service orientation de ta fac pour poser les vraies infos, puis reviens à ta prochaine unité de travail l’esprit plus clair.',
+      'Sujet important, à traiter avec les bonnes sources : service orientation de ta fac, textes officiels de TON université, témoignages récents. Méfie-toi des forums (règles d’une autre fac, d’une autre année). Et pendant que la réflexion mûrit, le meilleur investissement reste le même : tes méthodes et ta régularité — elles servent dans TOUS les scénarios.',
+    ],
+    also: 'Et pour l’orientation : le service orientation de ta fac — les règles locales priment.',
+  },
+  {
+    id: 'tutorat-prepa',
+    strong: [
+      'tutorat ou prepa', 'prepa privee', 'payer une prepa', 'inscrire en prepa',
+      'le tutorat suffit', 'prepa payante', 'boite privee',
+    ],
+    mood: 'think',
+    links: [{ label: 'Sources et niveau de preuve', to: '/reperes/sources' }],
+    variants: [
+      'Réponse honnête : aucune structure ne travaille à ta place, et les classements sont remplis d’étudiants « tutorat seul ». Le tutorat de fac a deux avantages structurels : il est calé sur TON programme (c’est lui qui prédit les sujets) et il est gratuit. Une prépa peut apporter du cadre et des colles en plus — utile si tu as du mal à t’auto-structurer — mais c’est la MÉTHODE quotidienne qui fait le classement, pas le logo sur le polycopié.',
+      'Avant de payer, pose la vraie question : qu’est-ce qui te manque ? Des colles ? (le tutorat en fait). Du cadre ? (les méthodes de l’app + un binôme font ça gratuitement). De la réassurance ? (comprends que la prépa vend aussi ça). Si tu paies, que ce soit pour un besoin identifié — pas pour calmer l’angoisse ou parce que « tout le monde le fait ».',
+      'Le piège classique de la prépa : l’empilement. Deux sources de cours + deux banques de colles = surcharge et culpabilité permanente. Quelle que soit ta décision, garde UNE base de cours (celle de ta fac) et fais des annales/colles ta seule accumulation. La structure en plus doit simplifier ta semaine, pas la doubler.',
+    ],
+    also: 'Et sur tutorat/prépa : c’est la méthode quotidienne qui classe, pas le logo.',
+  },
+
   // ================================================================ MÉTA / SOCIAL
   {
     id: 'motive-moi',
@@ -1112,7 +1370,7 @@ export const INTENTS: Intent[] = [
   {
     id: 'au-revoir',
     priority: 5,
-    strong: ['bonne nuit', 'a demain', 'bye', 'a plus', 'je file', 'j y vais', 'a toute'],
+    strong: ['bonne nuit', 'bye', 'a plus', 'je file', 'j y vais', 'a toute'],
     mood: 'cheer',
     variants: [
       'File ! Une bonne session, puis du vrai repos. À la prochaine.',

@@ -1,4 +1,5 @@
 import { foldPhrase } from '../search/normalize';
+import { searchAll } from '../search/engine';
 import { COACH_LINES } from '../content/coach-lines';
 import { SUBJECTS } from '../content/subjects';
 import { METHODS } from '../content/methods/index';
@@ -11,6 +12,13 @@ import {
   type CoachLink,
   type Intent,
 } from './kb';
+import {
+  CONCEPTS,
+  CONCEPT_DEFAULT_INTENT,
+  EXTRA_TRIGGERS,
+  INTENT_CONCEPTS,
+  SLANG,
+} from './vocab';
 import type { AxelMood } from '../ui/Axel';
 
 /**
@@ -42,8 +50,19 @@ function norm(input: string): string {
     .trim();
 }
 
+/** Traduit l'argot/SMS token par token (« jpp » → « j en peux plus »). */
+function expandSlang(tokens: string[]): string[] {
+  const out: string[] = [];
+  for (const t of tokens) {
+    const rep = SLANG[t];
+    if (rep !== undefined) out.push(...rep.split(' '));
+    else out.push(t);
+  }
+  return out;
+}
+
 function tokenize(input: string): string[] {
-  return norm(input).split(' ').filter((t) => t.length > 0);
+  return expandSlang(norm(input).split(' ').filter((t) => t.length > 0));
 }
 
 /** Distance de Damerau-Levenshtein bornée (transpositions comprises). */
@@ -81,8 +100,12 @@ function tokenExact(token: string, kw: string): boolean {
 /** Un token du message correspond-il à un mot-clé, faute de frappe comprise ? */
 function tokenMatches(token: string, kw: string): boolean {
   if (tokenExact(token, kw)) return true;
-  // Les mots courts exigent l'exactitude (évite « con » → « concours », etc.).
+  // Les mots courts exigent l'exactitude (évite « con » → « concours », etc.),
+  // et la première lettre doit coïncider : les fautes de frappe touchent
+  // rarement l'initiale, alors que « motivé »/« démotivé » ou « barre »/
+  // « marre » changent le sens du tout au tout.
   if (kw.length < 5 || token.length < 4) return false;
+  if (token[0] !== kw[0]) return false;
   return editDistanceAtMost(token, kw, kw.length >= 8 ? 2 : 1);
 }
 
@@ -106,8 +129,9 @@ const COMPILED: Compiled[] = INTENTS.map((intent) => {
     }
     return { phrases, words };
   };
-  const s = split(intent.strong);
-  const w = split(intent.weak);
+  const extra = EXTRA_TRIGGERS[intent.id];
+  const s = split([...intent.strong, ...(extra?.strong ?? [])]);
+  const w = split([...(intent.weak ?? []), ...(extra?.weak ?? [])]);
   return {
     intent,
     phrasesStrong: s.phrases,
@@ -116,6 +140,32 @@ const COMPILED: Compiled[] = INTENTS.map((intent) => {
     wordsWeak: w.words,
   };
 });
+
+// Concepts compilés : une idée → toutes ses formes.
+const CONCEPT_COMPILED = Object.entries(CONCEPTS).map(([id, forms]) => {
+  const phrases: string[] = [];
+  const words: string[] = [];
+  for (const f of forms) {
+    if (f.includes(' ')) phrases.push(f);
+    else words.push(f);
+  }
+  return { id, phrases, words };
+});
+
+/** Concepts touchés par le message. */
+function conceptHits(padded: string, tokens: string[]): Set<string> {
+  const hits = new Set<string>();
+  for (const c of CONCEPT_COMPILED) {
+    let hit = c.phrases.some((p) => padded.includes(p));
+    if (!hit) {
+      hit = c.words.some((w) =>
+        tokens.some((t) => tokenExact(t, w) || tokenMatches(t, w)),
+      );
+    }
+    if (hit) hits.add(c.id);
+  }
+  return hits;
+}
 
 const DETRESSE = COMPILED.find((c) => c.intent.id === 'detresse')!;
 
@@ -392,17 +442,41 @@ export function respond(input: string, rng: () => number = Math.random): CoachRe
     return reply;
   }
 
-  // 2. Scores des intentions (la matière compte comme intention dynamique).
+  // 2. Scores des intentions : mots-clés + concepts touchés + matière citée.
   const subjects = subjectHits(padded);
-  const scored = COMPILED.map((c) => ({
-    c,
-    score: c.intent.id === 'matiere' ? (subjects.length > 0 ? 6 : 0) : scoreIntent(c, padded, tokens),
-  })).filter((s) => s.score > 0);
+  const concepts = conceptHits(padded, tokens);
+  const scored = COMPILED.map((c) => {
+    let score =
+      c.intent.id === 'matiere'
+        ? subjects.length > 0
+          ? 6
+          : 0
+        : scoreIntent(c, padded, tokens);
+    const subs = INTENT_CONCEPTS[c.intent.id];
+    if (subs !== undefined) {
+      for (const s of subs) if (concepts.has(s.c)) score += s.w;
+    }
+    return { c, score };
+  }).filter((s) => s.score > 0);
+  // Le SCORE décide, la priorité ne fait que départager : une correspondance
+  // précise bat toujours une correspondance vague, quel que soit le sujet.
+  // (La détresse, elle, court-circuite tout en amont.)
   scored.sort(
     (a, b) =>
-      ((b.c.intent.priority ?? 10) * 1000 + b.score) -
-      ((a.c.intent.priority ?? 10) * 1000 + a.score),
+      (b.score * 100 + (b.c.intent.priority ?? 10)) -
+      (a.score * 100 + (a.c.intent.priority ?? 10)),
   );
+  // La matière seule est un choix par défaut : tout signal précis la bat
+  // (elle reste ajoutée en lien dans tous les cas).
+  if (
+    scored.length > 1 &&
+    scored[0]!.c.intent.id === 'matiere' &&
+    scored.some((s) => s.c.intent.id !== 'matiere' && s.score >= 3)
+  ) {
+    const idx = scored.findIndex((s) => s.c.intent.id !== 'matiere' && s.score >= 3);
+    const [promoted] = scored.splice(idx, 1);
+    scored.unshift(promoted!);
+  }
   const best = scored[0];
 
   // 3. Suivi de conversation — seulement si le message n'est pas un nouveau
@@ -458,8 +532,38 @@ export function respond(input: string, rng: () => number = Math.random): CoachRe
     return reply;
   }
 
-  // 5. Repli honnête si rien ne matche.
-  if (best === undefined || best.score < 2) {
+  // 5. Filet de sécurité conceptuel : une idée reconnue sans mot-clé d'intention.
+  let resolved = best;
+  if (resolved === undefined || resolved.score < 2) {
+    for (const c of concepts) {
+      const target = CONCEPT_DEFAULT_INTENT[c];
+      if (target !== undefined) {
+        const comp = COMPILED.find((x) => x.intent.id === target);
+        if (comp !== undefined) {
+          resolved = { c: comp, score: 4 };
+          break;
+        }
+      }
+    }
+  }
+
+  // 6. Dernier filet : la recherche de l'app trouve presque toujours des pistes.
+  if (resolved === undefined || resolved.score < 2) {
+    const hits = searchAll(input, 4).slice(0, 3);
+    if (hits.length > 0) {
+      const SEARCH_VARIANTS = [
+        'Je n’ai pas de réponse toute prête à ça — mais la recherche de l’app trouve des pistes sérieuses, je te les mets ci-dessous. Si aucune ne colle, dis-le moi avec d’autres mots.',
+        'Pas d’intention claire de mon côté, alors j’ai fait tourner la recherche : voilà ce qu’elle propose de plus proche. Sinon, reformule en une phrase simple, je réessaie.',
+        'Je préfère être honnête : je ne suis pas sûr de la demande. En attendant, la recherche remonte ces fiches — l’une d’elles est peut-être exactement ce que tu cherches.',
+      ];
+      const reply: CoachReply = {
+        text: pickVariant('recherche', SEARCH_VARIANTS, rng),
+        links: hits.map((h) => ({ label: h.title, to: h.route })),
+        mood: 'think',
+        intent: 'recherche',
+      };
+      return reply;
+    }
     const FALLBACK_VARIANTS = [
       'Je ne suis pas sûr d’avoir bien compris — et je préfère te le dire que répondre à côté. Reformule en une phrase simple (« je n’arrive pas à… », « comment retenir… »), ou lance le diagnostic ci-dessous.',
       'Hmm, ça dépasse mes mots-clés. Essaie avec d’autres mots — ou plus efficace : le diagnostic ci-dessous pose 3 à 5 questions et trouve la méthode exacte, sans se tromper.',
@@ -479,7 +583,7 @@ export function respond(input: string, rng: () => number = Math.random): CoachRe
   }
 
   // 6. Réponse principale + éventuel second sujet si le message en mélange deux.
-  const intent = best.c.intent;
+  const intent = resolved.c.intent;
   let links: CoachLink[] =
     intent.id === 'matiere'
       ? subjects.map((s) => ({ label: `Protocole ${s.name}`, to: `/matiere/${s.id}` }))

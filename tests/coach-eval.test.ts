@@ -1,6 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { respond, _resetCoachForTests } from '../src/coach/engine';
 import { INTENTS } from '../src/coach/kb';
+import {
+  CONCEPTS,
+  CONCEPT_DEFAULT_INTENT,
+  EXTRA_TRIGGERS,
+  INTENT_CONCEPTS,
+  SLANG,
+} from '../src/coach/vocab';
 import { foldPhrase } from '../src/search/normalize';
 import { METHODS } from '../src/content/methods/index';
 import { SOS_PROTOCOLS } from '../src/content/sos';
@@ -106,7 +113,7 @@ const EVAL: [string, string][] = [
   ['les schémas d’anatomie ne rentrent pas', 'schemas'],
   ['comment bosser la biochimie', 'matiere'],
   ['jai du mal en biostatistiques', 'matiere'],
-  ['santé publique c’est imbitable', 'matiere'],
+  ['santé publique c’est imbitable', 'comprends-rien'],
 
   // --- mental
   ['tout le monde est meilleur que moi', 'comparaison'],
@@ -145,6 +152,98 @@ const EVAL: [string, string][] = [
   ['tu sais faire quoi ?', 'aide-app'],
   ['quelle méthode pour ce soir', 'quelle-methode'],
   ['mes amis me manquent', 'amis-sorties'],
+
+  // --- argot / SMS / élisions (couche SLANG)
+  ['jpp', 'detresse'],
+  ['jsuis deg jai rate ma colle', 'note-ratee'],
+  ['flm de bosser', 'procrastination'],
+  ['bcp trop de cours jsuis noyee', 'retard'],
+  ['jarrive pas a me concentrer', 'concentration'],
+  ['chuis crevee la', 'fatigue'],
+  ['jme compare tt le temps aux autres', 'comparaison'],
+  ['jsp quoi bosser ce soir', 'arbitrage-soir'],
+  ['cv pas fort en ce moment', 'moral-bas'],
+  ['jsuis largue en cours', 'comprends-rien'],
+
+  // --- phrases toutes simples (concepts)
+  ['ça rentre pas', 'ca-rentre-pas'],
+  ['ça veut pas rentrer', 'ca-rentre-pas'],
+  ['jy arrive pas', 'comprends-rien'],
+  ['je bloque', 'comprends-rien'],
+  ['je galère', 'comprends-rien'],
+  ['jen ai marre', 'ennui'],
+  ['ça me saoule', 'ennui'],
+  ['je suis nul', 'comparaison'],
+  ['ras le bol de tout', 'moral-bas'],
+  ['gros coup de mou aujourd’hui', 'moral-bas'],
+  ['jsuis au bout de ma vie', 'moral-bas'],
+  ['je rate tout en ce moment', 'note-ratee'],
+  ['ma mémoire est une passoire', 'ca-rentre-pas'],
+  ['rien ne s’imprime', 'ca-rentre-pas'],
+  ['je me souviens plus de rien', 'ca-rentre-pas'],
+  ['jsuis complètement demotive', 'procrastination'],
+
+  // --- composition matière × problème
+  ['l’anat rentre pas', 'ca-rentre-pas'],
+  ['la biochimie me saoule', 'ennui'],
+  ['je bloque en physique', 'comprends-rien'],
+  ['jsuis largué en biophy', 'comprends-rien'],
+  ['l’histo s’efface direct', 'ca-rentre-pas'],
+
+  // --- nouvelles situations v1.9
+  ['jarrive pas a me lever le matin', 'reveil'],
+  ['panne de reveil ce matin', 'reveil'],
+  ['je peux faire des impasses ?', 'impasses'],
+  ['sacrifier un chapitre c’est grave ?', 'impasses'],
+  ['le prof explique trop mal', 'profs-poly'],
+  ['les diapos sont illisibles', 'profs-poly'],
+  ['le tutorat dit autre chose que le prof', 'contradictions'],
+  ['deux versions différentes du cours, qui croire ?', 'contradictions'],
+  ['quelle matiere ce soir ?', 'arbitrage-soir'],
+  ['je dois trouver un job etudiant', 'argent-job'],
+  ['mes colocs font trop de bruit', 'logement-bruit'],
+  ['jai 1h de trajet tous les jours', 'transports'],
+  ['grosse soiree hier jsuis mort', 'soiree-alcool'],
+  ['je saute des repas en ce moment', 'alimentation'],
+  ['jai un oral a preparer', 'oral-entretien'],
+  ['je pense a passer en las', 'las-orientation'],
+  ['je prends une prepa privee ou pas ?', 'tutorat-prepa'],
+  ['le tutorat suffit ?', 'tutorat-prepa'],
+
+  // --- déclencheurs étendus (EXTRA_TRIGGERS)
+  ['encore rien fait de la journee', 'procrastination'],
+  ['zero motivation depuis lundi', 'procrastination'],
+  ['ma memoire est nulle', 'ca-rentre-pas'],
+  ['je pige que dalle', 'comprends-rien'],
+  ['j’hésite toujours entre deux réponses', 'qcm'],
+  ['note catastrophique au concours blanc', 'note-ratee'],
+  ['la tete sous l’eau', 'retard'],
+  ['cerveau grillé ce soir', 'fatigue'],
+  ['je me couche a 2h tous les soirs', 'sommeil'],
+  ['deux minutes et je décroche', 'concentration'],
+  ['stresse de ouf pour demain', 'stress'],
+  ['une journee type ca ressemble a quoi ?', 'planning'],
+  ['j’ai assez bossé aujourd’hui ?', 'combien-heures'],
+  ['travailler sur mon lit c’est grave ?', 'lieu-travail'],
+  ['une playlist pour reviser ?', 'musique'],
+  ['mes fiches sont trop longues', 'fiches'],
+  ['je relis en boucle et rien ne reste', 'relecture-surlignage'],
+  ['500 cartes en retard', 'anki'],
+  ['je melange les formules', 'formules'],
+  ['retenir les planches d’anatomie', 'schemas'],
+  ['veille de colle, je fais quoi ?', 'echeance-proche'],
+  ['je perds tous mes moyens en colle', 'trou-noir-examen'],
+  ['je revise mais je rate quand meme', 'illusion-maitrise'],
+  ['tout le monde y arrive sauf moi', 'comparaison'],
+  ['je vais decevoir mes parents', 'pression-famille'],
+  ['l’an dernier j’ai raté, je refais une pass', 'doublant'],
+  ['je refais tout au propre tout le temps', 'perfectionnisme'],
+  ['peur de redoubler', 'peur-echec'],
+  ['je doute de mon choix de medecine', 'pourquoi-medecine'],
+  ['toujours les memes notes, aucun progres', 'progres-stagne'],
+  ['je finis jamais dans les temps', 'lent'],
+  ['t’es le meilleur axel', 'merci'],
+  ['ca va et toi ?', 'salut'],
 ];
 
 describe('table d’évaluation : compréhension large', () => {
@@ -240,6 +339,54 @@ describe('multi-intentions : deux problèmes, une réponse complète', () => {
     const r = respond('je stresse et je confonds tout', seededRng(2));
     expect(r.intent).toBe('stress');
     expect(r.text).toMatch(/contraste|confonds/i);
+  });
+});
+
+describe('filet de recherche : jamais sec', () => {
+  it('un message hors intentions renvoie les fiches trouvées par la recherche', () => {
+    const r = respond('parle moi des mythes sur le multitache', seededRng(1));
+    expect(['recherche', 'fallback']).toContain(r.intent);
+    expect(r.links.length).toBeGreaterThan(0);
+  });
+});
+
+describe('intégrité du vocabulaire', () => {
+  const normed = (s: string) =>
+    foldPhrase(s).replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+
+  it('SLANG : clés et remplacements déjà normalisés', () => {
+    for (const [k, v] of Object.entries(SLANG)) {
+      expect(k).toBe(normed(k));
+      expect(v).toBe(normed(v));
+    }
+  });
+
+  it('CONCEPTS : formes normalisées et non vides', () => {
+    for (const [id, forms] of Object.entries(CONCEPTS)) {
+      expect(forms.length, id).toBeGreaterThan(3);
+      for (const f of forms) expect(f, `${id} : ${f}`).toBe(normed(f));
+    }
+  });
+
+  it('les abonnements et déclencheurs étendus pointent vers des intentions réelles', () => {
+    const ids = new Set(INTENTS.map((i) => i.id));
+    for (const id of Object.keys(INTENT_CONCEPTS)) expect(ids.has(id), id).toBe(true);
+    for (const id of Object.keys(EXTRA_TRIGGERS)) expect(ids.has(id), id).toBe(true);
+    for (const [c, target] of Object.entries(CONCEPT_DEFAULT_INTENT)) {
+      expect(CONCEPTS[c] !== undefined, c).toBe(true);
+      expect(ids.has(target), target).toBe(true);
+    }
+    for (const subs of Object.values(INTENT_CONCEPTS)) {
+      for (const s of subs) expect(CONCEPTS[s.c] !== undefined, s.c).toBe(true);
+    }
+  });
+
+  it('EXTRA_TRIGGERS : mots-clés normalisés', () => {
+    for (const [id, extra] of Object.entries(EXTRA_TRIGGERS)) {
+      for (const kw of [...(extra.strong ?? []), ...(extra.weak ?? [])]) {
+        expect(kw, `${id} : ${kw}`).toBe(normed(kw));
+      }
+    }
   });
 });
 

@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.8.0';
+export const APP_VERSION = '1.9.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,17 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '1.9.0',
+    date: '2026-08',
+    items: [
+      'Axel parle couramment le langage étudiant : « jpp », « jsuis », « flm », « bcp », « tkt », « jsp »… traduits avant analyse — les phrases toutes simples passent (« ça rentre pas », « jy arrive pas », « jen ai marre », « je suis nul »).',
+      'Un lexique de concepts : des dizaines de façons de dire « oublier », « bloquer », « en avoir marre », « être crevé »… mènent à la bonne réponse sans mot-clé exact. Et « l’anat rentre pas » est compris comme matière + problème, d’un coup.',
+      '14 situations de plus : moral bas (avec la nuance qui va vers les bonnes ressources), réveil impossible, impasses, prof qui explique mal, sources contradictoires, quoi bosser ce soir, job étudiant, colocs bruyants, trajets, lendemain de soirée, repas sautés, oral, LAS/orientation, tutorat vs prépa.',
+      'Et quand vraiment rien ne matche, Axel ne sèche plus : il fait tourner la recherche de l’app et te propose les fiches les plus proches.',
+      'Le tout verrouillé par une table d’évaluation de ~175 phrases réelles testées, fautes et argot compris. Toujours 100 % local.',
+    ],
+  },
   {
     version: '1.8.0',
     date: '2026-08',
