@@ -27,6 +27,7 @@ export type IconName =
   | 'share'
   | 'expand'
   | 'send'
+  | 'filter'
   | 'grid';
 
 const PATHS: Record<IconName, React.ReactNode> = {
@@ -131,6 +132,14 @@ const PATHS: Record<IconName, React.ReactNode> = {
     </>
   ),
   send: <path d="M4.5 12 19 5.2 15.6 19l-4.2-4.6L4.5 12Zm6.9 2.4L19 5.2" />,
+  filter: (
+    <>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+      <circle cx="14.5" cy="7" r="2.3" fill="currentColor" stroke="none" />
+      <circle cx="8.5" cy="12" r="2.3" fill="currentColor" stroke="none" />
+      <circle cx="16.5" cy="17" r="2.3" fill="currentColor" stroke="none" />
+    </>
+  ),
   grid: (
     <>
       <rect x="4.5" y="4.5" width="6.4" height="6.4" rx="1.6" />

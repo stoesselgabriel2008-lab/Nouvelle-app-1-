@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '1.9.0';
+export const APP_VERSION = '2.0.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,16 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '2.0.0',
+    date: '2026-08',
+    items: [
+      'Axel a maintenant trois personnalités, à changer d’un geste sur le sélecteur coulissant : Classique (le coach équilibré, bleu), Sergent (rouge, dur et direct — il te met au travail, sans jamais te rabaisser) et Zen (vert, posé, une chose à la fois). Le visage, les couleurs et la voix changent — la méthode, elle, reste la même.',
+      'Garde-fou absolu : quel que soit le mode, les sujets sensibles (détresse, panique, moral bas, santé…) gardent toujours la voix bienveillante et orientent vers de vraies personnes.',
+      'Plein écran citations : choisis ton ambiance — Motivation, Discipline, Persévérance, Calme, Savoir, Médecine, phrases du coach seules, citations seules ou tes favoris. Le choix est retenu et s’applique aussi à la carte de l’accueil.',
+      'La personnalité choisie est retenue, la conversation continue quand tu changes de voix, et tout reste 100 % local, sur ton appareil.',
+    ],
+  },
   {
     version: '1.9.0',
     date: '2026-08',

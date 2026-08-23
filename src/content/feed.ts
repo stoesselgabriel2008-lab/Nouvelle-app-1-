@@ -44,3 +44,45 @@ export function feedAuthorLine(item: FeedItem): string {
   if (item.kind === 'coach' || item.author === undefined) return '';
   return item.attributed === true ? `Attribué à ${item.author}` : item.author;
 }
+
+// ------------------------------------------------- Ambiances (filtre du flux)
+
+export type FeedFilter = 'tout' | 'coach' | 'citations' | 'favoris' | QuoteTheme;
+
+export const FEED_FILTERS: FeedFilter[] = [
+  'tout', 'courage', 'discipline', 'perseverance', 'calme', 'savoir', 'medecine',
+  'coach', 'citations', 'favoris',
+];
+
+/** Libellés d'ambiance (le thème « courage » se vit comme « Motivation »). */
+export const FEED_FILTER_LABELS: Record<FeedFilter, string> = {
+  tout: 'Tout',
+  courage: 'Motivation',
+  discipline: 'Discipline',
+  perseverance: 'Persévérance',
+  calme: 'Calme',
+  savoir: 'Savoir',
+  medecine: 'Médecine',
+  coach: 'Phrases du coach',
+  citations: 'Citations seules',
+  favoris: 'Mes favoris',
+};
+
+export function normalizeFilter(value: string): FeedFilter {
+  return (FEED_FILTERS as string[]).includes(value) ? (value as FeedFilter) : 'tout';
+}
+
+/** Applique l'ambiance ; ne renvoie JAMAIS un flux vide (repli sur tout). */
+export function filterFeed(
+  items: FeedItem[],
+  filter: FeedFilter,
+  favs: string[],
+): FeedItem[] {
+  let out: FeedItem[];
+  if (filter === 'tout') out = items;
+  else if (filter === 'coach') out = items.filter((i) => i.kind === 'coach');
+  else if (filter === 'citations') out = items.filter((i) => i.kind === 'quote');
+  else if (filter === 'favoris') out = items.filter((i) => favs.includes(i.text));
+  else out = items.filter((i) => i.theme === filter);
+  return out.length > 0 ? out : items;
+}

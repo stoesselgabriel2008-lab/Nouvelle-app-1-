@@ -43,6 +43,29 @@ export function toggleFavorite(methodId: string): string[] {
   return next;
 }
 
+// ------------------------------------------------- Personnalité du coach
+
+export type StoredCoachMode = 'classique' | 'sergent' | 'zen';
+
+export function getCoachMode(): StoredCoachMode {
+  const v = read<string>('coachMode', 'classique');
+  return v === 'sergent' || v === 'zen' ? v : 'classique';
+}
+
+export function setCoachMode(mode: StoredCoachMode): void {
+  write('coachMode', mode);
+}
+
+// --------------------------------------------- Ambiance du flux (plein écran)
+
+export function getZenFilter(): string {
+  return read<string>('zenFilter', 'tout');
+}
+
+export function setZenFilter(filter: string): void {
+  write('zenFilter', filter);
+}
+
 // ------------------------------------------------- Curseur du flux mental
 
 /**

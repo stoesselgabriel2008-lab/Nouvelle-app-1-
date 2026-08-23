@@ -8,39 +8,55 @@ import { useId } from 'react';
  */
 
 export type AxelMood = 'happy' | 'cheer' | 'think' | 'care';
+export type AxelVariant = 'classique' | 'sergent' | 'zen';
 
-export function Axel({ mood = 'happy', size = 64 }: { mood?: AxelMood; size?: number }) {
+const PALETTES: Record<AxelVariant, { g1: string; g2: string; limb: string }> = {
+  classique: { g1: '#6fa5ff', g2: '#7b5cff', limb: '#5f6ee0' },
+  sergent: { g1: '#ff8a70', g2: '#d94848', limb: '#b73c3c' },
+  zen: { g1: '#63d3b4', g2: '#2a9d8f', limb: '#1f7a6d' },
+};
+
+export function Axel({
+  mood = 'happy',
+  size = 64,
+  variant = 'classique',
+}: {
+  mood?: AxelMood;
+  size?: number;
+  variant?: AxelVariant;
+}) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
   const g = `axg-${uid}`;
+  const pal = PALETTES[variant];
 
   return (
     <svg viewBox="0 0 120 120" width={size} height={size} aria-hidden="true" className="axel">
       <defs>
         <linearGradient id={g} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#6fa5ff" />
-          <stop offset="100%" stopColor="#7b5cff" />
+          <stop offset="0%" stopColor={pal.g1} />
+          <stop offset="100%" stopColor={pal.g2} />
         </linearGradient>
       </defs>
 
       {/* Dendrites (l'épi) — trois brins terminés par un bouton synaptique. */}
-      <g stroke="#5f6ee0" strokeWidth="5" strokeLinecap="round" fill="none">
+      <g stroke={pal.limb} strokeWidth="5" strokeLinecap="round" fill="none">
         <path d="M45 34c-4-8-2-14 3-19" />
         <path d="M60 30c0-8 2-13 7-17" />
         <path d="M75 34c5-6 6-12 3-18" />
       </g>
-      <circle cx="48" cy="14" r="4.6" fill="#5f6ee0" />
-      <circle cx="67" cy="12" r="4.6" fill="#5f6ee0" />
-      <circle cx="78" cy="15" r="4.6" fill="#5f6ee0" />
+      <circle cx="48" cy="14" r="4.6" fill={pal.limb} />
+      <circle cx="67" cy="12" r="4.6" fill={pal.limb} />
+      <circle cx="78" cy="15" r="4.6" fill={pal.limb} />
 
       {/* Axone (la queue). */}
       <path
         d="M92 88c8 2 13 7 14 14"
-        stroke="#5f6ee0"
+        stroke={pal.limb}
         strokeWidth="6"
         strokeLinecap="round"
         fill="none"
       />
-      <circle cx="107" cy="104" r="5.4" fill="#5f6ee0" />
+      <circle cx="107" cy="104" r="5.4" fill={pal.limb} />
 
       {/* Corps. */}
       <ellipse cx="60" cy="68" rx="42" ry="40" fill={`url(#${g})`} />
@@ -61,8 +77,12 @@ export function Axel({ mood = 'happy', size = 64 }: { mood?: AxelMood; size?: nu
         </g>
       ) : (
         <>
-          <ellipse cx="45" cy="64" rx="10.5" ry="12" fill="#ffffff" />
-          <ellipse cx="75" cy="64" rx="10.5" ry="12" fill="#ffffff" />
+          {variant === 'zen' && mood === 'happy' ? null : (
+            <>
+              <ellipse cx="45" cy="64" rx="10.5" ry="12" fill="#ffffff" />
+              <ellipse cx="75" cy="64" rx="10.5" ry="12" fill="#ffffff" />
+            </>
+          )}
           {mood === 'think' ? (
             <>
               <circle cx="47.5" cy="60" r="5" fill="#1d2150" />
@@ -109,6 +129,60 @@ export function Axel({ mood = 'happy', size = 64 }: { mood?: AxelMood; size?: nu
               <path
                 d="M52 81c3 3 13 3 16 0"
                 stroke="#1d2150"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </>
+          ) : variant === 'sergent' ? (
+            <>
+              {/* Sourcils froncés + regard décidé : le Sergent ne rigole pas. */}
+              <path
+                d="M35 51l14 5"
+                stroke="#301024"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <path
+                d="M85 51l-14 5"
+                stroke="#301024"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <circle cx="46.5" cy="66" r="5" fill="#301024" />
+              <circle cx="76.5" cy="66" r="5" fill="#301024" />
+              <circle cx="48.2" cy="64.2" r="1.7" fill="#ffffff" />
+              <circle cx="78.2" cy="64.2" r="1.7" fill="#ffffff" />
+              <path
+                d="M51 82h18"
+                stroke="#301024"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </>
+          ) : variant === 'zen' ? (
+            <>
+              {/* Paupières closes, sourire paisible. */}
+              <path
+                d="M37 64c3 4 10 4 13 0"
+                stroke="#123b34"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <path
+                d="M70 64c3 4 10 4 13 0"
+                stroke="#123b34"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <path
+                d="M52 80c3 3 13 3 16 0"
+                stroke="#123b34"
                 strokeWidth="4.5"
                 strokeLinecap="round"
                 fill="none"

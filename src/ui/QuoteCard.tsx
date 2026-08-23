@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { buildFeed, feedAuthorLine } from '../content/feed';
-import { advanceFeedPos } from '../lib/storage';
+import { buildFeed, feedAuthorLine, filterFeed, normalizeFilter } from '../content/feed';
+import { advanceFeedPos, getQuoteFavs, getZenFilter } from '../lib/storage';
 import { frTypo } from '../lib/typo';
 import { Icon } from './Icon';
 
@@ -25,7 +25,11 @@ function prefersReducedMotion(): boolean {
 }
 
 export function QuoteCard() {
-  const feed = useMemo(() => buildFeed(), []);
+  // L'ambiance choisie en plein écran s'applique aussi à la carte d'accueil.
+  const feed = useMemo(
+    () => filterFeed(buildFeed(), normalizeFilter(getZenFilter()), getQuoteFavs()),
+    [],
+  );
   // Chaque montage (ouverture de l'app, retour à l'accueil) = phrase suivante.
   const [pos, setPos] = useState(() => advanceFeedPos());
 

@@ -1,8 +1,24 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { buildFeed, feedAuthorLine } from '../content/feed';
+import {
+  FEED_FILTERS,
+  FEED_FILTER_LABELS,
+  buildFeed,
+  feedAuthorLine,
+  filterFeed,
+  normalizeFilter,
+  type FeedFilter,
+} from '../content/feed';
 import { QUOTE_THEME_LABELS } from '../content/quotes';
-import { advanceFeedPos, isQuoteFav, peekFeedPos, toggleQuoteFav } from '../lib/storage';
+import {
+  advanceFeedPos,
+  getQuoteFavs,
+  isQuoteFav,
+  peekFeedPos,
+  setZenFilter,
+  getZenFilter,
+  toggleQuoteFav,
+} from '../lib/storage';
 import { frTypo } from '../lib/typo';
 import { Icon } from '../ui/Icon';
 
@@ -10,6 +26,7 @@ import { Icon } from '../ui/Icon';
  * Mode plein écran, inspiré des meilleures apps de motivation : une phrase à
  * la fois, plein cadre, sur fond profond. Toucher ou glisser vers le haut =
  * suivante ; glisser vers le bas = précédente ; cœur = favori ; partage natif.
+ * L'ambiance (Motivation, Calme, favoris…) filtre le flux et se retient.
  */
 
 function haptic(): void {
@@ -23,7 +40,9 @@ function haptic(): void {
 export function QuoteZenPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const feed = useMemo(() => buildFeed(), []);
+  const [filter, setFilter] = useState<FeedFilter>(() => normalizeFilter(getZenFilter()));
+  const [panel, setPanel] = useState(false);
+  const feed = useMemo(() => filterFeed(buildFeed(), filter, getQuoteFavs()), [filter]);
   const raw = Number.parseInt(params.get('i') ?? '', 10);
   const [pos, setPos] = useState(() =>
     Number.isFinite(raw) && raw >= 0 ? raw : Math.max(0, peekFeedPos()),
@@ -58,6 +77,16 @@ export function QuoteZenPage() {
     }
   };
 
+  const pickFilter = (f: FeedFilter) => {
+    setPanel(false);
+    if (f === filter) return;
+    setZenFilter(f);
+    setFilter(f);
+    setDir('up');
+    setPos(0);
+    haptic();
+  };
+
   // Plein écran réel : le fond de page ne défile pas derrière.
   useEffect(() => {
     document.body.classList.add('zen-open');
@@ -66,7 +95,13 @@ export function QuoteZenPage() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close();
+      if (e.key === 'Escape') {
+        // Échap ferme d'abord le panneau d'ambiance, puis le plein écran.
+        if (panel) setPanel(false);
+        else close();
+        return;
+      }
+      if (panel) return;
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
         e.preventDefault();
         next();
@@ -79,7 +114,7 @@ export function QuoteZenPage() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [panel]);
 
   const share = async () => {
     const line = authorLine !== '' ? `« ${item.text} » — ${authorLine}` : `« ${item.text} »`;
@@ -127,7 +162,18 @@ export function QuoteZenPage() {
       }}
     >
       <header className="zen-top" onClick={(e) => e.stopPropagation()}>
-        <span className="zen-kicker">{QUOTE_THEME_LABELS[item.theme]}</span>
+        <button
+          type="button"
+          className={`zen-btn zen-btn--top${filter !== 'tout' ? ' zen-btn--filtered' : ''}`}
+          aria-label="Choisir une ambiance"
+          aria-expanded={panel}
+          onClick={() => setPanel((p) => !p)}
+        >
+          <Icon name="filter" size={20} />
+        </button>
+        <span className="zen-kicker">
+          {filter === 'tout' ? QUOTE_THEME_LABELS[item.theme] : FEED_FILTER_LABELS[filter]}
+        </span>
         <button type="button" className="zen-close" aria-label="Fermer" onClick={close}>
           <Icon name="close" size={20} />
         </button>
@@ -171,6 +217,38 @@ export function QuoteZenPage() {
         <p className="zen-copied" role="status">
           Copié
         </p>
+      ) : null}
+
+      {panel ? (
+        <div
+          className="zen-filter-wrap"
+          onClick={(e) => {
+            e.stopPropagation();
+            setPanel(false);
+          }}
+        >
+          <div
+            className="zen-filter"
+            role="dialog"
+            aria-label="Ambiance du flux"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="zen-filter-title">Ambiance</p>
+            <div className="zen-chips">
+              {FEED_FILTERS.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className={`zen-chip${f === filter ? ' on' : ''}`}
+                  aria-pressed={f === filter}
+                  onClick={() => pickFilter(f)}
+                >
+                  {FEED_FILTER_LABELS[f]}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       ) : null}
     </div>
   );

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { greet, respond, QUICK_CHIPS, type CoachLink } from '../coach/engine';
+import { MODES, MODE_ORDER, type CoachMode } from '../coach/modes';
+import { getCoachMode, setCoachMode } from '../lib/storage';
 import { frTypo } from '../lib/typo';
 import { Axel, type AxelMood } from '../ui/Axel';
 import { BackButton } from '../ui/bits';
@@ -39,10 +41,11 @@ function saveMsgs(msgs: Msg[]): void {
 }
 
 export function CoachPage() {
+  const [mode, setMode] = useState<CoachMode>(() => getCoachMode());
   const [msgs, setMsgs] = useState<Msg[]>(() => {
     const stored = loadMsgs();
     if (stored.length > 0) return stored;
-    const g = greet();
+    const g = greet(Math.random, getCoachMode());
     return [{ who: 'axel', text: g.text, mood: g.mood }];
   });
   const [draft, setDraft] = useState('');
@@ -73,18 +76,29 @@ export function CoachPage() {
     setTyping(true);
     // Petit délai « il écrit… » : la réponse instantanée sonne machine.
     timerRef.current = window.setTimeout(() => {
-      const r = respond(text);
+      const r = respond(text, Math.random, mode);
       setMsgs((m) => [...m, { who: 'axel', text: r.text, links: r.links, mood: r.mood }]);
       setTyping(false);
     }, 500 + Math.random() * 500);
   };
 
+  const switchMode = (next: CoachMode) => {
+    if (next === mode || typing) return;
+    setCoachMode(next);
+    setMode(next);
+    // Le nouveau ton se présente — la conversation continue, la voix change.
+    const g = greet(Math.random, next);
+    setMsgs((m) => [...m, { who: 'axel', text: g.text, mood: 'happy' }]);
+  };
+
   const reset = () => {
     window.clearTimeout(timerRef.current);
     setTyping(false);
-    const g = greet();
+    const g = greet(Math.random, mode);
     setMsgs([{ who: 'axel', text: g.text, mood: g.mood }]);
   };
+
+  const modeIdx = MODE_ORDER.indexOf(mode);
 
   return (
     <>
@@ -94,10 +108,10 @@ export function CoachPage() {
           <Icon name="trash" size={18} />
         </button>
       </div>
-      <main className="content coach" style={{ paddingTop: 'var(--sp-2)' }}>
+      <main className="content coach" data-mode={mode} style={{ paddingTop: 'var(--sp-2)' }}>
         <header className="coach-head">
           <span className="coach-head-avatar">
-            <Axel mood={lastMood} size={72} />
+            <Axel mood={lastMood} size={72} variant={mode} />
           </span>
           <div>
             <h1 className="title2">Axel</h1>
@@ -107,12 +121,33 @@ export function CoachPage() {
           </div>
         </header>
 
+        <div className="mode-switch" role="tablist" aria-label="Personnalité d’Axel">
+          <span
+            className="mode-ind"
+            aria-hidden="true"
+            style={{ transform: `translateX(${modeIdx * 100}%)` }}
+          />
+          {MODE_ORDER.map((m) => (
+            <button
+              key={m}
+              type="button"
+              role="tab"
+              aria-selected={mode === m}
+              className={mode === m ? 'on' : ''}
+              onClick={() => switchMode(m)}
+            >
+              {MODES[m].label}
+            </button>
+          ))}
+        </div>
+        <p className="mode-tagline">{MODES[mode].tagline}</p>
+
         <div className="chat" aria-live="polite">
           {msgs.map((m, i) => (
             <div key={i} className={`chat-row chat-row--${m.who}`}>
               {m.who === 'axel' ? (
                 <span className="chat-avatar" aria-hidden="true">
-                  <Axel mood={m.mood ?? 'happy'} size={34} />
+                  <Axel mood={m.mood ?? 'happy'} size={34} variant={mode} />
                 </span>
               ) : null}
               <div className={`bubble bubble--${m.who}`}>
@@ -135,7 +170,7 @@ export function CoachPage() {
           {typing ? (
             <div className="chat-row chat-row--axel">
               <span className="chat-avatar" aria-hidden="true">
-                <Axel mood="think" size={34} />
+                <Axel mood="think" size={34} variant={mode} />
               </span>
               <div className="bubble bubble--axel bubble--typing" aria-label="Axel écrit">
                 <span className="tdot" />

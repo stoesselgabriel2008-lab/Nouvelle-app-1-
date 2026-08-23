@@ -349,3 +349,107 @@ test('vérification manuelle des mises à jour : un retour clair', async ({ page
     page.getByText(/dernière version|Recharger|impossible|Vérification/),
   ).toBeVisible({ timeout: 10_000 });
 });
+
+test.describe('v2.0 : personnalités d’Axel', () => {
+  test('sélecteur coulissant : Sergent glisse, teinte la page et se présente', async ({
+    page,
+  }) => {
+    await page.goto('#/coach');
+    const main = page.locator('main.coach');
+    await expect(main).toHaveAttribute('data-mode', 'classique');
+    const ind = page.locator('.mode-ind');
+    await expect(ind).toHaveAttribute('style', /translateX\(0%\)/);
+
+    await page.getByRole('tab', { name: 'Sergent' }).click();
+    await expect(main).toHaveAttribute('data-mode', 'sergent');
+    await expect(ind).toHaveAttribute('style', /translateX\(100%\)/);
+    await expect(page.locator('.mode-tagline')).toHaveText('Dur, direct, exigeant');
+    // Le nouveau ton se présente dans la conversation.
+    const bubbles = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)');
+    await expect(bubbles).toHaveCount(2);
+    // Le choix se retient à la réouverture.
+    await page.reload();
+    await expect(page.locator('main.coach')).toHaveAttribute('data-mode', 'sergent');
+    await expect(page.getByRole('tab', { name: 'Sergent' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+  });
+
+  test('Sergent : réponse dure sur l’action, protocole conservé', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('tab', { name: 'Sergent' }).click();
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('je procrastine');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)').last();
+    await expect(reply.locator('.bubble-link').first()).toContainText('Démarrage', {
+      timeout: 5_000,
+    });
+    expect(((await reply.textContent()) ?? '').length).toBeGreaterThan(80);
+  });
+
+  test('garde-fou : la détresse reste bienveillante même en Sergent', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('tab', { name: 'Sergent' }).click();
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('je vais craquer');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)').last();
+    await expect(reply).toContainText('3114', { timeout: 5_000 });
+    await expect(reply.locator('.bubble-link')).toContainText('Détresse');
+  });
+
+  test('Zen : la troisième voix a sa tagline et répond', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('tab', { name: 'Zen' }).click();
+    await expect(page.locator('main.coach')).toHaveAttribute('data-mode', 'zen');
+    await expect(page.locator('.mode-tagline')).toHaveText('Posé, une chose à la fois');
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('je stresse');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)').last();
+    await expect(reply).toContainText(/respire|expire|posé|doucement|calme/i, {
+      timeout: 5_000,
+    });
+  });
+});
+
+test.describe('v2.0 : ambiances du plein écran', () => {
+  test('choisir « Discipline » filtre le flux et se retient', async ({ page }) => {
+    await page.goto('#/citations/plein-ecran');
+    await page.getByRole('button', { name: 'Choisir une ambiance' }).click();
+    const panel = page.locator('.zen-filter');
+    await expect(panel).toBeVisible();
+    await panel.getByRole('button', { name: 'Discipline', exact: true }).click();
+    await expect(panel).toBeHidden();
+    await expect(page.locator('.zen-kicker')).toHaveText('Discipline');
+    for (let i = 0; i < 3; i++) {
+      await page.locator('.zen-body').click();
+      await expect(page.locator('.zen-kicker')).toHaveText('Discipline');
+    }
+    // L'ambiance persiste à la réouverture, le bouton signale le filtre actif.
+    await page.reload();
+    await expect(page.locator('.zen-kicker')).toHaveText('Discipline');
+    await expect(page.locator('.zen-btn--filtered')).toBeVisible();
+  });
+
+  test('Échap ferme d’abord le panneau, ensuite le plein écran', async ({ page }) => {
+    await page.goto('#/citations/plein-ecran');
+    await page.getByRole('button', { name: 'Choisir une ambiance' }).click();
+    await expect(page.locator('.zen-filter')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.zen-filter')).toBeHidden();
+    await expect(page.locator('.zen')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page).not.toHaveURL(/plein-ecran/);
+  });
+
+  test('l’ambiance choisie s’applique aussi à la carte de l’accueil', async ({ page }) => {
+    await page.goto('#/citations/plein-ecran');
+    await page.getByRole('button', { name: 'Choisir une ambiance' }).click();
+    await page
+      .locator('.zen-filter')
+      .getByRole('button', { name: 'Phrases du coach', exact: true })
+      .click();
+    await page.goto('#/');
+    await expect(page.locator('.quote-hero-author')).toHaveText('Axel · ton coach');
+  });
+});

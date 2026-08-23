@@ -19,6 +19,7 @@ import {
   INTENT_CONCEPTS,
   SLANG,
 } from './vocab';
+import { MODES, SAFETY_INTENTS, type CoachMode } from './modes';
 import type { AxelMood } from '../ui/Axel';
 
 /**
@@ -384,13 +385,6 @@ export function _resetCoachForTests(): void {
 
 // ------------------------------------------------------------------ Accueil
 
-const GREETINGS: string[] = [
-  'Salut, moi c’est Axel — ton coach méthodes. Dis-moi ce qui coince en ce moment : démarrer, retenir, comprendre, gérer le stress… J’ai un protocole pour chaque situation.',
-  'Hello ! Axel, coach de révisions (et neurone à mes heures). Décris ton blocage avec tes mots, même en abrégé — je te réponds en méthodes concrètes, pas en discours.',
-  'Salut ! Ici Axel. Une règle entre nous : pas de blabla, des protocoles. Qu’est-ce qui te ralentit aujourd’hui ?',
-  'Bienvenue ! Je suis Axel, ton coach 100 % local (rien ne quitte ton appareil). Raconte : c’est quoi le problème du moment ?',
-];
-
 export const QUICK_CHIPS: string[] = [
   'Motive-moi',
   'J’arrive pas à commencer',
@@ -404,14 +398,19 @@ export const QUICK_CHIPS: string[] = [
   'Quelle méthode ce soir ?',
 ];
 
-export function greet(rng: () => number = Math.random): CoachReply {
+export function greet(
+  rng: () => number = Math.random,
+  mode: CoachMode = 'classique',
+): CoachReply {
   return {
-    text: pickVariant('greet', GREETINGS, rng),
+    text: pickVariant(`greet:${mode}`, MODES[mode].greetings, rng),
     links: [],
     mood: 'happy',
     intent: 'greet',
   };
 }
+
+/** Intentions sociales/méta : ni second sujet, ni ton de personnalité forcé. */
 
 // ------------------------------------------------------------------ Réponse
 
@@ -425,7 +424,11 @@ function remember(id: string, links: CoachLink[]): void {
   lastLinks = links;
 }
 
-export function respond(input: string, rng: () => number = Math.random): CoachReply {
+export function respond(
+  input: string,
+  rng: () => number = Math.random,
+  mode: CoachMode = 'classique',
+): CoachReply {
   const tokens = tokenize(input);
   const padded = ` ${tokens.join(' ')} `;
 
@@ -588,7 +591,19 @@ export function respond(input: string, rng: () => number = Math.random): CoachRe
     intent.id === 'matiere'
       ? subjects.map((s) => ({ label: `Protocole ${s.name}`, to: `/matiere/${s.id}` }))
       : [...(intent.links ?? [])];
-  let text = fillSlots(pickVariant(intent.id, intent.variants, rng), rng);
+  // La personnalité choisie parle — sauf sur les sujets sensibles, qui
+  // gardent toujours la voix bienveillante de base.
+  const modeCfg = MODES[mode];
+  const safe = SAFETY_INTENTS.has(intent.id);
+  const override = safe ? undefined : modeCfg.overrides[intent.id];
+  let text = fillSlots(
+    pickVariant(
+      override !== undefined ? `${intent.id}:${mode}` : intent.id,
+      override ?? intent.variants,
+      rng,
+    ),
+    rng,
+  );
 
   if (!NO_SECONDARY.has(intent.id)) {
     const second = scored.find(
@@ -615,6 +630,17 @@ export function respond(input: string, rng: () => number = Math.random): CoachRe
         links = [...links, ...extras].slice(0, 5);
       }
     }
+  }
+
+  // Signature du mode sur les réponses de base (jamais sur les sujets sûrs
+  // ni les échanges sociaux) : le ton reste présent partout.
+  if (
+    !safe &&
+    override === undefined &&
+    modeCfg.closers.length > 0 &&
+    !NO_SECONDARY.has(intent.id)
+  ) {
+    text += `\n\n${pickVariant(`closer:${mode}`, modeCfg.closers, rng)}`;
   }
 
   const reply: CoachReply = {

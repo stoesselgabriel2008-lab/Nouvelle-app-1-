@@ -2515,3 +2515,217 @@ body:has(.coach-input input:focus) .composer {
   font-weight: 600;
   color: var(--label-2);
 }
+
+/* ------------------------------------------- Personnalités d'Axel (v2.0) */
+
+/* Chaque personnalité teinte le salon : bulle « moi », bouton d'envoi,
+   liens de réponse et sélecteur suivent l'accent du mode. */
+.coach {
+  --coach-accent: var(--tint);
+  --coach-accent-soft: var(--tint-soft);
+  --coach-on-accent: var(--on-tint);
+}
+
+.coach[data-mode='sergent'] {
+  --coach-accent: #d64545;
+  --coach-accent-soft: rgba(214, 69, 69, 0.14);
+  --coach-on-accent: #ffffff;
+}
+
+.coach[data-mode='zen'] {
+  --coach-accent: #2a9d8f;
+  --coach-accent-soft: rgba(42, 157, 143, 0.16);
+  --coach-on-accent: #ffffff;
+}
+
+/* En sombre, l'accent s'éclaircit et porte du texte foncé (comme --tint). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .coach[data-mode='sergent'] {
+    --coach-accent: #e5605c;
+    --coach-accent-soft: rgba(229, 96, 92, 0.18);
+    --coach-on-accent: #24070a;
+  }
+
+  :root:not([data-theme='light']) .coach[data-mode='zen'] {
+    --coach-accent: #3fb9a5;
+    --coach-accent-soft: rgba(63, 185, 165, 0.18);
+    --coach-on-accent: #04211c;
+  }
+}
+
+:root[data-theme='dark'] .coach[data-mode='sergent'] {
+  --coach-accent: #e5605c;
+  --coach-accent-soft: rgba(229, 96, 92, 0.18);
+  --coach-on-accent: #24070a;
+}
+
+:root[data-theme='dark'] .coach[data-mode='zen'] {
+  --coach-accent: #3fb9a5;
+  --coach-accent-soft: rgba(63, 185, 165, 0.18);
+  --coach-on-accent: #04211c;
+}
+
+/* Sélecteur segmenté à indicateur coulissant (signature iOS/ChatGPT). */
+.mode-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: var(--sp-4);
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--bg-inset);
+  border: 0.5px solid var(--card-border);
+}
+
+.mode-ind {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 3);
+  height: calc(100% - 6px);
+  border-radius: var(--r-pill);
+  background: var(--coach-accent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--coach-accent) 45%, transparent);
+  transition:
+    transform 0.28s cubic-bezier(0.32, 0.72, 0.35, 1),
+    background-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.mode-switch button {
+  position: relative;
+  z-index: 1;
+  padding: 8px 0;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-footnote);
+  font-weight: 600;
+  color: var(--label-2);
+  transition: color 0.22s ease;
+}
+
+.mode-switch button.on {
+  color: var(--coach-on-accent);
+}
+
+.mode-tagline {
+  margin-top: var(--sp-2);
+  text-align: center;
+  font-size: var(--fs-caption);
+  color: var(--label-3);
+}
+
+/* Application de l'accent du mode. */
+.bubble--me {
+  background: var(--coach-accent, var(--tint));
+  color: var(--coach-on-accent, var(--on-tint));
+  transition: background-color 0.28s ease;
+}
+
+.coach-send {
+  background: var(--coach-accent, var(--tint));
+  color: var(--coach-on-accent, var(--on-tint));
+  transition: transform 0.1s ease, opacity 0.15s ease, background-color 0.28s ease;
+}
+
+.bubble-link {
+  background: var(--coach-accent-soft, var(--tint-soft));
+  color: var(--coach-accent, var(--tint));
+}
+
+.coach-input input:focus {
+  border-color: var(--coach-accent, var(--tint));
+  box-shadow: 0 0 0 3px var(--coach-accent-soft, var(--tint-soft));
+}
+
+/* ------------------------------------- Ambiances du plein écran (v2.0) */
+
+.zen-btn--top {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Ambiance active : le bouton s'inverse pour signaler le filtre. */
+.zen-btn--filtered {
+  background: rgba(255, 255, 255, 0.92);
+  color: #16182f;
+}
+
+.zen > .zen-filter-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(8, 9, 20, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  cursor: default;
+  animation: zen-veil 0.25s ease both;
+}
+
+@keyframes zen-veil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.zen-filter {
+  width: 100%;
+  padding: var(--sp-5) var(--sp-5) calc(var(--safe-bottom) + var(--sp-6));
+  border-radius: 26px 26px 0 0;
+  background: rgba(21, 23, 43, 0.97);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.35);
+  animation: zen-sheet 0.32s cubic-bezier(0.32, 0.72, 0.35, 1) both;
+}
+
+@keyframes zen-sheet {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zen-filter-title {
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.zen-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zen-chip {
+  padding: 9px 15px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--fs-footnote);
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.zen-chip:active {
+  transform: scale(0.96);
+}
+
+.zen-chip.on {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #191b33;
+}
