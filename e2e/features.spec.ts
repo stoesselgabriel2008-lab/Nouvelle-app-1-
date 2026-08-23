@@ -413,22 +413,38 @@ test.describe('v2.0 : personnalités d’Axel', () => {
 });
 
 test.describe('v3 : glisse premium et coach encyclopédique', () => {
-  test('tab bar : la pastille coulisse sous l’onglet actif', async ({ page }, testInfo) => {
+  test('tab bar : l’onglet actif s’étire en pilule avec son nom', async ({ page }, testInfo) => {
     test.skip(
       testInfo.project.name.startsWith('ipad') || testInfo.project.name === 'desktop',
       'tab bar iPhone uniquement',
     );
     await page.goto('#/');
-    const bar = page.locator('.tabbar-wrap');
-    const ind = page.locator('.tab-ind');
-    await expect(ind).toHaveAttribute('style', /translateX\(0%\)/);
+    const bar = page.locator('.tabbar');
+    const active = bar.locator(".tab-item[aria-current='page']");
+    await expect(active).toHaveCount(1);
+    await expect(active.locator('span')).toHaveText('Pour moi');
+    await expect(active.locator('span')).toBeVisible();
+    // Les onglets au repos sont icône seule : libellé masqué.
+    await expect(
+      bar.locator(".tab-item:not([aria-current='page']) span").first(),
+    ).toBeHidden();
+
+    // Navigation : la pilule migre, montre le nouveau nom, et reste bien
+    // plus large que les onglets au repos (l'étirement).
     await bar.getByRole('link', { name: 'Méthodes' }).click();
-    await expect(ind).toHaveAttribute('style', /translateX\(100%\)/);
-    await bar.getByRole('link', { name: 'SOS' }).click();
-    await expect(ind).toHaveAttribute('style', /translateX\(300%\)/);
-    // Hors des 4 onglets (recherche), la pastille s'efface.
-    await bar.getByRole('link', { name: 'Recherche' }).click();
-    await expect(ind).toHaveAttribute('style', /opacity: 0/);
+    const nowActive = bar.locator(".tab-item[aria-current='page']");
+    await expect(nowActive.locator('span')).toHaveText('Méthodes');
+    await expect
+      .poll(async () => {
+        const a = await nowActive.boundingBox();
+        const i = await bar.locator(".tab-item:not([aria-current='page'])").first().boundingBox();
+        return a !== null && i !== null ? a.width / i.width : 0;
+      })
+      .toBeGreaterThan(1.5);
+
+    // Hors des 4 onglets (recherche), plus aucune pilule active.
+    await page.locator('.tabbar-wrap').getByRole('link', { name: 'Recherche' }).click();
+    await expect(page.locator(".tab-item[aria-current='page']")).toHaveCount(0);
   });
 
   test('Axel comprend les situations de vie (accro au téléphone)', async ({ page }) => {

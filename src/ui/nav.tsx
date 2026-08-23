@@ -26,9 +26,11 @@ const ENTRIES: NavEntry[] = [
 
 /**
  * iPhone : capsule flottante en verre (4 onglets) + bouton Recherche
- * circulaire séparé — le pattern actuel des tab bars iOS.
- * v3 : une pastille coulisse sous l'onglet actif, et un glissement du doigt
- * SUR la capsule change d'onglet (gauche/droite), comme sur Safari iOS.
+ * circulaire séparé.
+ * v3.0.1 : onglets « pilule extensible » (le pattern de barre le plus copié —
+ * navigation bar Material 3 / CodePen) : icône seule au repos, l'onglet actif
+ * s'étire en pilule pleine couleur avec son nom, les voisins glissent.
+ * Un glissement du doigt SUR la capsule change d'onglet, comme Safari iOS.
  */
 export function TabBar() {
   const { pathname } = useLocation();
@@ -68,15 +70,6 @@ export function TabBar() {
           }
         }}
       >
-        <span
-          className="tab-ind"
-          aria-hidden="true"
-          style={
-            active === -1
-              ? { opacity: 0 }
-              : { transform: `translateX(${active * 100}%)`, opacity: 1 }
-          }
-        />
         {ENTRIES.map((e) => (
           <NavLink
             key={e.to}
@@ -84,6 +77,7 @@ export function TabBar() {
             end={e.end}
             className="tab-item"
             viewTransition
+            aria-label={e.tabLabel ?? e.label}
             onClick={() => haptic(5)}
           >
             <Icon name={e.icon} size={23} />

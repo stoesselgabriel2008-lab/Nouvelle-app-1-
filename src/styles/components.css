@@ -80,59 +80,101 @@
   position: relative;
   display: flex;
   align-items: stretch;
+  gap: 2px;
   background: var(--glass-bg);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 0.5px solid var(--glass-border);
   border-radius: var(--r-pill);
   box-shadow: var(--glass-shadow);
-  padding: var(--sp-1);
+  padding: 5px;
   max-width: 480px;
   flex: 1;
 }
 
-/* Pastille coulissante sous l'onglet actif (glisse au changement d'onglet). */
-.tab-ind {
-  position: absolute;
-  top: var(--sp-1);
-  left: var(--sp-1);
-  width: calc((100% - 2 * var(--sp-1)) / 4);
-  height: calc(100% - 2 * var(--sp-1));
-  border-radius: var(--r-pill);
-  background: var(--tint-soft);
-  transition:
-    transform 0.32s cubic-bezier(0.32, 0.72, 0.35, 1),
-    opacity 0.2s ease;
-  pointer-events: none;
-}
-
+/* Onglets « pilule extensible » (pattern navigation bar Material 3, le plus
+   repris des barres CodePen/uiverse) : icône seule au repos ; l'onglet actif
+   s'étire en pilule pleine couleur avec son nom, et les voisins glissent.
+   flex-grow anime l'étirement — c'est lui qui donne la glisse. */
 .tab-item {
-  position: relative;
-  z-index: 1;
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  min-height: 52px;
-  min-width: 0;
-  padding: 6px 4px;
+  gap: 7px;
+  min-height: 50px;
+  padding: 6px 8px;
   border-radius: var(--r-pill);
   color: var(--label-2);
-  font-size: 0.6875rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 650;
   letter-spacing: 0.01em;
-  transition: color 0.15s ease;
+  transition:
+    flex-grow 0.38s cubic-bezier(0.32, 0.72, 0.35, 1),
+    background-color 0.28s ease,
+    color 0.28s ease,
+    box-shadow 0.28s ease;
 }
 
-/* Le fond actif est porté par la pastille coulissante (.tab-ind). */
-.tab-item[aria-current='page'] {
-  color: var(--tint);
+.tab-item svg {
+  flex-shrink: 0;
 }
 
+/* Au repos : icône seule (le nom est porté par l'aria-label). */
 .tab-item span {
+  display: none;
   white-space: nowrap;
+}
+
+.tab-item[aria-current='page'] {
+  flex-grow: 2.7;
+  background: var(--tint);
+  color: var(--on-tint);
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--tint) 38%, transparent);
+}
+
+.tab-item[aria-current='page'] span {
+  display: block;
+  animation: tab-label-in 0.32s 0.06s cubic-bezier(0.32, 0.72, 0.35, 1) backwards;
+}
+
+.tab-item[aria-current='page'] svg {
+  animation: tab-icon-pop 0.38s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+@keyframes tab-label-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes tab-icon-pop {
+  from {
+    transform: scale(0.72);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-item {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .tab-item[aria-current='page'] span,
+  .tab-item[aria-current='page'] svg {
+    animation: none;
+  }
 }
 
 /* Recherche : bouton circulaire séparé, à droite de la capsule. */
@@ -2813,10 +2855,6 @@ body:has(.coach-input input:focus) .composer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tab-ind {
-    transition: opacity 0.2s ease;
-  }
-
   .quote-hero-body--left,
   .quote-hero-body--right,
   .zen-body--left,

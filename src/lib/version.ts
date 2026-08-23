@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '3.0.0';
+export const APP_VERSION = '3.0.1';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,14 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '3.0.1',
+    date: '2026-08',
+    items: [
+      'Barre du bas entièrement refaite sur le modèle des meilleures barres de navigation (pattern « pilule extensible » de Material 3, le plus repris des designs libres) : icône seule au repos, l’onglet actif s’étire en pilule pleine couleur avec son nom — les voisins glissent, l’icône rebondit, le nom apparaît en fondu.',
+      'Plus lisible, plus net, plus premium — en clair comme en sombre, jusqu’aux iPhone 320 px sans rien tronquer. Le glissement du doigt sur la barre pour changer d’onglet est conservé.',
+    ],
+  },
   {
     version: '3.0.0',
     date: '2026-08',
