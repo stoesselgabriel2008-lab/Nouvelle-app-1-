@@ -19,23 +19,17 @@ import {
   getZenFilter,
   toggleQuoteFav,
 } from '../lib/storage';
+import { haptic } from '../lib/haptics';
 import { frTypo } from '../lib/typo';
 import { Icon } from '../ui/Icon';
 
 /**
  * Mode plein écran, inspiré des meilleures apps de motivation : une phrase à
- * la fois, plein cadre, sur fond profond. Toucher ou glisser vers le haut =
- * suivante ; glisser vers le bas = précédente ; cœur = favori ; partage natif.
- * L'ambiance (Motivation, Calme, favoris…) filtre le flux et se retient.
+ * la fois, plein cadre, sur fond profond. Toucher ou glisser (haut/gauche) =
+ * suivante ; glisser (bas/droite) = précédente ; cœur = favori ; partage
+ * natif. L'ambiance (Motivation, Calme, favoris…) filtre le flux et se
+ * retient. L'animation suit la direction du geste.
  */
-
-function haptic(): void {
-  try {
-    navigator.vibrate?.(10);
-  } catch {
-    /* indisponible : tant pis */
-  }
-}
 
 export function QuoteZenPage() {
   const [params] = useSearchParams();
@@ -47,7 +41,7 @@ export function QuoteZenPage() {
   const [pos, setPos] = useState(() =>
     Number.isFinite(raw) && raw >= 0 ? raw : Math.max(0, peekFeedPos()),
   );
-  const [dir, setDir] = useState<'up' | 'down'>('up');
+  const [dir, setDir] = useState<'up' | 'down' | 'left' | 'right'>('up');
   const [, bump] = useReducer((x: number) => x + 1, 0);
   const [copied, setCopied] = useState(false);
   const touchY = useRef<number | null>(null);
@@ -57,15 +51,15 @@ export function QuoteZenPage() {
   const fav = isQuoteFav(item.text);
   const authorLine = feedAuthorLine(item);
 
-  const next = () => {
-    setDir('up');
+  const next = (d: 'up' | 'left' = 'up') => {
+    setDir(d);
     setPos((p) => p + 1);
     // Le curseur global avance aussi : à la prochaine ouverture de l'app,
     // on repart plus loin — jamais sur une phrase déjà vue à l'instant.
     advanceFeedPos();
   };
-  const prev = () => {
-    setDir('down');
+  const prev = (d: 'down' | 'right' = 'down') => {
+    setDir(d);
     setPos((p) => (p === 0 ? feed.length - 1 : p - 1));
   };
 
@@ -142,7 +136,7 @@ export function QuoteZenPage() {
       className={`zen zen--${item.theme}`}
       role="region"
       aria-label="Citations en plein écran"
-      onClick={next}
+      onClick={() => next()}
       onTouchStart={(e) => {
         touchY.current = e.touches[0]?.clientY ?? null;
         touchX.current = e.touches[0]?.clientX ?? null;
@@ -158,6 +152,11 @@ export function QuoteZenPage() {
           e.preventDefault();
           if (dy < 0) next();
           else prev();
+        } else if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+          // Glisse horizontale : même navigation, animation latérale.
+          e.preventDefault();
+          if (dx < 0) next('left');
+          else prev('right');
         }
       }}
     >

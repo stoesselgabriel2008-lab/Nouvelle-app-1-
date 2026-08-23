@@ -44,16 +44,41 @@ export const SLANG: Record<string, string> = {
   ql: 'quel', qlq: 'quelque', bx: 'beaux', nv: 'niveau', pb: 'probleme',
   pbs: 'problemes', prob: 'probleme', probleme: 'probleme',
   rdv: 'rendez vous', wk: 'week end', we: 'week end',
-  // études
-  fac: 'fac', bu: 'bibliotheque', bibli: 'bibliotheque',
+  // études — « bu » reste ambigu (bibliothèque / boire) : on ne le traduit
+  // PAS, les phrases décident (« a la bu » vs « trop bu »).
+  fac: 'fac', bibli: 'bibliotheque',
   memo: 'mnemotechnique', flashcards: 'flashcard', qcms: 'qcm',
   chapitres: 'chapitre', chap: 'chapitre', exo: 'exercice', exos: 'exercices',
   ed: 'exercice dirige', cm: 'cours magistral', tp: 'travaux pratiques',
+  kholle: 'colle', kholles: 'colles', partiels: 'partiel',
   // renforts
   jamais: 'jamais', ftg: 'silence', mm: 'meme', mnt: 'maintenant',
   pcq: 'parce que', pck: 'parce que', psk: 'parce que', parceque: 'parce que',
   ptn: 'zut', pff: 'zut', pfff: 'zut', rah: 'zut', raah: 'zut',
   cv: 'ca va', cava: 'ca va', bg: 'sympa',
+  // v3 — SMS ultra-court (une lettre vaut un mot)
+  g: 'j ai', c: 'c est', ct: 'c etait', cetait: 'c etait', pa: 'pas',
+  ke: 'que', ki: 'qui', koi: 'quoi', kan: 'quand', keske: 'qu est ce que',
+  kesk: 'qu est ce que', kel: 'quel', kelle: 'quelle',
+  // v3 — contractions de verbes
+  jcrois: 'je crois', jtrouve: 'je trouve', jgalere: 'je galere',
+  jstresse: 'je stresse', jbosse: 'je bosse', jdors: 'je dors',
+  jrevise: 'je revise', jrate: 'je rate', joublie: 'j oublie',
+  jretiens: 'je retiens', jprocrastine: 'je procrastine', jv: 'je vais',
+  jvx: 'je veux', jpx: 'je peux', jcapte: 'je capte', jpige: 'je pige',
+  // v3 — argot courant
+  vnr: 'enerve', nrv: 'enerve', seum: 'degoute', chelou: 'bizarre',
+  cimer: 'merci', wallah: 'vraiment', nan: 'non', ouai: 'ouais',
+  yep: 'oui', nope: 'non', vla: 'voila', tro: 'trop', deg: 'degoute',
+  frr: 'frere', frero: 'frere', poto: 'ami', tmtc: 'tu sais',
+  mdrr: 'drole', mdrrr: 'drole', ptdrr: 'drole', dodo: 'dormir',
+  // v3 — abréviations supplémentaires
+  pkoi: 'pourquoi', prq: 'pourquoi', aprem: 'apres midi', apm: 'apres midi',
+  ojd: 'aujourd hui', qqun: 'quelqu un', kelkun: 'quelqu un',
+  jms: 'jamais', lgtps: 'longtemps', lgt: 'longtemps', tlj: 'tous les jours',
+  srx: 'serieux', vrmnt: 'vraiment', mtnt: 'maintenant', bn: 'bon',
+  bne: 'bonne', slmt: 'seulement', qqs: 'quelques', ttes: 'toutes',
+  toussa: 'tout ca',
 };
 
 /** Une idée → toutes ses formes (mots simples ET locutions, normalisés). */
@@ -68,6 +93,7 @@ export const CONCEPTS: Record<string, string[]> = {
     's evapore', 'rien ne reste', 'trou de memoire', 'me souviens plus',
     'souviens pas', 'rappelle plus', 'rappelle pas', 'passoire', 'imprime pas',
     'reste pas', 'retombe', 'disparait', 'part en fumee', 'memoire de poisson rouge',
+    'zappe', 'zappes', 'sort de ma tete',
   ],
   travailler: [
     'bosser', 'taffer', 'reviser', 'etudier', 'charbonner', 'gratter',
@@ -103,12 +129,12 @@ export const CONCEPTS: Record<string, string[]> = {
     'casse la gueule', 'saque', 'mauvais resultat',
   ],
   reussir: ['reussir', 'reussis', 'progresser', 'm ameliorer', 'monter au classement', 'cartonner', 'majorer'],
-  dormir: ['dormir', 'dors', 'sommeil', 'coucher', 'endormir', 'insomnie', 'sieste', 'mes nuits'],
+  dormir: ['dormir', 'dors', 'sommeil', 'coucher', 'endormir', 'insomnie', 'mes nuits'],
   fatigue_c: ['fatigue', 'fatiguee', 'epuise', 'epuisee', 'creve', 'crevee', 'claque', 'claquee', 'mort de fatigue', 'plus d energie', 'a plat', 'lessive', 'lessivee', 'vide', 'nase', 'naze', 'hs'],
   distrait: [
     'distrait', 'distraite', 'deconcentre', 'deconcentree', 'dans la lune',
     'tete ailleurs', 'pense a autre chose', 'divague', 'decroche', 'zone',
-    'procrastine sur le telephone', 'scrolle', 'scroll',
+    'procrastine sur le telephone',
   ],
   commencer_c: [
     'commencer', 'demarrer', 'lancer', 'm y mettre', 'my mettre', 's y mettre',
@@ -124,6 +150,21 @@ export const CONCEPTS: Record<string, string[]> = {
     'stresse', 'stressee', 'angoisse', 'angoissee', 'anxieux', 'anxieuse',
     'boule au ventre', 'oppresse', 'oppressee', 'paniquer',
     'tendu', 'tendue', 'nerveux', 'nerveuse',
+  ],
+  colere_c: [
+    'enerve', 'enervee', 'rage', 'fulmine', 'furax', 'furieux', 'furieuse',
+    'agace', 'agacee', 'exaspere', 'exasperee', 'hors de moi', 'bouillonne',
+  ],
+  solitude_c: [
+    'solitude', 'isolement', 'me sens seul', 'me sens seule', 'tout seul',
+    'toute seule', 'esseule', 'esseulee',
+  ],
+  honte_c: [
+    'honte', 'honteux', 'honteuse', 'coupable', 'm en veux', 'mauvaise conscience',
+  ],
+  ecran_c: [
+    'ecran', 'ecrans', 'scroller', 'portable', 'smartphone', 'insta', 'reels',
+    'shorts', 'notifs',
   ],
 };
 
@@ -145,6 +186,10 @@ export const INTENT_CONCEPTS: Record<string, { c: string; w: number }[]> = {
   'moral-bas': [{ c: 'triste', w: 3 }, { c: 'marre', w: 1 }],
   'echeance-proche': [{ c: 'vite', w: 1 }],
   'progres-stagne': [{ c: 'reussir', w: 1 }],
+  colere: [{ c: 'colere_c', w: 3 }],
+  solitude: [{ c: 'solitude_c', w: 3 }],
+  culpabilite: [{ c: 'honte_c', w: 3 }],
+  'addiction-ecrans': [{ c: 'ecran_c', w: 2 }],
 };
 
 /** Concept → intention par défaut quand une matière est citée avec.
@@ -163,6 +208,10 @@ export const CONCEPT_DEFAULT_INTENT: Record<string, string> = {
   commencer_c: 'procrastination',
   distrait: 'concentration',
   travailler: 'quelle-methode',
+  colere_c: 'colere',
+  solitude_c: 'solitude',
+  honte_c: 'culpabilite',
+  ecran_c: 'addiction-ecrans',
 };
 
 /** Déclencheurs supplémentaires par intention (fusionnés au chargement). */
@@ -188,7 +237,7 @@ export const EXTRA_TRIGGERS: Record<string, { strong?: string[]; weak?: string[]
   },
   'comprends-rien': {
     strong: [
-      'rien compris', 'j ai rien capte', 'capte rien', 'pige que dalle',
+      'rien compris', 'pas compris', 'j ai rien capte', 'capte rien', 'pige que dalle',
       'trop complexe pour moi', 'depasse par le cours', 'largue', 'larguee',
       'decroche en cours', 'plus rien ne suit', 'ca me depasse',
     ],
@@ -269,7 +318,7 @@ export const EXTRA_TRIGGERS: Record<string, { strong?: string[]; weak?: string[]
     ],
   },
   'lieu-travail': {
-    strong: ['a la bibliotheque', 'places a la bu', 'travailler au lit', 'sur mon lit', 'dans ma chambre'],
+    strong: ['a la bibliotheque', 'places a la bu', 'travailler au lit', 'sur mon lit', 'dans ma chambre', 'bu', 'bu pleine', 'pas de place a la bu'],
   },
   musique: { strong: ['bruit blanc', 'lofi', 'lo fi', 'playlist pour reviser', 'avec ou sans musique'] },
   fiches: {
@@ -365,5 +414,85 @@ export const EXTRA_TRIGGERS: Record<string, { strong?: string[]; weak?: string[]
       'plus envie de vivre', 'envie d en finir', 'tout le monde serait mieux sans moi',
       'je sers a rien dans la vie', 'ma vie ne vaut rien',
     ],
+  },
+  // ------------------------------------------------ v3 : situations de vie
+  'moral-bas': {
+    strong: ['degoute', 'degoutee', 'le seum', 'trop deg'],
+  },
+  colere: {
+    strong: ['ca m enerve', 'je rage', 'ca me met hors de moi', 'enerve contre le prof', 'trop la rage', 'je suis furax'],
+  },
+  solitude: {
+    strong: ['je me sens abandonne', 'je me sens abandonnee', 'aucun ami ici', 'personne pour me soutenir'],
+  },
+  culpabilite: {
+    strong: ['je m en veux tellement', 'je me sens nul de ne pas', 'honte de ne pas y arriver'],
+  },
+  surmenage: {
+    strong: ['au bord du burn out', 'j en fais trop', 'je tire sur la corde', 'plus aucune coupure'],
+  },
+  'bonne-note': {
+    strong: ['ma meilleure note', 'meilleure colle de ma vie', 'je monte au classement', 'enfin bien classe', 'enfin bien classee', 'ca y est j ai reussi'],
+  },
+  'addiction-ecrans': {
+    strong: ['je perds des heures sur', 'aspire par mon telephone', 'bloque sur les reseaux', 'je scrolle toute la journee', 'lache pas insta'],
+  },
+  'jeux-video': {
+    strong: ['envie de jouer', 'ma console me tente', 'une game', 'lancer une partie'],
+  },
+  'series-films': {
+    strong: ['finir ma saison', 'enchaine les episodes', 'accro a ma serie'],
+  },
+  meditation: {
+    strong: ['apprendre a mediter', 'ca marche la meditation', 'exercices pour me calmer'],
+  },
+  'groupe-travail': {
+    strong: ['on revise ensemble', 'bosser en duo', 'trouver un binome', 'reviser en binome'],
+  },
+  'materiel-etude': {
+    strong: ['acheter un ipad', 'vaut le coup l ipad', 'changer de materiel', 'prendre une tablette'],
+  },
+  rentree: {
+    strong: ['je debute en pass', 'premiere semaine de cours', 'nouvelle en medecine', 'nouveau en medecine', 'des conseils pour demarrer'],
+  },
+  'amphi-ou-replay': {
+    strong: ['je vais plus en cours', 'j y vais plus en amphi', 'cours a la maison ou en amphi'],
+  },
+  'changer-methode': {
+    strong: ['tout changer dans ma facon de bosser', 'repartir de zero sur la methode', 'ma facon de travailler ne marche pas'],
+  },
+  'jour-colle': {
+    strong: ['des conseils pour le jour j', 'comment gerer le jour du concours', 'la strategie pendant l epreuve'],
+  },
+  'apres-colle': {
+    strong: ['je ressasse mes reponses', 'refais la colle dans ma tete', 'attends mes resultats'],
+  },
+  'hors-champ': {
+    strong: ['telecharge', 'installe une appli', 'mets de la musique', 'lance un chrono', 'ouvre une video'],
+  },
+  'axel-perso': {
+    strong: ['parle moi de toi', 'tu me connais', 'raconte ta vie', 't es mignon', 'tu es mignon'],
+  },
+  'correction-axel': {
+    strong: ['t es pas fiable', 'tu inventes', 'c est pas ce que dit mon prof'],
+  },
+  // v3 : couche savoir — formulations naturelles supplémentaires
+  'k-intervalles': {
+    strong: ['tous les combien je revois mes cours', 'quand est ce que je dois reviser', 'le bon rythme de reprise'],
+  },
+  'k-duree-pomodoro': {
+    strong: ['c est long un pomodoro', 'temps de travail par bloc'],
+  },
+  'k-heures-sommeil': {
+    strong: ['6h de sommeil', 'dormir 6 heures', 'nuits de 6 heures ca va'],
+  },
+  'k-source-corpus': {
+    strong: ['c est prouve scientifiquement', 'y a des etudes derriere', 'c est valide par la science'],
+  },
+  'k-cartes-par-jour': {
+    strong: ['limite de nouvelles cartes anki', 'je cree combien de cartes'],
+  },
+  'k-mode-degrade': {
+    strong: ['travailler un cours a moitie', 'faire le minimum sur un chapitre'],
   },
 };

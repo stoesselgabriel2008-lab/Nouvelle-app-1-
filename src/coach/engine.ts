@@ -12,6 +12,8 @@ import {
   type CoachLink,
   type Intent,
 } from './kb';
+import { LIFE_INTENTS } from './kb-vie';
+import { KNOWLEDGE_INTENTS } from './kb-savoir';
 import {
   CONCEPTS,
   CONCEPT_DEFAULT_INTENT,
@@ -51,13 +53,24 @@ function norm(input: string): string {
     .trim();
 }
 
-/** Traduit l'argot/SMS token par token (« jpp » → « j en peux plus »). */
+/** Traduit l'argot/SMS token par token (« jpp » → « j en peux plus »).
+    Garde anti-duplication : « c est » ne devient pas « c est est » quand
+    « c » (→ « c est ») est déjà suivi de « est » dans le message. */
 function expandSlang(tokens: string[]): string[] {
   const out: string[] = [];
-  for (const t of tokens) {
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i]!;
     const rep = SLANG[t];
-    if (rep !== undefined) out.push(...rep.split(' '));
-    else out.push(t);
+    if (rep === undefined) {
+      out.push(t);
+      continue;
+    }
+    const parts = rep.split(' ');
+    if (parts.length > 1 && parts[0] === t && tokens[i + 1] === parts[1]) {
+      out.push(t);
+      continue;
+    }
+    out.push(...parts);
   }
   return out;
 }
@@ -120,7 +133,10 @@ interface Compiled {
   wordsWeak: string[];
 }
 
-const COMPILED: Compiled[] = INTENTS.map((intent) => {
+/** La base complète : situations du concours + situations de vie + savoir. */
+export const ALL_INTENTS: Intent[] = [...INTENTS, ...LIFE_INTENTS, ...KNOWLEDGE_INTENTS];
+
+const COMPILED: Compiled[] = ALL_INTENTS.map((intent) => {
   const split = (list: string[] | undefined) => {
     const phrases: string[] = [];
     const words: string[] = [];
@@ -486,7 +502,7 @@ export function respond(
   //    sujet net par lui-même.
   const follow = followKind(padded, tokens);
   if (follow !== null && lastIntentId !== null && (best === undefined || best.score < 6)) {
-    const lastIntent = INTENTS.find((i) => i.id === lastIntentId);
+    const lastIntent = ALL_INTENTS.find((i) => i.id === lastIntentId);
     if (follow === 'yes') {
       const r: CoachReply = { text: pickVariant('ack-yes', ACK_YES, rng), links: lastLinks, mood: 'cheer', intent: 'suivi' };
       return r;
@@ -515,12 +531,14 @@ export function respond(
   }
 
   // 4. Entités : « c'est quoi X », message réduit au nom d'une fiche, ou
-  //    rien d'autre ne matche. Une vraie situation vécue garde la priorité.
+  //    rien d'autre ne matche. Une vraie situation vécue garde la priorité —
+  //    et une QUESTION précise (locution à 6+, ex. couche savoir) bat la
+  //    carte d'identité générique de la fiche.
   const entity = findEntity(padded, tokens);
   const asksInfo = INFO_PATTERN.test(padded);
   if (
     entity !== null &&
-    (asksInfo ||
+    ((asksInfo && (best === undefined || best.score < 6)) ||
       (isBareEntity(tokens, entity) && (best === undefined || best.score < 3)) ||
       best === undefined)
   ) {

@@ -77,6 +77,7 @@
 
 .tabbar {
   pointer-events: auto;
+  position: relative;
   display: flex;
   align-items: stretch;
   background: var(--glass-bg);
@@ -90,7 +91,24 @@
   flex: 1;
 }
 
+/* Pastille coulissante sous l'onglet actif (glisse au changement d'onglet). */
+.tab-ind {
+  position: absolute;
+  top: var(--sp-1);
+  left: var(--sp-1);
+  width: calc((100% - 2 * var(--sp-1)) / 4);
+  height: calc(100% - 2 * var(--sp-1));
+  border-radius: var(--r-pill);
+  background: var(--tint-soft);
+  transition:
+    transform 0.32s cubic-bezier(0.32, 0.72, 0.35, 1),
+    opacity 0.2s ease;
+  pointer-events: none;
+}
+
 .tab-item {
+  position: relative;
+  z-index: 1;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -105,12 +123,12 @@
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.01em;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
+/* Le fond actif est porté par la pastille coulissante (.tab-ind). */
 .tab-item[aria-current='page'] {
   color: var(--tint);
-  background: var(--tint-soft);
 }
 
 .tab-item span {
@@ -2728,4 +2746,81 @@ body:has(.coach-input input:focus) .composer {
   background: #ffffff;
   border-color: #ffffff;
   color: #191b33;
+}
+
+/* --------------------------------------------- Glisse directionnelle (v3) */
+
+/* Héros de l'accueil : glisser à gauche/droite fait défiler les phrases. */
+.quote-hero-body--left {
+  animation: hero-left 0.32s cubic-bezier(0.32, 0.72, 0.35, 1) both;
+}
+
+.quote-hero-body--right {
+  animation: hero-right 0.32s cubic-bezier(0.32, 0.72, 0.35, 1) both;
+}
+
+@keyframes hero-left {
+  from {
+    opacity: 0;
+    transform: translateX(56px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-right {
+  from {
+    opacity: 0;
+    transform: translateX(-56px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Plein écran : l'animation suit la direction du geste. */
+.zen-body--left {
+  animation-name: zen-left;
+}
+
+.zen-body--right {
+  animation-name: zen-right;
+}
+
+@keyframes zen-left {
+  from {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zen-right {
+  from {
+    opacity: 0;
+    transform: translateX(-64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-ind {
+    transition: opacity 0.2s ease;
+  }
+
+  .quote-hero-body--left,
+  .quote-hero-body--right,
+  .zen-body--left,
+  .zen-body--right {
+    animation: quote-in 0.2s ease both;
+  }
 }

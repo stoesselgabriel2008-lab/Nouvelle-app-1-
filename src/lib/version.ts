@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '2.0.0';
+export const APP_VERSION = '3.0.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,18 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '3.0.0',
+    date: '2026-08',
+    items: [
+      'Axel change de dimension : ~140 situations comprises (le double), dont toute ta vie autour du concours — colère, culpabilité, solitude, rupture, dispute, deuil, harcèlement, proche malade, surmenage, tabac, bonnes notes à fêter, écrans, jeux, séries, sieste, canicule, groupe de travail, iPad ou papier, jour J, après-colle, rentrée, amphi ou replay, changement de méthode, choix de filière…',
+      'Nouvelle couche « savoir » : pose-lui des questions précises — « pomodoro combien de temps ? », « quels intervalles de révision ? », « combien de cartes Anki par jour ? », « différence feuille blanche / blurting ? », « la lecture rapide ça marche ? » — il répond avec les chiffres exacts des fiches et le lien source.',
+      'Il parle encore mieux le SMS : « g pas compris », « c chiant », « koi bosser ce soir », « jsuis vener », « seum », « cimer »… Et il dit honnêtement ses limites (pas d’internet, pas d’heure — 100 % local).',
+      'Sergent et Zen doublés : 24 situations réécrites par personnalité. Et le garde-fou s’étend : tous les nouveaux sujets sensibles gardent la voix bienveillante, dans tous les modes.',
+      'La glisse partout : une pastille coulisse sous l’onglet actif de la barre du bas (et un glissement du doigt sur la barre change d’onglet), la carte de citations de l’accueil se balaye du doigt, le plein écran suit ton geste dans les quatre directions. Retour haptique discret sur les gestes clés.',
+      'Le tout verrouillé par 450 tests unitaires (dont une table de 336 phrases réelles) et la suite complète sur 5 formats d’écran.',
+    ],
+  },
   {
     version: '2.0.0',
     date: '2026-08',

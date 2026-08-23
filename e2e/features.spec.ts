@@ -412,6 +412,57 @@ test.describe('v2.0 : personnalités d’Axel', () => {
   });
 });
 
+test.describe('v3 : glisse premium et coach encyclopédique', () => {
+  test('tab bar : la pastille coulisse sous l’onglet actif', async ({ page }, testInfo) => {
+    test.skip(
+      testInfo.project.name.startsWith('ipad') || testInfo.project.name === 'desktop',
+      'tab bar iPhone uniquement',
+    );
+    await page.goto('#/');
+    const bar = page.locator('.tabbar-wrap');
+    const ind = page.locator('.tab-ind');
+    await expect(ind).toHaveAttribute('style', /translateX\(0%\)/);
+    await bar.getByRole('link', { name: 'Méthodes' }).click();
+    await expect(ind).toHaveAttribute('style', /translateX\(100%\)/);
+    await bar.getByRole('link', { name: 'SOS' }).click();
+    await expect(ind).toHaveAttribute('style', /translateX\(300%\)/);
+    // Hors des 4 onglets (recherche), la pastille s'efface.
+    await bar.getByRole('link', { name: 'Recherche' }).click();
+    await expect(ind).toHaveAttribute('style', /opacity: 0/);
+  });
+
+  test('Axel comprend les situations de vie (accro au téléphone)', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('je suis accro à mon téléphone');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)').last();
+    await expect(reply.locator('.bubble-link').first()).toContainText('friction', {
+      timeout: 5_000,
+      ignoreCase: true,
+    });
+  });
+
+  test('Axel répond aux questions de savoir avec les chiffres des fiches', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('textbox', { name: 'Ton message à Axel' }).fill('pomodoro combien de temps ?');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)').last();
+    await expect(reply).toContainText('25', { timeout: 5_000 });
+    await expect(reply.locator('.bubble-link')).toContainText('Pomodoro');
+  });
+
+  test('garde-fou v3 : un deuil reste bienveillant même en Sergent', async ({ page }) => {
+    await page.goto('#/coach');
+    await page.getByRole('tab', { name: 'Sergent' }).click();
+    await page
+      .getByRole('textbox', { name: 'Ton message à Axel' })
+      .fill('mon grand-père est décédé');
+    await page.getByRole('button', { name: 'Envoyer' }).click();
+    const reply = page.locator('.chat-row--axel .bubble--axel:not(.bubble--typing)').last();
+    await expect(reply).toContainText(/désolé|condoléances|cœur/i, { timeout: 5_000 });
+  });
+});
+
 test.describe('v2.0 : ambiances du plein écran', () => {
   test('choisir « Discipline » filtre le flux et se retient', async ({ page }) => {
     await page.goto('#/citations/plein-ecran');

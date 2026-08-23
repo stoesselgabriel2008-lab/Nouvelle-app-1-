@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { greet, respond, QUICK_CHIPS, type CoachLink } from '../coach/engine';
 import { MODES, MODE_ORDER, type CoachMode } from '../coach/modes';
+import { haptic } from '../lib/haptics';
 import { getCoachMode, setCoachMode } from '../lib/storage';
 import { frTypo } from '../lib/typo';
 import { Axel, type AxelMood } from '../ui/Axel';
@@ -84,6 +85,7 @@ export function CoachPage() {
 
   const switchMode = (next: CoachMode) => {
     if (next === mode || typing) return;
+    haptic(8);
     setCoachMode(next);
     setMode(next);
     // Le nouveau ton se présente — la conversation continue, la voix change.

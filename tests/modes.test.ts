@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { respond, greet, _resetCoachForTests } from '../src/coach/engine';
+import { respond, greet, ALL_INTENTS, _resetCoachForTests } from '../src/coach/engine';
 import { MODES, MODE_ORDER, SAFETY_INTENTS, type CoachMode } from '../src/coach/modes';
-import { INTENTS } from '../src/coach/kb';
 import {
   FEED_FILTERS,
   FEED_FILTER_LABELS,
@@ -25,7 +24,7 @@ beforeEach(() => {
   _resetCoachForTests();
 });
 
-const INTENT_IDS = new Set(INTENTS.map((i) => i.id));
+const INTENT_IDS = new Set(ALL_INTENTS.map((i) => i.id));
 
 describe('personnalités : intégrité de la configuration', () => {
   it('MODE_ORDER couvre exactement les modes définis', () => {
@@ -59,10 +58,10 @@ describe('personnalités : intégrité de la configuration', () => {
     }
   });
 
-  it('Sergent et Zen couvrent les mêmes situations clés (≥ 10)', () => {
+  it('Sergent et Zen couvrent les mêmes situations clés (≥ 20 en v3)', () => {
     const sergent = Object.keys(MODES.sergent.overrides).sort();
     const zen = Object.keys(MODES.zen.overrides).sort();
-    expect(sergent.length).toBeGreaterThanOrEqual(10);
+    expect(sergent.length).toBeGreaterThanOrEqual(20);
     expect(zen).toEqual(sergent);
   });
 
@@ -152,6 +151,84 @@ describe('personnalités : garde-fou des sujets sensibles', () => {
     const base = runFor('je fais une crise de panique', 'classique', 13);
     const sergent = runFor('je fais une crise de panique', 'sergent', 13);
     expect(sergent.text).toBe(base.text);
+  });
+
+  it('v3 : les nouvelles situations sensibles gardent la voix de base partout', () => {
+    const cases: [string, string][] = [
+      ['mon grand-père est décédé', 'deuil'],
+      ['je me fais harceler à la fac', 'harcelement'],
+      ['mon copain m’a quitté', 'rupture-amoureuse'],
+      ['je me sens seul ce soir', 'solitude'],
+      ['je travaille trop sans m’arrêter', 'surmenage'],
+      ['je suis trop énervé', 'colere'],
+    ];
+    for (const [msg, intent] of cases) {
+      const base = runFor(msg, 'classique', 21);
+      expect(base.intent, msg).toBe(intent);
+      for (const mode of ['sergent', 'zen'] as const) {
+        const r = runFor(msg, mode, 21);
+        expect(r.text, `${msg} (${mode})`).toBe(base.text);
+        expect(MODES[mode].closers.every((c) => !r.text.endsWith(c))).toBe(true);
+      }
+    }
+  });
+
+  it('v3 : les nouvelles réécritures Sergent/Zen sont réellement servies', () => {
+    // startsWith : une phrase « second sujet » peut légitimement s'ajouter après.
+    _resetCoachForTests();
+    const s = respond('je suis accro à mon téléphone', seededRng(9), 'sergent');
+    expect(s.intent).toBe('addiction-ecrans');
+    expect(
+      MODES.sergent.overrides['addiction-ecrans']!.some((v) => s.text.startsWith(v)),
+    ).toBe(true);
+    _resetCoachForTests();
+    const z = respond('jai eu une bonne note enfin', seededRng(9), 'zen');
+    expect(z.intent).toBe('bonne-note');
+    expect(MODES.zen.overrides['bonne-note']!.some((v) => z.text.startsWith(v))).toBe(true);
+  });
+});
+
+describe('v3 : couche savoir', () => {
+  it('répond avec les chiffres des fiches (pomodoro, intervalles, anki)', () => {
+    _resetCoachForTests();
+    const pomo = respond('pomodoro combien de temps ?', seededRng(4));
+    expect(pomo.intent).toBe('k-duree-pomodoro');
+    expect(pomo.text).toContain('25');
+    expect(pomo.links.map((l) => l.to)).toContain('/methode/pomodoro');
+
+    _resetCoachForTests();
+    const esp = respond('quels intervalles pour la répétition espacée', seededRng(4));
+    expect(esp.intent).toBe('k-intervalles');
+    expect(esp.text).toContain('J+1');
+
+    _resetCoachForTests();
+    const anki = respond('combien de cartes par jour sur anki', seededRng(4));
+    expect(anki.intent).toBe('k-cartes-par-jour');
+    expect(anki.text).toContain('20');
+  });
+
+  it('une question précise bat la carte d’identité générique de la fiche', () => {
+    _resetCoachForTests();
+    const r = respond('c’est quoi les intervalles de la répétition espacée ?', seededRng(4));
+    expect(r.intent).toBe('k-intervalles');
+  });
+
+  it('« c’est quoi X » sans question précise reste une entité', () => {
+    _resetCoachForTests();
+    const r = respond('c’est quoi le blurting ?', seededRng(4));
+    expect(r.intent).toBe('entite:blurting');
+  });
+
+  it('les limites sont dites honnêtement (hors-champ, numerus)', () => {
+    _resetCoachForTests();
+    const web = respond('cherche sur internet stp', seededRng(4));
+    expect(web.intent).toBe('hors-champ');
+    expect(web.text.toLowerCase()).toContain('local');
+
+    _resetCoachForTests();
+    const num = respond('combien de places en médecine ?', seededRng(4));
+    expect(num.intent).toBe('numerus-places');
+    expect(num.text).toMatch(/scolarit|universit/i);
   });
 });
 

@@ -15,6 +15,10 @@ export type CoachMode = 'classique' | 'sergent' | 'zen';
 export const SAFETY_INTENTS = new Set([
   'detresse', 'panique', 'moral-bas', 'sante-physique', 'trouble-attention',
   'las-orientation', 'pression-famille', 'peur-echec', 'pourquoi-medecine',
+  // v3 — situations de vie sensibles : même garde-fou, toujours.
+  'colere', 'culpabilite', 'solitude', 'mal-du-pays', 'rupture-amoureuse',
+  'dispute-amis', 'deuil', 'harcelement', 'maladie-proche', 'anxiete-sociale',
+  'surmenage', 'cigarette-vape',
 ]);
 
 export interface ModeConfig {
@@ -122,6 +126,66 @@ export const MODES: Record<CoachMode, ModeConfig> = {
         'Réviser jusqu’à 2 h du matin, c’est verser tes points dans un seau percé et être fier de l’effort. INTERDIT. Nouvelle discipline : heure de coucher fixe défendue comme une position stratégique, lever régulier, lumière le matin. Le rythme d’abord — la mémoire suivra, c’est mécanique.',
         'Tes nuits pourries te coûtent plus que n’importe quelle impasse. On reprend le contrôle : lever à heure FIXE sept jours sur sept (c’est lui qui recale tout), pas de café après 15 h, le lit réservé au sommeil. Deux semaines de cette discipline et ton cerveau redevient une machine. Exécution.',
       ],
+      'addiction-ecrans': [
+        'Ton téléphone n’est pas ton ami, c’est un adversaire entraîné : des milliers d’ingénieurs travaillent chaque jour à te voler ton attention — et toi tu le poses à 20 cm de ton poly. Fini. Autre pièce, notifications rasées, applis voraces désinstallées en semaine. On ne négocie pas avec une machine à distraire : on la met dehors.',
+        'Fais le calcul qui fait mal : ton temps d’écran hebdomadaire, converti en unités de cours. C’est ton classement qui défile pendant que tu scrolles. La volonté ne gagnera pas ce combat — la FRICTION oui : téléphone exilé pendant les blocs, une fenêtre de consultation décidée par jour. Applique la fiche, à la lettre, dès la prochaine session.',
+        'Chaque déverrouillage te coûte des minutes de re-concentration que tes concurrents gardent. Tu veux la vraie détox ? Elle tient en trois ordres : autre pièce pendant le travail, gris à l’écran, réveil sans téléphone la première heure. Pas de méthode douce pour une machine qui ne joue pas doux. Exécute.',
+      ],
+      'jeux-video': [
+        'Les parties classées en année de concours ? Mauvais calcul, soldat. Un jeu qui exige des sessions d’une heure et te laisse énervé n’a rien à faire dans ta semaine de PASS. La règle : le jeu est une RÉCOMPENSE — après la journée validée, créneau borné, minuteur. Pas avant, pas à la place. Et si tu ne sais pas t’arrêter : console débranchée et rangée. Point.',
+        'Tu veux jouer ? Gagne-le. Journée de travail validée = créneau de jeu décidé, chrono en main. Journée sabotée = pas de manette. C’est simple, c’est carré, et c’est exactement comme ça que le jeu redevient un plaisir au lieu d’un remords. En attendant : la console ne dort pas dans la pièce de travail.',
+        'Le rang qui compte cette année ne s’affiche pas dans un jeu. Chaque heure de partie est une heure que quelqu’un d’autre passe sur les annales — et en janvier, vous serez sur la même liste. Cadre le jeu en récompense courte ou coupe-le jusqu’aux vacances : les serveurs t’attendront, le concours non.',
+      ],
+      'series-films': [
+        '« Un épisode » — on sait tous les deux comment ça finit. L’autoplay est un adversaire : coupe-le dans les réglages, MAINTENANT, ça prend trente secondes. Ensuite la règle : un épisode = une récompense après le socle du jour, décidée avant de lancer, écran fermé au générique. La saison se finira aux vacances. Ton année, elle, ne se rattrape pas en streaming.',
+        'Ta série ne te juge pas, moi si : trois épisodes un soir de semaine, c’est une session de biochimie donnée à une plateforme. Le deal du Sergent : épisode unique, en mangeant, autoplay coupé — et les séries à suspense au placard jusqu’à la prochaine coupure. Tu veux du feuilleton ? Ton classement en est un. Écris le prochain épisode.',
+        'Le binge est une défaite en pyjama : tu ne te reposes même pas, tu subis un algorithme. Reprends le commandement : décide AVANT de lancer (combien, jusqu’à quelle heure, quoi ensuite), et exécute ta décision au générique. Celui qui ne décide pas, l’écran décide pour lui. Pas toi. Plus maintenant.',
+      ],
+      'bonne-note': [
+        'Bien. C’est ce qu’on attendait — pas un exploit, une CONFIRMATION : ta méthode paye. Maintenant écoute l’ordre le plus dur : NE CHANGE RIEN. Ni le volume, ni le rythme, ni les méthodes. Le danger d’une bonne note s’appelle relâchement, et il rend les points deux fois plus vite qu’ils sont venus. Dix minutes de fierté, autorisées. Ensuite : la suite du programme.',
+        'Voilà. Tu vois ce qui arrive quand on exécute au lieu de discuter ? Grave cette leçon : note NOIR SUR BLANC ce qui a marché (méthodes, rythme, sommeil) — c’est ton plan de bataille, il doit survivre aux semaines molles. Et débusque les réponses chanceuses avec la Correction par cause : un soldat compte ses vraies munitions, pas ses coups de chance.',
+        'Bonne nouvelle acceptée. Mais un bon classement se DÉFEND — et il se défend en continuant exactement ce qui l’a construit, pendant que d’autres célèbrent trop longtemps. Ce soir : récompense décidée, une vraie. Demain matin : même heure, même poste, même exigence. Les meilleurs ne font pas des coups d’éclat, ils font des semaines identiques.',
+      ],
+      reveil: [
+        'Le snooze est une désertion de 9 minutes, répétée. On règle ça ce soir, pas demain matin : réveil À TRAVERS la pièce, affaires préparées, premier geste écrit sur un papier posé sur le poly ouvert. Au réveil tu n’as qu’un ordre : debout, lumière, eau. Le cerveau suit le corps — jamais l’inverse à 6 h 30.',
+        'La bataille du matin se gagne la veille au soir — celui qui improvise à 7 h a déjà perdu. Protocole : coucher à heure fixe, réveil hors de portée, et le Démarrage en 10 minutes préparé sur le bureau. Demain, tu ne te demandes pas si tu te lèves. Tu te lèves. La question n’existe plus.',
+        'Émerger à midi, c’est offrir ta meilleure tranche de cerveau à ton oreiller. On recale par le LEVER : heure fixe sept jours sur sept, même après une mauvaise nuit — c’est lui qui reprogramme tout le reste. Trois jours difficiles, puis la machine tourne. Tu as connu plus dur. Debout.',
+      ],
+      ennui: [
+        'L’ennui, c’est le luxe de ceux qui relisent. Toi tu vas passer en mode ACTIF et tu n’auras plus le temps de t’ennuyer : pré-test, pari sur ta note, chrono, rappels en duel contre toi-même. Le cours n’a pas à être divertissant — c’est un terrain d’entraînement, et un entraînement se gagne. Transforme la session en match. Maintenant.',
+        '« C’est chiant » n’est pas une information, c’est une excuse en uniforme. La vérité : la PASSIVITÉ est chiante — relire endort n’importe qui. Se tester, chronométrer, traquer ses erreurs : ça, ça réveille. Change de geste, pas de matière. Et rappelle-toi pourquoi tu es là : ce chapitre barbant soigne des gens au bout de la chaîne.',
+        'Tu veux de l’intérêt ? Fabrique-le : alterne deux matières par blocs de 30 minutes, mets un enjeu sur chaque session (pari, score, chrono), et traque le « pourquoi clinique » de chaque notion morne. L’ennui déteste les enjeux. Donne-lui-en un et regarde-le déguerpir. Au travail.',
+      ],
+      planning: [
+        'Tu veux un planning ? En voilà un, gratuit et incassable : chaque soir, TROIS unités écrites pour demain. Le matin : exécution, zéro renégociation. C’est tout. Les usines à planning multicolores sont des procrastinations en tenue de camouflage — pendant que tu colories des cases, d’autres font des rappels. Trois lignes, un papier. Ce soir.',
+        'Le meilleur plan est celui qui survit au contact du réel — et le réel, c’est la fatigue, les imprévus, les jours sans. Donc : un socle minimal NON NÉGOCIABLE chaque jour (Journée minimale), du travail en unités validables, et basta. Un plan simple exécuté écrase un plan parfait contemplé. Décide la veille, exécute le jour.',
+        'Règle de fer : on planifie en UNITÉS, jamais en heures. « 3 h d’anat » ne veut rien dire — « 2 rappels + 20 QCM analysés », ça se valide ou ça se rate, sans zone grise. La zone grise, c’est là où se cache la procrastination. Supprime-la de ton vocabulaire et de tes journées.',
+      ],
+      'combien-heures': [
+        'Mauvaise question, soldat. Le concours ne pointe pas tes heures — il teste ce que tu RESTITUES. 6 heures de blocs nets avec rappels battent 11 heures de présence molle, tous les jours de la semaine. Compte tes unités validées, pas ton temps de chaise. Et garde des nuits complètes : c’est une consigne, pas une option.',
+        'Ceux qui affichent « 12 h par jour » comptent leur téléphone, leurs pauses molles et leur relecture passive. Ne joue pas à ce concours-là — il ne rapporte rien. Ton tableau de bord : unités finies, rappels réussis, erreurs corrigées. Des chiffres qui classent. L’horloge, elle, n’a jamais classé personne.',
+        'Le bon volume, c’est le maximum que tu tiens TOUTE l’année sans casser — pour la plupart : 7 à 9 heures EFFECTIVES, découpées au cordeau, avec de vraies pauses et une vraie nuit. Le héros de septembre qui s’effondre en novembre perd contre le métronome qui aligne ses semaines. Sois le métronome.',
+      ],
+      'relecture-surlignage': [
+        'Repose ce stabilo. Surligner, c’est décorer — et le concours ne note pas la décoration. La relecture te donne une sensation de maîtrise ? C’est exactement le piège : reconnaître n’est PAS savoir. Nouvelle consigne, effective immédiatement : une lecture active, puis cours FERMÉ, et tu produis de mémoire. Ce qui ne sort pas n’était pas su. Voilà ta vraie note.',
+        'Compte tes deux dernières heures : combien de minutes les yeux sur le cours, combien à récupérer cours fermé ? Si c’est 90/10, tu t’entraînes à regarder — et l’épreuve te demandera de produire. Inverse le ratio, dès la prochaine session : 50/50 minimum. C’est inconfortable ? Parfait. C’est le poids qui muscle.',
+        'La troisième relecture est un somnifère avec bonne conscience. Interdite. À la place : feuille blanche, tu écris tout ce que tu sais, tu compares, tu répares les trous — et UNIQUEMENT les trous. La relecture devient un outil de vérification ciblée, plus jamais une méthode. C’est un ordre, et c’est surtout un service que je te rends.',
+      ],
+      fiches: [
+        'Recopier ton cours au propre : des heures de main, zéro mémoire — le travail préféré de ceux qui veulent avoir l’air sérieux sans se tester. Pas toi, pas cette année. Une fiche se GAGNE : cours fermé, tu écris le squelette de mémoire, PUIS tu vérifies et corriges en rouge. Ça, c’est de l’entraînement. Le reste, c’est de la calligraphie.',
+        'Le test de la fiche utile, sans appel : a-t-elle été produite de MÉMOIRE ? Oui → c’est un rappel actif avec un bonus papier, continue. Non → c’est une relecture déguisée qui t’a coûté ta soirée. Et le plan « je fiche tout d’abord, j’apprends ensuite » est une désertion organisée : à mi-semestre tu auras des fiches magnifiques et une mémoire vide.',
+        'Ton objectif n’est pas une belle fiche, c’est un cerveau qui restitue. Alors : format court (squelette + discriminants + TES erreurs), fabriqué cours fermé, corrigé en couleur, re-testé à J+3. Le moche qui travaille bat le beau qui rassure. Fais du moche efficace, et encadre tes points en janvier.',
+      ],
+      'arbitrage-soir': [
+        'Tu hésites depuis combien de temps ? Chaque minute de délibération est une minute de travail perdue — et un choix moyen exécuté ÉCRASE un choix parfait discuté. La règle, 60 secondes chrono : échéance proche ? elle gagne. Sinon : la matière la plus en retard sur son poids. Égalité ? Celle que tu fuis — c’est là que dorment tes points. Tranche. Fonce.',
+        'Le soir, ton cerveau fatigué est un mauvais stratège et un bon soldat : ne lui demande plus de choisir, demande-lui d’exécuter. Nouveau protocole : chaque soir, tu écris les 3 unités du lendemain. Fini les débats de 20 h 30 devant la pile de polys. La décision se prend la veille, à froid. Le jour, on obéit au papier.',
+        'Pendant que tu te demandes « anat ou biochimie », d’autres font l’un OU l’autre — et c’est tout ce qui compte : N’IMPORTE LEQUEL des deux te rapporte plus que l’hésitation. Applique la règle (échéance > rentabilité > évitement), écris l’unité exacte, lance le minuteur. Trente secondes de décision. Pas une de plus.',
+      ],
+      'vacances-repos': [
+        'Écoute bien, parce que ça va te surprendre venant de moi : le repos est un ORDRE. Une demi-journée de vraie coupure par semaine, décidée à l’avance, défendue comme une position. Pourquoi ? Parce qu’un soldat sans récupération tire de travers, et que ton cerveau consolide pendant la pause. Mais attention : une coupure DÉCIDÉE — pas une capitulation molle devant l’écran.',
+        'La culpabilité pendant le repos, c’est le pire des deux mondes : tu ne récupères pas ET tu ne travailles pas. Le Sergent ne tolère pas le gaspillage : décide ta coupure (jour, heure de reprise), profites-en à FOND, reprends à l’heure dite au garde-à-vous. Une pause exécutée avec discipline, c’est encore de l’entraînement.',
+        'Les vacances courtes, version efficace : la Journée minimale (30-60 minutes de rappels d’entretien — la chaîne reste intacte) puis déconnexion TOTALE le reste du temps. Ni plus de travail, ni zéro : les deux extrêmes sont des fautes. Tu reviens affûté pendant que les autres reviennent rouillés ou cramés. C’est ça, la stratégie.',
+      ],
     },
   },
 
@@ -201,6 +265,66 @@ export const MODES: Record<CoachMode, ModeConfig> = {
         'Le sommeil est ton allié le plus doux : il range, consolide et répare pendant que tu ne fais rien. Offre-lui un cadre : une heure de coucher régulière, une transition calme sans écran, et un carnet près du lit pour y déposer les pensées qui tournent. Déposées, elles laissent dormir. La nuit fera le reste.',
         'Si les nuits sont difficiles, sois patient·e — le sommeil ne s’ordonne pas, il s’invite. On prépare juste sa venue : lever à heure douce et régulière, lumière du jour le matin, pas de café l’après-midi, et le lit gardé pour dormir. Quelques jours de ce rythme et le corps retrouve son chemin. S’il ne le retrouve pas, un médecin saura t’aider — c’est fréquent et ça se soigne bien.',
         'Ce que tu apprends le jour s’installe la nuit — dormir EST réviser, au sens propre. Alors ce soir, pas de marchandage avec l’oreiller : une vraie nuit, choisie, assumée. Ton toi de demain matin te dira merci, et tes cours aussi.',
+      ],
+      'addiction-ecrans': [
+        'Sois doux·ce avec toi sur ce point : ces applis sont conçues par des milliers de personnes pour capter ton attention — perdre contre elles à mains nues n’est pas une faiblesse, c’est mathématique. Alors on ne lutte plus, on aménage : le téléphone va se reposer dans une autre pièce pendant que tu travailles, et toi tu retrouves un peu de silence. Vous vous retrouverez à la pause décidée — tout le monde y gagne.',
+        'Pas de culpabilité — de la mécanique : chaque notification est une petite main qui te tire par la manche, et on ne médite pas au milieu d’une foule. Offre-toi des plages de calme : notifications éteintes, écran en gris, une fenêtre de consultation choisie par jour. Tu verras vite que le monde continue très bien de tourner pendant que tu ne le regardes pas — et toi aussi.',
+        'Commence par observer, simplement, sans te juger : ton temps d’écran de la semaine, regardé en face. Puis choisis UNE seule chose à adoucir — souvent le réveil (la première heure sans téléphone change la couleur de toute la journée). Une habitude à la fois, tranquillement. La friction fait le travail, pas la volonté — c’est une très bonne nouvelle.',
+      ],
+      'jeux-video': [
+        'Le jeu n’est pas ton ennemi — c’est un plaisir qui a juste besoin d’un cadre pour rester un plaisir. La version apaisée : tu joues APRÈS le socle du jour, sur un créneau décidé, et tu ranges la manette sans drame quand c’est fini. Si une partie déborde, ce n’est pas un échec de caractère : c’est le signe qu’il faut un cadre plus simple — parfois, débrancher la console en semaine est le geste le plus doux.',
+        'Pose-toi la vraie question, calmement : après une session de jeu, tu te sens reposé·e ou vidé·e et coupable ? Si c’est la première réponse : garde-le, en récompense choisie — c’est précieux, un vrai plaisir. Si c’est la seconde : offre-toi une pause de jeu jusqu’aux vacances, sans dramatiser. Les serveurs seront encore là. Ta sérénité de janvier, elle, se construit maintenant.',
+        'Une chose à la fois, et chaque chose à sa place : le travail dans ses blocs, le jeu dans son créneau — et un petit sas entre les deux (quelques minutes de marche, une douche), parce que l’excitation d’une partie met du temps à redescendre. Cadré comme ça, le jeu devient ce qu’il devrait être : une respiration, pas une fuite.',
+      ],
+      'series-films': [
+        'Un épisode choisi, savouré, c’est du vrai repos — garde-le précieusement. Ce qu’on va adoucir, c’est l’enchaînement subi : coupe la lecture automatique (un petit réglage, un grand calme), et décide avant de lancer ce que tu regardes et jusqu’où. La différence entre se reposer et se faire aspirer tient dans cette petite décision d’avant.',
+        'Si une série te tient trop fort en ce moment, ce n’est pas grave — c’est juste une histoire bien racontée qui rencontre un cerveau fatigué. La solution douce : garde les intrigues à suspense pour les vacances, et pour les soirs de semaine, choisis des choses légères qui se terminent bien et se quittent facilement. Ton sommeil te dira merci, et tes révisions aussi.',
+        'Essaie ce petit rituel : l’épisode se regarde en mangeant ou après le socle du jour, écran fermé au générique, puis une transition calme vers la suite (quelques pas, un thé, les 3 unités de demain notées). Pas d’interdit — un cadre. Les histoires sont un beau refuge ; il faut juste en sortir doucement, pas s’y perdre.',
+      ],
+      'bonne-note': [
+        'Quelle joie — savoure-la pleinement, sans te presser vers la suite. Prends un vrai moment ce soir pour toi, et pour remercier la bonne personne : toi-même, ton travail régulier, tes choix. Puis, quand tu seras prêt·e, note quelque part ce qui a rendu ça possible — c’est ta recette personnelle, elle te réchauffera les semaines plus grises.',
+        'Bravo, sincèrement. Et accueille aussi ce que cette note t’apprend en douceur : ta méthode fonctionne. Il n’y a donc rien à révolutionner — juste à continuer, au même rythme tranquille. La tentation après une réussite est d’accélérer ou de relâcher ; les deux abîment ce que tu as construit. Continue comme l’eau : régulière, patiente.',
+        'C’est une belle étape — et tu as le droit d’en être fier·e sans te demander déjà si ça va durer. Ce soir : célébration douce, vraie coupure. Demain : la même petite routine qui t’a mené·e ici. Les réussites durables ne sont pas des sommets qu’on défend crispé — ce sont des chemins qu’on continue de marcher, un pas après l’autre.',
+      ],
+      reveil: [
+        'Les matins difficiles se soignent la veille, en douceur : une heure de coucher régulière, une transition calme avant de dormir, et le premier geste de demain déjà préparé sur le bureau — pour que le réveil n’ait aucune décision à prendre, juste un petit chemin à suivre. Lumière, un verre d’eau, et le corps emmène le reste.',
+        'Ne te juge pas sur tes réveils — ajuste le système, tranquillement. Le réveil posé de l’autre côté de la chambre (se lever pour l’éteindre, c’est déjà être levé·e), les volets entrouverts pour la lumière, et un début de journée que tu aimes un peu : une boisson chaude, dix minutes calmes, puis la première unité, toute petite. On se lève plus volontiers vers quelque chose de doux.',
+        'Si tout a glissé et que tu émerges à midi, pas de panique ni de reproche : on recale par le lever, à heure douce et régulière, quelques jours de suite — le sommeil suivra de lui-même. Et une matinée perdue ne condamne rien : la Journée minimale existe exactement pour repartir sans drame, là, maintenant, depuis où tu es.',
+      ],
+      ennui: [
+        'L’ennui est un message, pas une faute — il dit souvent : « je suis passif depuis trop longtemps ». Écoute-le avec curiosité : transforme la session en petit jeu calme (un pré-test, un pari doux avec toi-même, un chrono), et regarde l’ennui se dissoudre. Ce n’est pas la matière qui est terne — c’est le geste qui s’était endormi.',
+        'Quand tout semble gris, varie doucement : alterne deux matières par blocs courts, change de lieu, passe par le dessin ou la voix haute. Le cerveau aime la nouveauté à petites doses — offre-lui-en sans bouleverser tout le système. Et cherche l’histoire cachée de la notion barbante : ce canal ionique soigne quelqu’un, quelque part, dans quelques années. Ça change son visage.',
+        'Et si l’ennui s’étend sur tout depuis des semaines, écoute-le plus attentivement : il porte parfois un habit d’ennui sur une fatigue ou un moral qui se tait. Une vraie coupure, du sommeil, quelque chose qui te fait plaisir — puis on regarde si les cours ont retrouvé des couleurs. Si non, on en reparle, toi et moi, ou avec quelqu’un de vrai.',
+      ],
+      planning: [
+        'On va faire simple et respirable : pas d’architecture de planning qui s’effondre au premier imprévu — juste un petit socle quotidien que tu peux tenir même les mauvais jours (la Journée minimale), et trois unités notées la veille au soir. C’est peu, et c’est exactement pour ça que ça tient toute une année. La régularité douce bat les grands plans.',
+        'Un bon planning ressemble à une respiration : des blocs de travail, des pauses, des repas à peu près fixes, une vraie coupure quelque part. Rien de plus sophistiqué. Planifie en unités toutes simples (« un rappel d’anat, 20 QCM ») plutôt qu’en heures — les unités se terminent et font du bien à cocher ; les heures se subissent et pèsent.',
+        'Si l’organisation t’angoisse, c’est peut-être qu’elle essaie d’en faire trop : un planning n’a pas à contenir ta réussite entière, juste ta prochaine journée. Ce soir, trois lignes sur un papier pour demain. Demain soir, pareil. Le reste — la semaine, le semestre, le concours — se construira tout seul, une journée posée après l’autre.',
+      ],
+      'combien-heures': [
+        'Douce vérité : il n’y a pas de nombre magique, et courir après celui des autres épuise pour rien. Ce qui compte : des heures EFFECTIVES et paisibles — des blocs où tu es vraiment là, des pauses où tu récupères vraiment, et une nuit complète qui grave le tout. Pour la plupart, ça fait 7 à 9 heures bien vécues. Au-delà, on remplit des chaises, pas des mémoires.',
+        'Remplace la question « combien d’heures » par « qu’est-ce que j’ai validé aujourd’hui ». Trois rappels réussis, une série de QCM analysée, un schéma refait — voilà une journée pleine, quelle que soit l’horloge. Compter en unités apaise énormément : on sait quand c’est fini, on peut poser le cartable l’esprit tranquille. C’est ça, une bonne journée de travail.',
+        'Et garde une heure vraiment à toi chaque jour — marche, musique, rien. Ce n’est pas du temps volé au concours : c’est elle qui rend toutes les autres heures tenables sur dix mois. Les années réussies ne sont pas les plus remplies — ce sont les plus régulières. Un rythme que tu peux aimer un peu, tu peux le tenir longtemps.',
+      ],
+      'relecture-surlignage': [
+        'Je comprends l’attrait de la relecture : c’est doux, fluide, rassurant. Le souci, c’est que cette fluidité est un trompe-l’œil — reconnaître un cours n’est pas savoir le produire. On va garder la douceur et changer le geste : lis une fois tranquillement, puis ferme, et écris ce qui vient, sans pression. Ce qui manque n’est pas un échec : c’est la carte exacte de quoi reprendre.',
+        'Le surligneur peut rester — on change juste son rôle : il ne décore plus la première lecture, il marque ce qui a résisté à ton rappel. D’abord tu récupères de mémoire, ensuite tu rouvres et tu surlignes uniquement les trous. Même geste, sens inversé, rentabilité multipliée. Et la relecture devient une vérification ciblée, courte et sereine.',
+        'Vas-y progressivement, sans tout bousculer : sur ta prochaine session, remplace UNE relecture par UN rappel de mémoire — juste un. Constate ce que ça change (c’est un peu plus effortful, et beaucoup plus durable). Puis étends doucement, session après session. Les grandes transformations tiennent mieux quand elles commencent petites.',
+      ],
+      fiches: [
+        'Si faire des fiches t’apaise, gardons ce qui apaise — et réparons ce qui ne sert pas : une fiche recopiée calligraphiée est une relecture qui a pris ton temps. La version qui nourrit vraiment : cours fermé, tu écris le squelette de mémoire (même imparfait, surtout imparfait), puis tu corriges en couleur. C’est un moment calme ET un vrai entraînement — le meilleur des deux mondes.',
+        'Une pensée douce à garder : ta fiche n’a pas besoin d’être belle, elle a besoin d’être née de ta mémoire. Le brouillon moche produit cours fermé muscle plus que la plus jolie fiche recopiée. Autorise-toi le moche qui travaille — et garde peut-être UNE belle fiche par chapitre, courte, faite en dernier, comme une récompense de synthèse.',
+        'Et libère-toi du projet « d’abord tout ficher, ensuite apprendre » — il pèse sur les épaules et repousse sans fin le vrai travail. Inverse tranquillement : apprends une unité (rappel, correction), PUIS note l’essentiel qui en reste — squelette, discriminants, tes erreurs. La fiche devient une trace de ton apprentissage, pas une dette avant lui.',
+      ],
+      'arbitrage-soir': [
+        'L’hésitation du soir fatigue plus que le travail lui-même — alors on va la raccourcir avec douceur : échéance proche ? elle passe devant. Sinon, la matière la plus en retard sur son importance. Et si tout se vaut, celle que tu évites doucement depuis des jours. Une minute de décision, pas plus — puis tu poses le choix et tu n’y reviens pas. Choisir, c’est aussi se reposer.',
+        'Le plus apaisant, c’est de ne plus choisir le soir du tout : chaque veille, note les trois unités du lendemain, tranquillement, quand la tête est encore claire. Le lendemain soir, il n’y a plus de débat — juste un petit chemin déjà tracé à suivre. La fatigue exécute très bien ; c’est décider qu’elle fait mal. Alors décidons en avance.',
+        'Et rappelle-toi : entre deux matières raisonnables, il n’y a pas de mauvais choix — il n’y a que l’hésitation qui coûte. Ce soir, n’importe laquelle des deux, travaillée calmement une heure, est une victoire. Prends celle qui te pèse le moins à lancer, commence tout petit, et laisse la session t’emporter. Le mouvement résout ce que la réflexion retourne.',
+      ],
+      'vacances-repos': [
+        'Le repos n’est pas une récompense à mériter — c’est un des piliers du système, au même titre que les rappels et le sommeil. Une demi-journée de vraie coupure par semaine, choisie et savourée sans culpabilité : c’est elle qui consolide ta mémoire, recharge ta motivation, et rend les dix mois tenables. Prends-la comme on prend un médicament : régulièrement, sérieusement.',
+        'Culpabiliser pendant la pause, c’est la perdre deux fois — alors on va l’apaiser : décide ta coupure à l’avance (le moment, la durée, l’heure de reprise), écris-la comme un rendez-vous, et honore-la pleinement. Une pause décidée n’est jamais du temps volé. C’est du temps investi dans la personne qui fera tout le reste.',
+        'Pour les vacances courtes, la formule douce : un tout petit entretien quotidien (30-60 minutes de rappels légers, pour que la chaîne reste tiède) et une vraie déconnexion le reste du temps — des gens, de l’air, du sommeil, des choses que tu aimes. Tu reviendras reposé·e SANS avoir perdu le fil. C’est exactement ce qu’une année longue demande.',
       ],
     },
   },

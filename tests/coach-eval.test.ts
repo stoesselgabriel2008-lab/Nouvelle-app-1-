@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { respond, _resetCoachForTests } from '../src/coach/engine';
-import { INTENTS } from '../src/coach/kb';
+import { respond, ALL_INTENTS, _resetCoachForTests } from '../src/coach/engine';
 import {
   CONCEPTS,
   CONCEPT_DEFAULT_INTENT,
@@ -246,8 +245,161 @@ const EVAL: [string, string][] = [
   ['ca va et toi ?', 'salut'],
 ];
 
+/** v3 : situations de vie, couche savoir, argot SMS ultra-court. */
+const EVAL_V3: [string, string][] = [
+  // ------------------------------------------------------------ émotions
+  ['je suis trop énervé là', 'colere'],
+  ['jai trop la rage', 'colere'],
+  ['ca me met hors de moi', 'colere'],
+  ['jsuis vener', 'colere'],
+  ['je culpabilise de pas bosser assez', 'culpabilite'],
+  ['je m’en veux tellement', 'culpabilite'],
+  ['jai honte de moi', 'culpabilite'],
+  ['je me sens seul dans cette ville', 'solitude'],
+  ['personne à qui parler ce soir', 'solitude'],
+  ['besoin de parler', 'solitude'],
+  ['ma famille me manque', 'mal-du-pays'],
+  ['jai le mal du pays', 'mal-du-pays'],
+  ['loin de chez moi c’est dur', 'mal-du-pays'],
+  ['mon copain m’a quitté', 'rupture-amoureuse'],
+  ['je viens de vivre une rupture', 'rupture-amoureuse'],
+  ['elle m’a largué hier', 'rupture-amoureuse'],
+  ['je me suis disputé avec ma meilleure amie', 'dispute-amis'],
+  ['grosse embrouille avec mon coloc', 'dispute-amis'],
+  ['je suis en froid avec mes potes', 'dispute-amis'],
+  ['mon grand-père est décédé', 'deuil'],
+  ['jai perdu ma grand-mère la semaine dernière', 'deuil'],
+  ['je suis en deuil', 'deuil'],
+  ['on se moque de moi à la fac', 'harcelement'],
+  ['je me fais harceler', 'harcelement'],
+  ['ma mère est malade c’est grave', 'maladie-proche'],
+  ['mon père est à l’hôpital', 'maladie-proche'],
+  ['j’ose pas poser de question au prof', 'anxiete-sociale'],
+  ['je suis trop timide pour aller au tutorat', 'anxiete-sociale'],
+  ['peur de déranger avec mes questions', 'anxiete-sociale'],
+  ['je travaille trop je crois', 'surmenage'],
+  ['je fais que bosser sans m’arrêter', 'surmenage'],
+  ['aucun jour off depuis un mois', 'surmenage'],
+  ['au bord du burn out', 'surmenage'],
+  ['j’arrive pas à arrêter de fumer', 'cigarette-vape'],
+  ['je fume trop en ce moment', 'cigarette-vape'],
+  ['accro à la vape', 'cigarette-vape'],
+  ['g trop le seum', 'moral-bas'],
+  // ------------------------------------------------------- bonnes nouvelles
+  ['jai eu une bonne note enfin', 'bonne-note'],
+  ['jai cartonné à la colle', 'bonne-note'],
+  ['je remonte au classement !', 'bonne-note'],
+  ['trop fière de moi aujourd’hui', 'bonne-note'],
+  // ------------------------------------------------------------ habitudes
+  ['je suis accro à mon téléphone', 'addiction-ecrans'],
+  ['mon temps d’écran est catastrophique', 'addiction-ecrans'],
+  ['je scrolle toute la journée', 'addiction-ecrans'],
+  ['les jeux vidéo me bouffent mes soirées', 'jeux-video'],
+  ['jarrive pas à lâcher la console', 'jeux-video'],
+  ['encore un épisode et je bosse', 'series-films'],
+  ['je binge des séries au lieu de réviser', 'series-films'],
+  ['la méditation ça marche vraiment ?', 'meditation'],
+  ['des exercices de respiration pour me calmer', 'meditation'],
+  ['je peux faire une sieste ?', 'sieste'],
+  ['sieste de combien de temps max', 'sieste'],
+  ['il fait trop chaud pour bosser', 'canicule'],
+  ['canicule impossible de réviser', 'canicule'],
+  // ------------------------------------------------------------- études
+  ['on révise ensemble avec un pote c’est bien ?', 'groupe-travail'],
+  ['travailler en groupe ou seul ?', 'groupe-travail'],
+  ['je cherche un binôme', 'groupe-travail'],
+  ['ça vaut le coup un ipad pour la pass ?', 'materiel-etude'],
+  ['papier ou ipad ?', 'materiel-etude'],
+  ['des conseils pour le jour du concours', 'jour-colle'],
+  ['comment gérer le matin de l’épreuve', 'jour-colle'],
+  ['je ressasse mes réponses depuis la sortie', 'apres-colle'],
+  ['l’attente des résultats me ronge', 'apres-colle'],
+  ['je commence la pass des conseils ?', 'rentree'],
+  ['bien démarrer l’année', 'rentree'],
+  ['amphi ou replay ?', 'amphi-ou-replay'],
+  ['je vais plus en cours c’est grave ?', 'amphi-ou-replay'],
+  ['je veux changer de méthode de travail', 'changer-methode'],
+  ['ma méthode ne marche pas', 'changer-methode'],
+  ['combien de places en médecine cette année ?', 'numerus-places'],
+  ['le taux de réussite me fait peur', 'numerus-places'],
+  ['médecine ou kiné je sais pas', 'autres-filieres'],
+  ['hésiter entre les filières c’est normal ?', 'autres-filieres'],
+  ['jenregistre mes cours au dictaphone', 'dictaphone-audio'],
+  ['réécouter le cours ça sert ?', 'dictaphone-audio'],
+  // ------------------------------------------------------------ méta Axel
+  ['tu as quel âge ?', 'axel-perso'],
+  ['parle moi de toi', 'axel-perso'],
+  ['cherche sur internet la réponse', 'hors-champ'],
+  ['mets une alarme à 7h', 'hors-champ'],
+  ['quelle heure il est ?', 'hors-champ'],
+  ['tu te trompes c’est faux', 'correction-axel'],
+  ['t’es sûr de ça ?', 'correction-axel'],
+  // ------------------------------------------------------ couche savoir
+  ['pomodoro combien de temps ?', 'k-duree-pomodoro'],
+  ['durée d’un pomodoro ?', 'k-duree-pomodoro'],
+  ['durée des pauses entre les blocs ?', 'k-duree-pause'],
+  ['quels intervalles pour la répétition espacée', 'k-intervalles'],
+  ['quand réviser un cours pour le retenir', 'k-intervalles'],
+  ['tous les combien je revois mes cours', 'k-intervalles'],
+  ['combien de fois revoir un cours pour le retenir', 'k-nombre-repetitions'],
+  ['combien d’heures de sommeil il faut', 'k-heures-sommeil'],
+  ['6h de sommeil ça suffit ?', 'k-heures-sommeil'],
+  ['pourquoi le sommeil est important pour la mémoire', 'k-pourquoi-sommeil'],
+  ['quand se tester après avoir appris', 'k-quand-se-tester'],
+  ['c’est quoi le testing effect', 'k-testing-effect'],
+  ['pourquoi le rappel actif marche', 'k-testing-effect'],
+  ['c’est quoi la courbe de l’oubli', 'k-courbe-oubli'],
+  ['pourquoi on oublie aussi vite', 'k-courbe-oubli'],
+  ['c’est quoi la charge cognitive', 'k-charge-cognitive'],
+  ['c’est quoi le discriminant roi', 'k-discriminant'],
+  ['c’est quoi une unité de travail', 'k-unite-travail'],
+  ['c’est quoi le mode dégradé', 'k-mode-degrade'],
+  ['c’est quoi les causes d’erreur K C T L', 'k-codes-erreurs'],
+  ['la règle 20 20 20 c’est quoi', 'k-regle-20-20-20'],
+  ['différence entre rappel actif et répétition espacée', 'k-diff-rappel-espacee'],
+  ['différence entre feuille blanche et blurting', 'k-diff-feuille-blurting'],
+  ['différence entre mind map et carte conceptuelle', 'k-diff-mindmap-conceptuelle'],
+  ['combien de cartes par jour sur anki', 'k-cartes-par-jour'],
+  ['c’est quoi fsrs', 'k-fsrs'],
+  ['le palais mental ça marche vraiment ?', 'k-palais-quand'],
+  ['comment utiliser les annales', 'k-annales-comment'],
+  ['réviser le matin ou le soir ?', 'k-matin-ou-soir'],
+  ['réviser avant de dormir c’est bien ?', 'k-avant-dormir'],
+  ['bosser le week-end comment l’organiser', 'k-week-end'],
+  ['la lecture rapide ça marche ?', 'k-lecture-rapide'],
+  ['réviser en marchant ?', 'k-marcher-reviser'],
+  ['réciter à voix haute ça marche ?', 'k-voix-haute'],
+  ['combien de simulations par semaine', 'k-simulation-frequence'],
+  ['combien de méthodes dans l’app', 'k-combien-methodes'],
+  ['tes méthodes sont basées sur quoi ?', 'k-source-corpus'],
+  ['c’est prouvé scientifiquement ?', 'k-source-corpus'],
+  ['c’est quoi l’algorithme universel', 'k-algorithme'],
+  ['quels sont les mythes d’apprentissage', 'k-mythes'],
+  ['c’est quoi la matrice des méthodes', 'k-matrice'],
+  // ------------------------------------------- argot SMS ultra-court (v3)
+  ['g pas compris le cours', 'comprends-rien'],
+  ['c chiant la biochimie', 'ennui'],
+  ['jgalere en anat', 'comprends-rien'],
+  ['pkoi je retiens rien', 'ca-rentre-pas'],
+  ['jdors mal en ce moment', 'sommeil'],
+  ['jstresse pour la colle', 'stress'],
+  ['koi bosser ce soir', 'arbitrage-soir'],
+  ['jai la flemme ojd', 'procrastination'],
+  ['cimer axel', 'merci'],
+  ['nrv contre ce cours', 'colere'],
+  // ------------------------------------------------- pièges et frontières
+  ['j’ai trop bu hier soir', 'soiree-alcool'],
+  ['pas de place à la bu', 'lieu-travail'],
+  ['je culpabilise quand je me repose', 'vacances-repos'],
+  ['trou noir pendant la colle', 'trou-noir-examen'],
+  ['je suis mort de fatigue', 'fatigue'],
+  ['jai perdu ma journée', 'procrastination'],
+  ['largué par le cours de biophy', 'comprends-rien'],
+  ['largué par ma copine', 'rupture-amoureuse'],
+];
+
 describe('table d’évaluation : compréhension large', () => {
-  for (const [msg, expected] of EVAL) {
+  for (const [msg, expected] of [...EVAL, ...EVAL_V3]) {
     it(`« ${msg} » → ${expected}`, () => {
       _resetCoachForTests();
       expect(respond(msg, seededRng(3)).intent).toBe(expected);
@@ -369,7 +521,7 @@ describe('intégrité du vocabulaire', () => {
   });
 
   it('les abonnements et déclencheurs étendus pointent vers des intentions réelles', () => {
-    const ids = new Set(INTENTS.map((i) => i.id));
+    const ids = new Set(ALL_INTENTS.map((i) => i.id));
     for (const id of Object.keys(INTENT_CONCEPTS)) expect(ids.has(id), id).toBe(true);
     for (const id of Object.keys(EXTRA_TRIGGERS)) expect(ids.has(id), id).toBe(true);
     for (const [c, target] of Object.entries(CONCEPT_DEFAULT_INTENT)) {
@@ -400,16 +552,16 @@ describe('intégrité de la base de connaissances', () => {
   ]);
 
   it('ids uniques, au moins 3 variantes partout, base large (≥ 50 situations)', () => {
-    const ids = new Set(INTENTS.map((i) => i.id));
-    expect(ids.size).toBe(INTENTS.length);
-    expect(INTENTS.length).toBeGreaterThanOrEqual(50);
-    for (const i of INTENTS) {
+    const ids = new Set(ALL_INTENTS.map((i) => i.id));
+    expect(ids.size).toBe(ALL_INTENTS.length);
+    expect(ALL_INTENTS.length).toBeGreaterThanOrEqual(130);
+    for (const i of ALL_INTENTS) {
       expect(i.variants.length, i.id).toBeGreaterThanOrEqual(3);
     }
   });
 
   it('tous les liens pointent vers des routes réelles', () => {
-    for (const i of INTENTS) {
+    for (const i of ALL_INTENTS) {
       for (const l of i.links ?? []) {
         expect(routes.has(l.to), `${i.id} → ${l.to}`).toBe(true);
       }
@@ -417,7 +569,7 @@ describe('intégrité de la base de connaissances', () => {
   });
 
   it('tous les mots-clés sont déjà normalisés (minuscules, sans accents)', () => {
-    for (const i of INTENTS) {
+    for (const i of ALL_INTENTS) {
       for (const kw of [...i.strong, ...(i.weak ?? [])]) {
         expect(kw, `${i.id} : « ${kw} »`).toBe(
           foldPhrase(kw).replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(),
@@ -428,7 +580,7 @@ describe('intégrité de la base de connaissances', () => {
 
   it('les textes des variantes sont substantiels et uniques', () => {
     const seen = new Set<string>();
-    for (const i of INTENTS) {
+    for (const i of ALL_INTENTS) {
       for (const v of i.variants) {
         expect(v.length, i.id).toBeGreaterThan(45);
         expect(seen.has(v), `doublon dans ${i.id}`).toBe(false);

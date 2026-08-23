@@ -1,4 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { useRef } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { haptic } from '../lib/haptics';
 import { Icon, type IconName } from './Icon';
 
 interface NavEntry {
@@ -25,13 +27,65 @@ const ENTRIES: NavEntry[] = [
 /**
  * iPhone : capsule flottante en verre (4 onglets) + bouton Recherche
  * circulaire séparé — le pattern actuel des tab bars iOS.
+ * v3 : une pastille coulisse sous l'onglet actif, et un glissement du doigt
+ * SUR la capsule change d'onglet (gauche/droite), comme sur Safari iOS.
  */
 export function TabBar() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const touch = useRef<{ x: number; y: number } | null>(null);
+
+  const active = ENTRIES.findIndex((e) =>
+    e.end === true ? pathname === e.to : pathname.startsWith(e.to),
+  );
+
+  const swipeTo = (delta: number) => {
+    const from = active === -1 ? 0 : active;
+    const next = Math.min(ENTRIES.length - 1, Math.max(0, from + delta));
+    if (next === active) return;
+    haptic(6);
+    void navigate(ENTRIES[next]!.to, { viewTransition: true });
+  };
+
   return (
     <nav className="tabbar-wrap" aria-label="Navigation principale">
-      <div className="tabbar">
+      <div
+        className="tabbar"
+        onTouchStart={(e) => {
+          const t = e.touches[0];
+          touch.current = t !== undefined ? { x: t.clientX, y: t.clientY } : null;
+        }}
+        onTouchEnd={(e) => {
+          const start = touch.current;
+          const t = e.changedTouches[0];
+          touch.current = null;
+          if (start === null || t === undefined) return;
+          const dx = t.clientX - start.x;
+          const dy = t.clientY - start.y;
+          if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            e.preventDefault();
+            swipeTo(dx < 0 ? 1 : -1);
+          }
+        }}
+      >
+        <span
+          className="tab-ind"
+          aria-hidden="true"
+          style={
+            active === -1
+              ? { opacity: 0 }
+              : { transform: `translateX(${active * 100}%)`, opacity: 1 }
+          }
+        />
         {ENTRIES.map((e) => (
-          <NavLink key={e.to} to={e.to} end={e.end} className="tab-item" viewTransition>
+          <NavLink
+            key={e.to}
+            to={e.to}
+            end={e.end}
+            className="tab-item"
+            viewTransition
+            onClick={() => haptic(5)}
+          >
             <Icon name={e.icon} size={23} />
             <span>{e.tabLabel ?? e.label}</span>
           </NavLink>
