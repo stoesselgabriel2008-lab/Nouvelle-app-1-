@@ -125,6 +125,10 @@ export function Sidebar() {
         <Icon name="heart" size={21} />
         <span>Axel, ton coach</span>
       </NavLink>
+      <NavLink to="/motivation" className="side-item" viewTransition>
+        <Icon name="bolt" size={21} />
+        <span>Déclic</span>
+      </NavLink>
       <NavLink to="/citations" className="side-item" viewTransition>
         <Icon name="expand" size={21} />
         <span>Citations</span>

@@ -6,7 +6,7 @@
  * en tête de CHANGELOG (phrases courtes, orientées utilisateur).
  */
 
-export const APP_VERSION = '3.0.1';
+export const APP_VERSION = '3.1.0';
 
 export interface ChangelogEntry {
   version: string;
@@ -15,6 +15,18 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: '3.1.0',
+    date: '2026-08',
+    items: [
+      'Nouveau pilier : le mode Déclic. Fini les citations qui flottent — tu choisis OÙ tu en es (pas commencé, en train de traîner, zéro envie, colle ratée, fatigué, doute, matin, soir, veille de colle, bien lancé, reprise, besoin de sens…) et on te parle POUR DE VRAI, plein écran.',
+      'Deux tons au choix, mémorisés : Franc (sec, direct — la voix qui te remet au travail) et Doux (bienveillant). Près de 60 discours écrits un par un, plus une banque de 110 punchlines sèches (« La claque du moment », avec « Une autre »).',
+      'Chaque discours se termine en acte : le contrat de 10 minutes se lance SUR l’écran — compte à rebours plein cadre, et à la sonnerie : « Encore 10 minutes » pour enchaîner. La fiche méthode liée est toujours à un geste.',
+      '« Ta raison, tes mots » : écris une fois pourquoi tu fais tout ça — les discours te la remettent sous les yeux au bon moment. 100 % local, comme tout le reste.',
+      'Garde-fou : la situation « j’ai envie de tout lâcher » est toujours en voix douce, sans minuteur ni pression — elle oriente vers de vraies personnes et le protocole Détresse.',
+      'Le Déclic est partout : carte dédiée sur l’accueil, entrée sur la page Citations, dans la barre latérale, et Axel te l’ouvre quand tu lui demandes de te motiver.',
+    ],
+  },
   {
     version: '3.0.1',
     date: '2026-08',

@@ -96,6 +96,19 @@ export function ForMePage() {
         <Icon name="chevronRight" size={18} />
       </Link>
 
+      <Link to="/motivation" className="declic-hero" viewTransition>
+        <span className="declic-hero-icon" aria-hidden="true">
+          <Icon name="bolt" size={24} strokeWidth={2} />
+        </span>
+        <span className="declic-hero-body">
+          <span className="declic-hero-title">Déclic</span>
+          <span className="declic-hero-sub">
+            Tu traînes ? Choisis ta situation — on te parle franchement, tu lances 10 minutes.
+          </span>
+        </span>
+        <Icon name="chevronRight" size={18} />
+      </Link>
+
       <div className="chip-row">
         {SHORTCUTS.map((s) => (
           <Link key={s.id} to={s.to} className="chip chip--tint" viewTransition>

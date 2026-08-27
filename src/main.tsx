@@ -16,6 +16,8 @@ import { ReferencePage } from './pages/ReferencePage';
 import { CitationsPage } from './pages/CitationsPage';
 import { QuoteZenPage } from './pages/QuoteZenPage';
 import { CoachPage } from './pages/CoachPage';
+import { MotivationPage } from './pages/MotivationPage';
+import { TalkPage } from './pages/TalkPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import './styles/tokens.css';
 import './styles/base.css';
@@ -51,6 +53,8 @@ const router = createHashRouter([
       { path: 'citations', element: <CitationsPage /> },
       { path: 'citations/plein-ecran', element: <QuoteZenPage /> },
       { path: 'coach', element: <CoachPage /> },
+      { path: 'motivation', element: <MotivationPage /> },
+      { path: 'motivation/declic', element: <TalkPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

@@ -87,6 +87,13 @@ export function CitationsPage() {
           zéro fausse citation : les apocryphes connus sont bannis.
         </p>
 
+        <Link to="/motivation" className="zen-launch zen-launch--declic" viewTransition>
+          <span>
+            <span className="zen-launch-title">Mode Déclic</span>
+            <span className="zen-launch-sub">Choisis ta situation — on te parle, tu te lances.</span>
+          </span>
+          <Icon name="bolt" size={22} />
+        </Link>
         <Link to="/citations/plein-ecran" className="zen-launch" viewTransition>
           <span>
             <span className="zen-launch-title">Mode plein écran</span>

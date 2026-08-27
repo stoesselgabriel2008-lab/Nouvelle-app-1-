@@ -118,6 +118,7 @@ export const INTENTS: Intent[] = [
     links: [
       { label: 'Démarrage en 10 minutes', to: '/methode/demarrage-10-minutes' },
       { label: 'SOS Je n’arrive pas à commencer', to: '/sos/commencer' },
+      { label: 'Le mode Déclic (la claque en direct)', to: '/motivation' },
     ],
     variants: [
       'On ne va pas attendre la motivation — elle arrive toujours APRÈS le démarrage, jamais avant. Contrat minimal : 10 minutes, une seule unité de cours, minuteur lancé. Après, tu décides. Ouvre le Démarrage en 10 minutes ci-dessous.',
@@ -1277,7 +1278,10 @@ export const INTENTS: Intent[] = [
       'donne moi de la force', 'remonte le moral', 'phrase du jour',
     ],
     mood: 'cheer',
-    links: [{ label: 'Toutes les citations en plein écran', to: '/citations/plein-ecran' }],
+    links: [
+      { label: 'Le mode Déclic — il te parle franchement', to: '/motivation' },
+      { label: 'Toutes les citations en plein écran', to: '/citations/plein-ecran' },
+    ],
     variants: [
       '{line}\n\nMaintenant, du concret : choisis UNE unité de cours et lance 10 minutes. La motivation suit l’action, jamais l’inverse.',
       '{line}\n\nGarde ça en tête — puis transforme-le en geste : une page, un rappel de mémoire, maintenant.',

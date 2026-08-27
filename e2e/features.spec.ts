@@ -479,6 +479,53 @@ test.describe('v3 : glisse premium et coach encyclopédique', () => {
   });
 });
 
+test.describe('v3.1 : mode Déclic', () => {
+  test('accueil → hub : situations, ton Franc par défaut, punchline', async ({ page }) => {
+    await page.goto('#/');
+    await page.locator('.declic-hero').click();
+    await expect(page).toHaveURL(/motivation/);
+    await expect(page.locator('.punch-text')).not.toBeEmpty();
+    await expect(page.getByRole('tab', { name: 'Franc' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await expect(page.locator('.declic-card')).toHaveCount(13);
+  });
+
+  test('discours franc → contrat de 10 minutes lancé sur place', async ({ page }) => {
+    await page.goto('#/motivation/declic?s=pas-commence');
+    const paras = page.locator('.talk-text');
+    await expect(paras.first()).toBeVisible();
+    expect(((await paras.allTextContents()).join(' ')).length).toBeGreaterThan(300);
+    await page.getByRole('button', { name: /Je m’y mets/ }).click();
+    await expect(page.locator('.talk-timer')).toHaveText(/09:5\d/, { timeout: 5_000 });
+    await page.getByRole('button', { name: 'Arrêter le contrat' }).click();
+    await expect(page.locator('.talk-cta')).toBeVisible();
+  });
+
+  test('situation sensible : voix douce, protocole Détresse, pas de minuteur', async ({
+    page,
+  }) => {
+    await page.goto('#/motivation/declic?s=envie-de-tout-lacher');
+    await expect(page.locator('.talk')).toHaveClass(/talk--doux/);
+    await expect(page.getByRole('button', { name: /Je m’y mets/ })).toHaveCount(0);
+    const cta = page.locator('.talk-cta');
+    await expect(cta).toContainText('Détresse');
+    await cta.click();
+    await expect(page).toHaveURL(/sos\/detresse/);
+  });
+
+  test('« ta raison » : écrite, resservie dans le discours', async ({ page }) => {
+    await page.goto('#/motivation');
+    await page.getByRole('button', { name: 'Écrire ma raison' }).click();
+    await page.getByRole('textbox', { name: 'Ta raison' }).fill('Je veux soigner des enfants');
+    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await expect(page.locator('.why-text')).toContainText('soigner des enfants');
+    await page.goto('#/motivation/declic?s=pas-envie');
+    await expect(page.locator('.talk-why-text')).toContainText('soigner des enfants');
+  });
+});
+
 test.describe('v2.0 : ambiances du plein écran', () => {
   test('choisir « Discipline » filtre le flux et se retient', async ({ page }) => {
     await page.goto('#/citations/plein-ecran');

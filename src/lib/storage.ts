@@ -56,6 +56,29 @@ export function setCoachMode(mode: StoredCoachMode): void {
   write('coachMode', mode);
 }
 
+// ------------------------------------------------------ Mode Déclic (v3.1)
+
+export type TalkTonePref = 'franc' | 'doux';
+
+/** Ton préféré des discours du Déclic (franc par défaut — c'est le concept). */
+export function getTalkTone(): TalkTonePref {
+  const v = read<string>('talkTone', 'franc');
+  return v === 'doux' ? 'doux' : 'franc';
+}
+
+export function setTalkTone(tone: TalkTonePref): void {
+  write('talkTone', tone);
+}
+
+/** « Ta raison, tes mots » — resservie dans les discours. Vide = pas définie. */
+export function getWhy(): string {
+  return read<string>('why', '');
+}
+
+export function setWhy(text: string): void {
+  write('why', text.trim().slice(0, 220));
+}
+
 // --------------------------------------------- Ambiance du flux (plein écran)
 
 export function getZenFilter(): string {

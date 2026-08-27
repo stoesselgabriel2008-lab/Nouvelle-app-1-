@@ -113,7 +113,7 @@ test('la navigation principale est visible et complète', async ({ page }) => {
   } else {
     await expect(page.locator('.sidebar')).toBeVisible();
     // 5 destinations + accès secondaires (Axel, Citations).
-    await expect(page.locator('.side-item')).toHaveCount(7);
+    await expect(page.locator('.side-item')).toHaveCount(8);
     await expect(page.locator('.sidebar')).toContainText('Axel, ton coach');
   }
 });

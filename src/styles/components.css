@@ -2862,3 +2862,468 @@ body:has(.coach-input input:focus) .composer {
     animation: quote-in 0.2s ease both;
   }
 }
+
+/* ================================================== Mode Déclic (v3.1) */
+
+/* --- Carte d'entrée sur l'accueil --- */
+.declic-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-xl);
+  background: linear-gradient(135deg, #b93a3a 0%, #7c2430 100%);
+  color: #fff7f4;
+  box-shadow: 0 10px 26px rgba(150, 45, 45, 0.28);
+  transition: transform 0.12s ease;
+}
+
+.declic-hero:active {
+  transform: scale(0.985);
+}
+
+.declic-hero-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.declic-hero-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.declic-hero-title {
+  font-size: var(--fs-headline);
+  font-weight: 750;
+}
+
+.declic-hero-sub {
+  font-size: var(--fs-footnote);
+  color: rgba(255, 247, 244, 0.82);
+}
+
+/* --- Hub /motivation --- */
+.declic-head {
+  margin-bottom: var(--sp-4);
+}
+
+.declic-sub {
+  margin-top: var(--sp-1);
+  color: var(--label-2);
+  font-size: var(--fs-callout);
+}
+
+.punch-card {
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--r-xl);
+  background: linear-gradient(160deg, #23263f 0%, #14162a 100%);
+  color: #f4f4f8;
+  box-shadow: 0 10px 26px rgba(16, 18, 40, 0.28);
+  margin-bottom: var(--sp-4);
+}
+
+.punch-kicker {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: rgba(244, 244, 248, 0.55);
+}
+
+.why-card .punch-kicker {
+  color: var(--label-3);
+}
+
+.punch-text {
+  margin-top: var(--sp-2);
+  font-size: 1.2rem;
+  line-height: 1.4;
+  font-weight: 650;
+}
+
+.punch-again {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: var(--sp-3);
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.12);
+  color: #f4f4f8;
+  font-size: var(--fs-footnote);
+  font-weight: 650;
+  transition: transform 0.1s ease;
+}
+
+.why-card .punch-again {
+  background: var(--tint-soft);
+  color: var(--tint);
+}
+
+.punch-again:active {
+  transform: scale(0.96);
+}
+
+/* Variante 2 segments du sélecteur coulissant. */
+.mode-switch--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.mode-ind2 {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 2);
+  height: calc(100% - 6px);
+  border-radius: var(--r-pill);
+  background: #c73e3e;
+  box-shadow: 0 2px 8px rgba(199, 62, 62, 0.4);
+  transition:
+    transform 0.28s cubic-bezier(0.32, 0.72, 0.35, 1),
+    background-color 0.28s ease;
+}
+
+.mode-switch--2 button.on {
+  color: #ffffff;
+}
+
+/* --- Grille des situations --- */
+.declic-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+}
+
+.declic-grid .section-title {
+  margin-bottom: var(--sp-1);
+}
+
+.declic-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 13px var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  color: var(--label-3);
+  transition: transform 0.1s ease;
+}
+
+.declic-card:active {
+  transform: scale(0.985);
+}
+
+.declic-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: rgba(199, 62, 62, 0.12);
+  color: #c05050;
+}
+
+.declic-card--soft .declic-card-icon {
+  background: var(--tint-soft);
+  color: var(--tint);
+}
+
+.declic-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.declic-card-label {
+  font-size: var(--fs-callout);
+  font-weight: 650;
+  color: var(--label);
+}
+
+.declic-card-sub {
+  font-size: var(--fs-caption);
+  color: var(--label-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 650;
+}
+
+/* --- « Ta raison » --- */
+.why-card {
+  margin-top: var(--sp-5);
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--r-xl);
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+.why-text {
+  margin-top: var(--sp-2);
+  font-family: ui-serif, 'New York', Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.45;
+  font-weight: 550;
+  color: var(--label);
+}
+
+.why-note {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-footnote);
+  color: var(--label-2);
+  margin-bottom: var(--sp-2);
+}
+
+.why-input {
+  width: 100%;
+  margin-top: var(--sp-2);
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  border: 0.5px solid var(--separator-strong);
+  background: var(--bg);
+  color: var(--label);
+  font: inherit;
+  font-size: var(--fs-callout);
+  resize: vertical;
+}
+
+.why-input:focus {
+  outline: none;
+  border-color: var(--tint);
+  box-shadow: var(--focus-ring);
+}
+
+.why-actions {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+
+.declic-foot {
+  margin: var(--sp-6) 0 var(--sp-2);
+  font-size: var(--fs-footnote);
+  color: var(--label-3);
+}
+
+/* Rangée Déclic sur la page Citations. */
+.zen-launch--declic {
+  background: linear-gradient(135deg, #b93a3a 0%, #7c2430 100%);
+  margin-bottom: var(--sp-3);
+}
+
+/* --- L'écran du discours (plein cadre) --- */
+.talk {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--safe-top) + 14px) 22px calc(var(--safe-bottom) + 18px);
+  color: #f6f2ef;
+  overflow-y: auto;
+}
+
+.talk--franc {
+  background:
+    radial-gradient(90% 50% at 50% 0%, rgba(214, 92, 70, 0.16), transparent 65%),
+    linear-gradient(170deg, #2b1211 0%, #17090b 60%, #120709 100%);
+}
+
+.talk--doux {
+  background:
+    radial-gradient(90% 50% at 50% 0%, rgba(88, 178, 156, 0.14), transparent 65%),
+    linear-gradient(170deg, #10231f 0%, #0a1414 60%, #081010 100%);
+}
+
+.talk-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-shrink: 0;
+}
+
+.talk-kicker {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: rgba(246, 242, 239, 0.55);
+  min-width: 0;
+}
+
+.talk-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-3);
+  max-width: 36rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--sp-5) 0;
+  animation: talk-in 0.34s cubic-bezier(0.32, 0.72, 0.35, 1) both;
+}
+
+@keyframes talk-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.talk-text {
+  font-size: clamp(1.05rem, 4.2vw, 1.3rem);
+  line-height: 1.55;
+  font-weight: 520;
+}
+
+.talk-text:first-child {
+  font-weight: 650;
+}
+
+.talk-why {
+  margin-top: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 3px solid rgba(246, 242, 239, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
+}
+
+.talk-why-kicker {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(246, 242, 239, 0.5);
+}
+
+.talk-why-text {
+  margin-top: 6px;
+  font-family: ui-serif, 'New York', Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.45;
+}
+
+.talk-punch {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-subhead);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgba(246, 242, 239, 0.6);
+}
+
+.talk-actions {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  max-width: 36rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.talk-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px var(--sp-5);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-headline);
+  font-weight: 750;
+  color: #2a0f0d;
+  background: #f6f2ef;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  transition: transform 0.1s ease;
+}
+
+.talk--doux .talk-cta {
+  color: #081611;
+}
+
+.talk-cta:active {
+  transform: scale(0.97);
+}
+
+.talk-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.talk-link {
+  font-size: var(--fs-footnote);
+  font-weight: 650;
+  color: rgba(246, 242, 239, 0.72);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(246, 242, 239, 0.3);
+}
+
+.talk-link--stop {
+  margin-top: var(--sp-5);
+}
+
+/* --- Le contrat de 10 minutes --- */
+.talk-body--timer {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.talk-timer-kicker {
+  font-size: var(--fs-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(246, 242, 239, 0.5);
+}
+
+.talk-timer {
+  font-size: clamp(4rem, 22vw, 6.5rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.talk-done-title {
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+  font-weight: 800;
+}
+
+.talk-timer-sub {
+  font-size: var(--fs-callout);
+  color: rgba(246, 242, 239, 0.72);
+  max-width: 26rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talk-body {
+    animation: none;
+  }
+}

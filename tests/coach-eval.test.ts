@@ -544,7 +544,7 @@ describe('intégrité du vocabulaire', () => {
 
 describe('intégrité de la base de connaissances', () => {
   const routes = new Set<string>([
-    '/diagnostic', '/bibliotheque', '/sos', '/recherche', '/citations/plein-ecran',
+    '/diagnostic', '/bibliotheque', '/sos', '/recherche', '/citations/plein-ecran', '/motivation',
     '/reperes/algorithme', '/reperes/matrice', '/reperes/mythes', '/reperes/sources',
     ...METHODS.map((m) => `/methode/${m.id}`),
     ...SOS_PROTOCOLS.map((s) => `/sos/${s.id}`),

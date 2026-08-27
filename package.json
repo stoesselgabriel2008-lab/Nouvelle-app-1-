@@ -1,7 +1,7 @@
 {
   "name": "pass-methods-os",
   "private": true,
-  "version": "3.0.1",
+  "version": "3.1.0",
   "type": "module",
   "description": "PASS Methods OS — méthode → diagnostic → action. PWA hors ligne pour iPhone et iPad.",
   "scripts": {
