@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PASS Methods OS</title>
+    <script>
+      // L'app utilise des routes en hash (#/methode/…), qui rechargent
+      // toujours correctement sur GitHub Pages. Ce filet convertit une URL
+      // tapée sans hash (/Nouvelle-app-1-/methode/x) vers la route en hash.
+      (function () {
+        var base = '/Nouvelle-app-1-/';
+        var path = location.pathname;
+        var rest = path.indexOf(base) === 0 ? path.slice(base.length) : '';
+        location.replace(base + '#/' + rest + location.search);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
